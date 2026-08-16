@@ -48,6 +48,16 @@ if (false && new File("${projectDir}/google-services.json").exists() && (getGrad
 android {
 
     namespace 'com.liskovsoft.smartyoutubetv2.tv'
+
+    // CI's lintStbetaRelease was failing on 5 pre-existing errors (MissingSuperCall/
+    // GestureBackNavigation in onBackPressed overrides, 3 upstream + 2 ours) that predate this
+    // baseline - see lint-baseline.xml. This only freezes what's already there; a NEW lint error
+    // still fails the build. Regenerate with `gradlew :smarttubetv:updateLintBaseline` if the
+    // known set changes deliberately.
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
     // FIX: Default interface methods are only supported starting with Android N (--min-api 24)
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

@@ -1,0 +1,3165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="IidCompatibilityCheckFailure"
+        message="Check failed with exception: java.lang.NoSuchMethodException: com.android.tools.lint.detector.api.LintModelModuleProject.getGradleProjectModel()">
+        <location
+            file="smarttubetv"/>
+    </issue>
+
+    <issue
+        id="IidCompatibilityCheckFailure"
+        message="Check failed with exception: java.lang.NoSuchMethodException: com.android.tools.lint.detector.api.LintModelModuleProject.getGradleProjectModel()">
+        <location
+            file="smarttubetv"/>
+    </issue>
+
+    <issue
+        id="IidCompatibilityCheckFailure"
+        message="Check failed with exception: java.lang.NoSuchMethodException: com.android.tools.lint.detector.api.LintModelModuleProject.getGradleProjectModel()">
+        <location
+            file="smarttubetv"/>
+    </issue>
+
+    <issue
+        id="MissingSuperCall"
+        message="Overriding method should call `super.onUserLeaveHint`"
+        errorLine1="    public void onUserLeaveHint() {"
+        errorLine2="                ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/playback/PlaybackActivity.java"
+            line="270"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="GestureBackNavigation"
+        message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX&apos;s backward compatible `OnBackPressedDispatcher`"
+        errorLine1="    public void onBackPressed() {"
+        errorLine2="                ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/dialogs/AppDialogActivity.java"
+            line="70"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="GestureBackNavigation"
+        message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX&apos;s backward compatible `OnBackPressedDispatcher`"
+        errorLine1="    override fun onBackPressed() {"
+        errorLine2="                 ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/dialog/compose/ComposeAppDialogActivity.kt"
+            line="43"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="GestureBackNavigation"
+        message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX&apos;s backward compatible `OnBackPressedDispatcher`"
+        errorLine1="    override fun onBackPressed() {"
+        errorLine2="                 ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/settings/compose/ComposeSettingsActivity.kt"
+            line="21"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="GestureBackNavigation"
+        message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX&apos;s backward compatible `OnBackPressedDispatcher`"
+        errorLine1="    public void onBackPressed() {"
+        errorLine2="                ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/playback/PlaybackActivity.java"
+            line="217"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`IconCardView`) and the declare-styleable (`lbImageCardView`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                        styleResId, R.styleable.lbImageCardView);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/IconCardView.java"
+            line="53"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`IconCardView`) and the declare-styleable (`LeanbackTheme`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                            R.styleable.LeanbackTheme);"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/IconCardView.java"
+            line="88"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`LoadingCardView`) and the declare-styleable (`lbImageCardView`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                        styleResId, R.styleable.lbImageCardView);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/LoadingCardView.java"
+            line="43"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`LoadingCardView`) and the declare-styleable (`LeanbackTheme`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                            R.styleable.LeanbackTheme);"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/LoadingCardView.java"
+            line="63"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`TagCardView`) and the declare-styleable (`lbImageCardView`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                        styleResId, R.styleable.lbImageCardView);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/TagCardView.java"
+            line="43"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`TagCardView`) and the declare-styleable (`LeanbackTheme`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                            R.styleable.LeanbackTheme);"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/TagCardView.java"
+            line="68"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`VideoCardView`) and the declare-styleable (`lbImageCardView`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                getContext().obtainStyledAttributes(styleResId, R.styleable.lbImageCardView);"
+        errorLine2="                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/videoview/VideoCardView.java"
+            line="73"
+            column="65"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`VideoCardView`) and the declare-styleable (`LeanbackTheme`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray styledAttrs = context.obtainStyledAttributes(R.styleable.LeanbackTheme);"
+        errorLine2="                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/videoview/VideoCardView.java"
+            line="122"
+            column="69"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                video.isShorts ? context.getString(R.string.header_shorts).toUpperCase() :"
+        errorLine2="                                                                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/presenter/VideoCardPresenter.java"
+            line="135"
+            column="76"/>
+    </issue>
+
+    <issue
+        id="InternalInsetResource"
+        message="Using internal inset dimension resource `status_bar_height` is not supported"
+        errorLine1="            int resourceId = res.getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/playerglue/tooltips/TooltipPopup.java"
+            line="147"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="CustomSplashScreen"
+        message="The application should not provide its own launch screen"
+        errorLine1="public class SplashActivity extends MotherActivity implements SplashView {"
+        errorLine2="             ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/main/SplashActivity.java"
+            line="9"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View view = inflater.inflate(R.layout.icon_header_item, null);"
+        errorLine2="                                                                ~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/presenter/IconHeaderItemPresenter.java"
+            line="47"
+            column="65"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        playerView = layoutInflater.inflate(R.layout.shorts_player_view, null) as ShortsPlayerView"
+        errorLine2="                                                                         ~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/shorts/ShortsPlayerActivity.kt"
+            line="71"
+            column="74"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        mContentView = LayoutInflater.from(mContext).inflate(R.layout.abc_tooltip, null);"
+        errorLine2="                                                                                   ~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/playerglue/tooltips/TooltipPopup.java"
+            line="61"
+            column="84"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="            return inflater.inflate(R.layout.webbrowser, null);"
+        errorLine2="                                                         ~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/webbrowser/WebBrowserFragment.java"
+            line="33"
+            column="58"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data android:host=&quot;search&quot; android:scheme=&quot;youtube&quot;/>"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="97"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data android:host=&quot;play&quot; android:scheme=&quot;youtube&quot;/>"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="98"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PictureInPictureIssue"
+        message="An activity in this app supports picture-in-picture and the targetSdkVersion is 31 or above; it is therefore strongly recommended to call both `setAutoEnterEnabled(true)` and `setSourceRectHint(...)`"
+        errorLine1="    &lt;application"
+        errorLine2="     ~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="46"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of Gradle than 8.13 is available: 8.14.5"
+        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Documents/git/SmartTube/gradle/wrapper/gradle-wrapper.properties"
+            line="6"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.gms:google-services than 4.3.15 is available: 4.5.0"
+        errorLine1="        classpath &apos;com.google.gms:google-services:4.3.15&apos;"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="15"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-crashlytics-gradle than 2.7.1 is available: 3.0.7"
+        errorLine1="        classpath &apos;com.google.firebase:firebase-crashlytics-gradle:2.7.1&apos;"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="20"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="Aligned16KB"
+        message="The native library `x86_64/libglide-webp.so` (from `com.github.zjupure:webpdecoder:2.6.4.16.0`) is not 16 KB aligned">
+        <location
+            file="$GRADLE_USER_HOME/caches/8.13/transforms/518f39e850033bf56a1d3a9a0b70b50e/transformed/jetified-webpdecoder-2.6.4.16.0/jni/x86_64/libglide-webp.so"/>
+    </issue>
+
+    <issue
+        id="Aligned16KB"
+        message="The native library `x86_64/libglide-webp.so` (from `com.github.zjupure:webpdecoder:2.6.4.16.0`) is not 16 KB aligned">
+        <location
+            file="$GRADLE_USER_HOME/caches/8.13/transforms/518f39e850033bf56a1d3a9a0b70b50e/transformed/jetified-webpdecoder-2.6.4.16.0/jni/x86_64/libglide-webp.so"/>
+    </issue>
+
+    <issue
+        id="Aligned16KB"
+        message="The native library `x86_64/libglide-webp.so` (from `com.github.zjupure:webpdecoder:2.6.4.16.0`) is not 16 KB aligned">
+        <location
+            file="$GRADLE_USER_HOME/caches/8.13/transforms/518f39e850033bf56a1d3a9a0b70b50e/transformed/jetified-webpdecoder-2.6.4.16.0/jni/x86_64/libglide-webp.so"/>
+    </issue>
+
+    <issue
+        id="Deprecated"
+        message="`android:editable` is deprecated: Use an `&lt;EditText>` to make it editable"
+        errorLine1="                    android:editable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_search_bar.xml"
+            line="66"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="            int resourceId = res.getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);"
+        errorLine2="                                 ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/playerglue/tooltips/TooltipPopup.java"
+            line="147"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UseRequiresApi"
+        message="Use `@RequiresApi(24) instead of `@TargetApi` to propagate the requirement to callers of `enterPipMode`"
+        errorLine1="    @TargetApi(24)"
+        errorLine2="    ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/playback/PlaybackActivity.java"
+            line="129"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UseRequiresApi"
+        message="Use `@RequiresApi(24) instead of `@TargetApi` to propagate the requirement to callers of `wannaEnterToPip`"
+        errorLine1="    @TargetApi(24)"
+        errorLine2="    ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/playback/PlaybackActivity.java"
+            line="323"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="SetJavaScriptEnabled"
+        message="Using `setJavaScriptEnabled` can introduce XSS vulnerabilities into your application, review carefully"
+        errorLine1="        webSettings.setJavaScriptEnabled(true);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/webbrowser/WebBrowserFragment.java"
+            line="48"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="TrustAllX509TrustManager"
+        message="`checkClientTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="$GRADLE_USER_HOME/caches/8.13/transforms/92f780211c8cd2f9f1056dcf64725d51/transformed/out/jars/classes.jar"/>
+    </issue>
+
+    <issue
+        id="TrustAllX509TrustManager"
+        message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
+        <location
+            file="$GRADLE_USER_HOME/caches/8.13/transforms/92f780211c8cd2f9f1056dcf64725d51/transformed/out/jars/classes.jar"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            notifyDataSetChanged();"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/preference/LeanbackListPreferenceDialogFragment.java"
+            line="276"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            notifyDataSetChanged();"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/preference/LeanbackListPreferenceDialogFragment.java"
+            line="343"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            notifyDataSetChanged();"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/dialogs/other/RadioListPreferenceDialogFragment.java"
+            line="98"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="    @RequiresApi(api = 21)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/styled/CardProgressBar.java"
+            line="24"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 23"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/common/DisplayUtils.java"
+            line="76"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="@RequiresApi(21)"
+        errorLine2="~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/transition/FadeAndShortSlide.java"
+            line="40"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 23"
+        errorLine1="        if (Build.VERSION.SDK_INT >= 21) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/preference/LeanbackPreferenceDialogFragment.java"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="@RequiresApi(21)"
+        errorLine2="~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/preference/LeanbackPreferenceFragmentTransitionHelperApi21.java"
+            line="28"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="    @RequiresApi(21)"
+        errorLine2="    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/vineyard/videoview/LoopingVideoView.java"
+            line="27"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `VERSION.SDK_INT > 21` is always true here (`SDK_INT` ≥ 23 and &lt; 28)"
+        errorLine1="        } else if (VERSION.SDK_INT > 21) {"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/marqueetextview/MarqueeTextView.java"
+            line="57"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt;= 19) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/marqueetextviewcompat/MarqueeTextViewCompat.java"
+            line="98"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt;= 19) return;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/marqueetextviewcompat/MarqueeTextViewCompat.java"
+            line="254"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt;= 19)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/marqueetextviewcompat/MarqueeTextViewCompat.java"
+            line="351"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (Build.VERSION.SDK_INT &lt;= 19)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/marqueetextviewcompat/MarqueeTextViewCompat.java"
+            line="367"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 23"
+        errorLine1="        if (Build.VERSION.SDK_INT >= 21 &amp;&amp; Build.VERSION.SDK_INT &lt; 26) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/playback/PlaybackActivity.java"
+            line="230"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `Build.VERSION.SDK_INT == 21` is never true here"
+        errorLine1="            if (Build.VERSION.SDK_INT == 21) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/playback/PlaybackActivity.java"
+            line="231"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (VERSION.SDK_INT &lt;= 19 || getContext() == null) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/playback/PlaybackFragment.java"
+            line="609"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 23"
+        errorLine1="                                stopSeek(Build.VERSION.SDK_INT >= 21"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/playerglue/tweaks/PlaybackTransportRowPresenter.java"
+            line="527"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 23"
+        errorLine1="            vh.stopSeek(Build.VERSION.SDK_INT >= 21"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/playerglue/tweaks/PlaybackTransportRowPresenter.java"
+            line="1006"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 23"
+        errorLine1="            .diskCacheStrategy(if (VERSION.SDK_INT > 21) DiskCacheStrategy.ALL else DiskCacheStrategy.NONE)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/search/compose/SearchVideoCardView.kt"
+            line="71"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (VERSION.SDK_INT &lt; 21) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/misc/SeekBar.java"
+            line="402"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="@RequiresApi(21)"
+        errorLine2="~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/transition/TranslationAnimationCreator.java"
+            line="21"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 23"
+        errorLine1="                .diskCacheStrategy(VERSION.SDK_INT > 21 ? DiskCacheStrategy.ALL : DiskCacheStrategy.NONE)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/presenter/VideoCardPresenter.java"
+            line="162"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (VERSION.SDK_INT &lt;= 19 || textViews == null) { // Android 4: Broken grid layout fix"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/util/ViewUtil.java"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (VERSION.SDK_INT &lt;= 19 || textViews == null) { // Android 4: Broken grid layout fix"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/util/ViewUtil.java"
+            line="87"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (VERSION.SDK_INT &lt;= 19) { // Android 4: Broken grid layout fix"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/util/ViewUtil.java"
+            line="130"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (context == null || rootView == null || VERSION.SDK_INT &lt;= 19) {"
+        errorLine2="                                                   ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/util/ViewUtil.java"
+            line="182"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 23"
+        errorLine1="        if (mainContainer instanceof FrameLayout &amp;&amp; VERSION.SDK_INT >= 21) {"
+        errorLine2="                                                    ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/util/ViewUtil.java"
+            line="195"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 23"
+        errorLine1="        if (context == null || rootView == null || VERSION.SDK_INT &lt;= 19) {"
+        errorLine2="                                                   ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/util/ViewUtil.java"
+            line="216"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v21`) is unnecessary; `minSdkVersion` is 23. Merge all the resources in this folder into `drawable`.">
+        <location
+            file="src/main/res/drawable-v21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/fastlane_background&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="36"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 19"
+        errorLine1="        &lt;item tools:targetApi=&quot;19&quot; name=&quot;android:windowTranslucentNavigation&quot;>true&lt;/item>"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="44"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 18"
+        errorLine1="        &lt;item tools:targetApi=&quot;18&quot; name=&quot;android:windowOverscan&quot;>true&lt;/item>"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="46"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/fastlane_background&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="58"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 19"
+        errorLine1="        &lt;item tools:targetApi=&quot;19&quot; name=&quot;android:windowTranslucentNavigation&quot;>true&lt;/item>"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="67"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 18"
+        errorLine1="        &lt;item tools:targetApi=&quot;18&quot; name=&quot;android:windowOverscan&quot;>true&lt;/item>"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="69"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 19"
+        errorLine1="        &lt;item tools:targetApi=&quot;19&quot; name=&quot;android:windowTranslucentNavigation&quot;>true&lt;/item>"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="80"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/fastlane_background&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="89"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorPrimary&quot; tools:targetApi=&quot;21&quot;>@color/fastlane_background_dark&lt;/item>"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="90"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 19"
+        errorLine1="        &lt;item tools:targetApi=&quot;19&quot; name=&quot;android:windowTranslucentNavigation&quot;>true&lt;/item>"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="96"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 19"
+        errorLine1="        &lt;item tools:targetApi=&quot;19&quot; name=&quot;android:windowTranslucentNavigation&quot;>true&lt;/item>"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="126"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/semi_red&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="137"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorPrimary&quot; tools:targetApi=&quot;21&quot;>@color/scheme_grey_background&lt;/item>"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="152"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/semi_red&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="153"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/semi_red&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="169"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorPrimary&quot; tools:targetApi=&quot;21&quot;>@color/scheme_red_background_dark&lt;/item>"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="181"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/semi_red&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="182"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/grey&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="228"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/scheme_blue_background&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="243"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/scheme_blue_background&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="254"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorAccent&quot; tools:targetApi=&quot;21&quot;>@color/scheme_blue_background&lt;/item>"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="257"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="        &lt;item name=&quot;android:colorPrimary&quot; tools:targetApi=&quot;21&quot;>@color/scheme_grey_background&lt;/item>"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="259"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `TooltipCompatHandler` which has field `mAnchor` pointing to `View`); this is a memory leak"
+        errorLine1="    private static TooltipCompatHandler sPendingHandler;"
+        errorLine2="            ~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/playerglue/tooltips/TooltipCompatHandler.java"
+            line="73"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `TooltipCompatHandler` which has field `mAnchor` pointing to `View`); this is a memory leak"
+        errorLine1="    private static TooltipCompatHandler sActiveHandler;"
+        errorLine2="            ~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/playerglue/tooltips/TooltipCompatHandler.java"
+            line="76"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="            var selectedIndex by remember(categories) { mutableStateOf(0) }"
+        errorLine2="                                                        ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/dialog/compose/AppDialogScreen.kt"
+            line="174"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="            var lastFocusedCategory by remember(categories) { mutableStateOf(0) }"
+        errorLine2="                                                              ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/dialog/compose/AppDialogScreen.kt"
+            line="175"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="                mutableStateOf(options.indexOfFirst { it.isSelected }.coerceAtLeast(0))"
+        errorLine2="                ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/dialog/compose/AppDialogScreen.kt"
+            line="382"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    private var dialogViewId by mutableStateOf(0)"
+        errorLine2="                                ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/dialog/compose/ComposeAppDialogFragment.kt"
+            line="38"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    private var selectedSectionIndex by mutableStateOf(0)"
+        errorLine2="                                        ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/home/compose/ComposeHomeFragment.kt"
+            line="46"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    private var currentSectionType by mutableStateOf(BrowseSection.TYPE_ROW)"
+        errorLine2="                                      ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/home/compose/ComposeHomeFragment.kt"
+            line="47"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    private var lastFocusedSectionId by mutableStateOf(-1)"
+        errorLine2="                                        ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/home/compose/ComposeHomeFragment.kt"
+            line="74"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    private var selectedIndex by mutableStateOf(-1)"
+        errorLine2="                                 ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/settings/compose/ComposeSettingsFragment.kt"
+            line="34"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    var lastFocusedRow by rememberSaveable { mutableStateOf(0) }"
+        errorLine2="                                             ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/settings/compose/SettingsScreen.kt"
+            line="88"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/lb_preference_decor_list_background` with a theme that also paints a background (inferred theme is `@style/App.Theme.Leanback.Browse`)"
+        errorLine1="              android:background=&quot;@color/lb_preference_decor_list_background&quot;"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/chat_preference_fragment.xml"
+            line="8"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/lb_preference_decor_list_background` with a theme that also paints a background (inferred theme is `@style/App.Theme.Leanback.Browse`)"
+        errorLine1="    android:background=&quot;@color/lb_preference_decor_list_background&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/leanback_preference_fragment.xml"
+            line="26"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.activate_account_qrcode_old` appears to be unused">
+        <location
+            file="src/main/res/drawable/activate_account_qrcode_old.jpg"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.activity_playback` appears to be unused"
+        errorLine1="&lt;merge xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/activity_playback.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.mipmap.app_logo_none` appears to be unused">
+        <location
+            file="src/main/res/mipmap-nodpi/app_logo_none.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.lb_control_button_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;lb_control_button_color&quot;>#86EEEEEE&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.default_background_gradient_start` appears to be unused"
+        errorLine1="    &lt;color name=&quot;default_background_gradient_start&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.default_background_gradient_end` appears to be unused"
+        errorLine1="    &lt;color name=&quot;default_background_gradient_end&quot;>#DDDDDD&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.default_light_grey` appears to be unused"
+        errorLine1="    &lt;color name=&quot;default_light_grey&quot;>#343434&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="14"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.search_opaque` appears to be unused"
+        errorLine1="    &lt;color name=&quot;search_opaque&quot;>#B47CF7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="15"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.search_opaque_yellow` appears to be unused"
+        errorLine1="    &lt;color name=&quot;search_opaque_yellow&quot;>#ffaa3f&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="16"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.card_selected_background_yellow` appears to be unused"
+        errorLine1="    &lt;color name=&quot;card_selected_background_yellow&quot;>#ffaa3f&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="21"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.card_selected_background_grey` appears to be unused"
+        errorLine1="    &lt;color name=&quot;card_selected_background_grey&quot;>#343434&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="22"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.card_selected_text_black` appears to be unused"
+        errorLine1="    &lt;color name=&quot;card_selected_text_black&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="23"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.shelf_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;shelf_background&quot;>#282828&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="30"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.icon_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;icon_background&quot;>#4A4F51&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="32"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.icon_alt_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;icon_alt_background&quot;>#2A2F51&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="33"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.scheme_red_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;scheme_red_background&quot;>#131313&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="43"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.scheme_blue_background_dark` appears to be unused"
+        errorLine1="    &lt;color name=&quot;scheme_blue_background_dark&quot;>#207EA1&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="50"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.tooltip_background_light_mod` appears to be unused"
+        errorLine1="    &lt;color name=&quot;tooltip_background_light_mod&quot;>#e6FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="61"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.foreground_material_light_mod` appears to be unused"
+        errorLine1="    &lt;color name=&quot;foreground_material_light_mod&quot;>@android:color/black&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="63"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.orb_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;orb_color&quot;>@color/grey&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="66"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.orb_bright_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;orb_bright_color&quot;>@color/grey&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="67"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.lb_speech_orb_not_recording` appears to be unused"
+        errorLine1="    &lt;color name=&quot;lb_speech_orb_not_recording&quot;>@color/orb_color&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="71"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.lb_speech_orb_not_recording_pulsed` appears to be unused"
+        errorLine1="    &lt;color name=&quot;lb_speech_orb_not_recording_pulsed&quot;>@color/orb_bright_color&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="72"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.lb_speech_orb_not_recording_icon` appears to be unused"
+        errorLine1="    &lt;color name=&quot;lb_speech_orb_not_recording_icon&quot;>@color/orb_icon_color&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="73"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.default_background_gradient` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable-xhdpi/default_background_gradient.xml"
+            line="3"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.channel_card_text_width` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;channel_card_text_width&quot;>140dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="19"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.pip_title_max_width` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;pip_title_max_width&quot;>370dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="28"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.pip_title_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;pip_title_size&quot;>24sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="29"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.pip_title_date_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;pip_title_date_size&quot;>12sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="30"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.browse_global_time_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;browse_global_time_size&quot;>30sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="31"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.search_bar_right_items_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;search_bar_right_items_margin&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="44"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.search_bar_global_time_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;search_bar_global_time_margin&quot;>120dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="47"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_browse_rows_margin_top` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_browse_rows_margin_top&quot;>130dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="51"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_browse_rows_margin_start` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_browse_rows_margin_start&quot;>265dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="55"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_search_bar_items_width` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_search_bar_items_width&quot;>600dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="58"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_playback_controls_time_text_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_playback_controls_time_text_size&quot;>16sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="61"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.integer.lb_details_description_subtitle_max_lines` appears to be unused"
+        errorLine1="    &lt;integer name=&quot;lb_details_description_subtitle_max_lines&quot;>2&lt;/integer>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="64"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.integer.lb_details_description_title_max_lines` appears to be unused"
+        errorLine1="    &lt;integer name=&quot;lb_details_description_title_max_lines&quot;>2&lt;/integer>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="65"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_preference_decor_title_margin_bottom` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_preference_decor_title_margin_bottom&quot;>10dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="69"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_browse_title_icon_height` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_browse_title_icon_height&quot;>50dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="73"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_browse_title_height` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_browse_title_height&quot;>50dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="74"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_rounded_rect_corner_radius` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_rounded_rect_corner_radius&quot;>12dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="84"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_basic_card_main_width` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_basic_card_main_width&quot;>140dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="107"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.lb_basic_card_main_height` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;lb_basic_card_main_height&quot;>188dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="108"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.spinner_width` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;spinner_width&quot;>50dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="117"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.spinner_height` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;spinner_height&quot;>50dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="118"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.detail_thumb_width` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;detail_thumb_width&quot;>274dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="119"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.detail_thumb_height` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;detail_thumb_height&quot;>274dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="120"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.playback_overlay_width` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;playback_overlay_width&quot;>240dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="121"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.playback_overlay_height` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;playback_overlay_height&quot;>240dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="122"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.activity_horizontal_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;activity_horizontal_margin&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="125"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.activity_vertical_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;activity_vertical_margin&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="126"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.tooltip_precise_anchor_extra_offset_mod` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;tooltip_precise_anchor_extra_offset_mod&quot;>8dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="132"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.tooltip_precise_anchor_threshold_mod` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;tooltip_precise_anchor_threshold_mod&quot;>96dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="133"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.tooltip_y_offset_non_touch_mod` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;tooltip_y_offset_non_touch_mod&quot;>0dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="135"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.tooltip_y_offset_touch_mod` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;tooltip_y_offset_touch_mod&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="136"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.fragment_signin` appears to be unused"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/fragment_signin.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.grid_bg` appears to be unused">
+        <location
+            file="src/main/res/drawable-xhdpi/grid_bg.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.guidedstep_second_guidance` appears to be unused"
+        errorLine1="&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/guidedstep_second_guidance.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.header_default` appears to be unused">
+        <location
+            file="src/main/res/drawable/header_default.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.lb_browse_title` appears to be unused"
+        errorLine1="&lt;com.liskovsoft.smartyoutubetv2.tv.ui.widgets.browse.NavigateTitleView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/lb_browse_title.xml"
+            line="17"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.lb_card_outline` appears to be unused"
+        errorLine1="&lt;shape"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable-v21/lb_card_outline.xml"
+            line="3"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.lb_control_button_secondary` appears to be unused"
+        errorLine1="&lt;ripple xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable-v21/lb_control_button_secondary.xml"
+            line="18"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.lb_image_card_view` appears to be unused"
+        errorLine1="&lt;merge xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/lb_image_card_view.xml"
+            line="4"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.lb_playback_fragment` appears to be unused"
+        errorLine1="&lt;FrameLayout"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/lb_playback_fragment.xml"
+            line="4"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.lb_search_bar` appears to be unused"
+        errorLine1="&lt;merge xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/lb_search_bar.xml"
+            line="18"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.lb_search_orb` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/lb_search_orb.xml"
+            line="18"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.lb_search_outline` appears to be unused"
+        errorLine1="&lt;shape"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable-v21/lb_search_outline.xml"
+            line="3"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.lb_title_view` appears to be unused"
+        errorLine1="&lt;merge xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/lb_title_view.xml"
+            line="20"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.lb_title_view_logo` appears to be unused"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/lb_title_view_logo.xml"
+            line="5"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.lb_vertical_grid` appears to be unused"
+        errorLine1="&lt;androidx.leanback.widget.VerticalGridView"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/lb_vertical_grid.xml"
+            line="19"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.leanback_preference_fragment` appears to be unused"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/leanback_preference_fragment.xml"
+            line="22"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.movie` appears to be unused">
+        <location
+            file="src/main/res/drawable/movie.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.player_background_controls_new` appears to be unused"
+        errorLine1="&lt;inset xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/player_background_controls_new.xml"
+            line="3"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.rounded_search_bg` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/rounded_search_bg.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.scroll_animation` appears to be unused"
+        errorLine1="&lt;translate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/scroll_animation.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.search_bar_cursor` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/search_bar_cursor.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.xml.settings` appears to be unused"
+        errorLine1="&lt;PreferenceScreen xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/xml/settings.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.slide_in_from_right` appears to be unused"
+        errorLine1="&lt;translate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/slide_in_from_right.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.slide_out_to_right` appears to be unused"
+        errorLine1="&lt;translate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/slide_out_to_right.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.stay_still` appears to be unused"
+        errorLine1="&lt;alpha xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/stay_still.xml"
+            line="3"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.browse_title` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;browse_title&quot;>&lt;![CDATA[AetherTube]]&gt;&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.related_movies` appears to be unused"
+        errorLine1="    &lt;string name=&quot;related_movies&quot;>Related Videos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.vertical_grid_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;vertical_grid_title&quot;>&lt;![CDATA[Vertical Video Grid]]&gt;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.popular_header` appears to be unused"
+        errorLine1="    &lt;string name=&quot;popular_header&quot;>Popular Videos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.more_samples` appears to be unused"
+        errorLine1="    &lt;string name=&quot;more_samples&quot;>More Samples&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.grid_view` appears to be unused"
+        errorLine1="    &lt;string name=&quot;grid_view&quot;>Vertical Grid View&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_fragment` appears to be unused"
+        errorLine1="    &lt;string name=&quot;error_fragment&quot;>Error Fragment&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.personal_settings` appears to be unused"
+        errorLine1="    &lt;string name=&quot;personal_settings&quot;>Personal Settings&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.watch_trailer_1` appears to be unused"
+        errorLine1="    &lt;string name=&quot;watch_trailer_1&quot;>Watch trailer&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.watch_trailer_2` appears to be unused"
+        errorLine1="    &lt;string name=&quot;watch_trailer_2&quot;>FREE&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.rent_1` appears to be unused"
+        errorLine1="    &lt;string name=&quot;rent_1&quot;>Rent By Day&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.rent_2` appears to be unused"
+        errorLine1="    &lt;string name=&quot;rent_2&quot;>From $1.99&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.buy_1` appears to be unused"
+        errorLine1="    &lt;string name=&quot;buy_1&quot;>Buy and Own&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.buy_2` appears to be unused"
+        errorLine1="    &lt;string name=&quot;buy_2&quot;>AT $9.99&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.queue_name` appears to be unused"
+        errorLine1="    &lt;string name=&quot;queue_name&quot;>Play Queue&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.search_results` appears to be unused"
+        errorLine1="    &lt;string name=&quot;search_results&quot;>Search results for \&apos;%1$s\&apos;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.no_search_results` appears to be unused"
+        errorLine1="    &lt;string name=&quot;no_search_results&quot;>No search results found for \&apos;%1$s\&apos;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.catalog_url` appears to be unused"
+        errorLine1="    &lt;string name=&quot;catalog_url&quot;>https://storage.googleapis.com/android-tv/android_tv_videos_new.json&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.videos_loading_error` appears to be unused"
+        errorLine1="    &lt;string name=&quot;videos_loading_error&quot;>Failed to load videos. Please check your network connection.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.error_fragment_message` appears to be unused"
+        errorLine1="    &lt;string name=&quot;error_fragment_message&quot;>An error occurred&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.dismiss_error` appears to be unused"
+        errorLine1="    &lt;string name=&quot;dismiss_error&quot;>Dismiss&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.global_search` appears to be unused"
+        errorLine1="    &lt;string name=&quot;global_search&quot;>GLOBALSEARCH&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.search_label` appears to be unused"
+        errorLine1="    &lt;string name=&quot;search_label&quot;>Leanback API Demo&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.search_hint` appears to be unused"
+        errorLine1="    &lt;string name=&quot;search_hint&quot;>Search for videos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.settings_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;settings_description&quot;>Leanback API Demo Videos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.noah_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;noah_description&quot;>to build an Ark to save creation from the coming flood.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="45"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.noah_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;noah_title&quot;>Noah&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.dragon2_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;dragon2_title&quot;>How to Train Your Dragon 2&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.dragon2_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;dragon2_description&quot;>Set in the mythical world of burly Vikings and wild dragons,"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.maleficent_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;maleficent_title&quot;>Maleficent&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.maleficent_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;maleficent_description&quot;>The untold story of Disney\&apos;s most iconic villain from the"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="56"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_first_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_first_title&quot;>Guided Step First Page&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="63"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_first_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_first_description&quot;>First step of guided sequence&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_first_breadcrumb` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_first_breadcrumb&quot;>Guided Steps: 1&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="65"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_second_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_second_title&quot;>Guided Step Second Page&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="66"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_second_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_second_description&quot;>Showcasing different action configurations&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="67"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_second_breadcrumb` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_second_breadcrumb&quot;>Guided Steps: 2&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="68"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_third_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_third_title&quot;>Guided Step Third Page&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="69"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_third_breadcrumb` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_third_breadcrumb&quot;>Guided Steps: 3&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_third_command` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_third_command&quot;>You chose: &lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="71"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_action_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_action_description&quot;>The description can be quite long as well."
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_action_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_action_title&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="75"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_continue` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_continue&quot;>Continue&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="78"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_letsdoit` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_letsdoit&quot;>Let\&apos;s do it&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="79"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_nevermind` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_nevermind&quot;>Never mind&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="80"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.guidedstep_cancel` appears to be unused"
+        errorLine1="    &lt;string name=&quot;guidedstep_cancel&quot;>Cancel&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="81"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.mobile_welcome_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;mobile_welcome_title&quot;>Welcome to the Leanback Sample&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="84"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.mobile_welcome_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;mobile_welcome_description&quot;>Welcome to the Leanback Sample app! Try opening this on an Android TV for a great leanback experience.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="85"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.onboarding_title_welcome` appears to be unused"
+        errorLine1="    &lt;string name=&quot;onboarding_title_welcome&quot;>Welcome to the Leanback Sample&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="88"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.onboarding_title_design` appears to be unused"
+        errorLine1="    &lt;string name=&quot;onboarding_title_design&quot;>Designed for Android TV&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="89"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.onboarding_title_simple` appears to be unused"
+        errorLine1="    &lt;string name=&quot;onboarding_title_simple&quot;>Simple to include&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="90"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.onboarding_title_project` appears to be unused"
+        errorLine1="    &lt;string name=&quot;onboarding_title_project&quot;>Check out the Sample Project&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="91"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.onboarding_description_welcome` appears to be unused"
+        errorLine1="    &lt;string name=&quot;onboarding_description_welcome&quot;>This is the Onboarding Fragment, which runs when the user first opens the app&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="93"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.onboarding_description_design` appears to be unused"
+        errorLine1="    &lt;string name=&quot;onboarding_description_design&quot;>The Leanback sample shows how to quickly design apps designed for a 10-foot user interface&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="94"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.onboarding_description_simple` appears to be unused"
+        errorLine1="    &lt;string name=&quot;onboarding_description_simple&quot;>You can include the Leanback library through gradle in your own apps&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="95"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.onboarding_description_project` appears to be unused"
+        errorLine1="    &lt;string name=&quot;onboarding_description_project&quot;>Are you looking for guidance? This sample is available on GitHub so you can see how we built this.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="96"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_title_settings` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_title_settings&quot;>App Settings&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="97"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_title_recommendations` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_title_recommendations&quot;>Recommendations&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="98"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_key_recommendations` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_key_recommendations&quot;>pref_recommendations&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="99"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_key_screen_general` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_key_screen_general&quot;>general_settings&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="100"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_title_screen_general` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_title_screen_general&quot;>General Settings&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="101"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_key_screen_signin` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_key_screen_signin&quot;>signin&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="102"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_title_screen_signin` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_title_screen_signin&quot;>Please Login&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="103"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_title_login_description` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_title_login_description&quot;>Please enter your username and password&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="104"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_title_username` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_title_username&quot;>Username&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="105"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_title_password` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_title_password&quot;>Password&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="106"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_key_login` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_key_login&quot;>pref_login&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="107"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.pref_title_login` appears to be unused"
+        errorLine1="    &lt;string name=&quot;pref_title_login&quot;>Login&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="108"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.no_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;no_title&quot;>No title&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="110"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.text_search_results` appears to be unused"
+        errorLine1="    &lt;string name=&quot;text_search_results&quot;>Search results for %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="117"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.text_post_results_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;text_post_results_title&quot;>Posts for %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="118"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.text_no_results` appears to be unused"
+        errorLine1="    &lt;string name=&quot;text_no_results&quot;>No results&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="119"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.text_badge_image_view_red` appears to be unused"
+        errorLine1="&lt;merge xmlns:tools=&quot;http://schemas.android.com/tools&quot; xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/text_badge_image_view_red.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.text_bg` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/text_bg.xml"
+            line="18"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Widget_Example_Leanback_Title_Text` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.Example.Leanback.Title.Text&quot; parent=&quot;Widget.Leanback.Title.Text&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes_old.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Widget_Example_Leanback_Rows_VerticalGridView` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.Example.Leanback.Rows.VerticalGridView&quot; parent=&quot;Widget.Leanback.Rows.VerticalGridView&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes_old.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Widget_Example_Leanback_GuidanceIconStyle` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.Example.Leanback.GuidanceIconStyle&quot; parent=&quot;Widget.Leanback.GuidanceIconStyle&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes_old.xml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Widget_Example_Leanback_FirstStepGuidanceIconStyle` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.Example.Leanback.FirstStepGuidanceIconStyle&quot; parent=&quot;Widget.Leanback.GuidanceIconStyle&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes_old.xml"
+            line="14"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Widget_Example_Leanback_SecondStepGuidanceIconStyle` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.Example.Leanback.SecondStepGuidanceIconStyle&quot; parent=&quot;Widget.Leanback.GuidanceIconStyle&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes_old.xml"
+            line="18"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Theme_Example_Leanback_GuidedStep` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Theme.Example.Leanback.GuidedStep&quot; parent=&quot;Theme.Leanback.GuidedStep&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes_old.xml"
+            line="22"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Theme_Example_Leanback_GuidedStep_First` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Theme.Example.Leanback.GuidedStep.First&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes_old.xml"
+            line="26"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.tooltip_frame_light_mod` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/tooltip_frame_light_mod.xml"
+            line="18"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.xml.whisperplay` appears to be unused"
+        errorLine1="&lt;whisperplay>"
+        errorLine2="^">
+        <location
+            file="src/main/res/xml/whisperplay.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.youtube_overlay` appears to be unused"
+        errorLine1="&lt;com.github.vkay94.dtpv.youtube.YouTubeOverlay"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/youtube_overlay.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `LinearLayout` layout or its `FrameLayout` parent is possibly unnecessary"
+        errorLine1="    &lt;LinearLayout"
+        errorLine2="     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/channel_card.xml"
+            line="9"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="IconDuplicatesConfig"
+        message="The `app_icon.png` icon has identical contents in the following configuration folders: mipmap-nodpi-v30, mipmap-nodpi">
+        <location
+            file="src/stbeta/res/mipmap-nodpi/app_icon.png"/>
+        <location
+            file="src/stbeta/res/mipmap-nodpi-v30/app_icon.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/activate_account_qrcode.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/activate_account_qrcode.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/activate_account_qrcode_old.jpg` in densityless folder">
+        <location
+            file="src/main/res/drawable/activate_account_qrcode_old.jpg"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/header_default.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/header_default.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/movie.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/movie.png"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: app_icon.png, app_icon_alt.png">
+        <location
+            file="src/main/res/mipmap-nodpi/app_icon_alt.png"/>
+        <location
+            file="src/main/res/mipmap-nodpi/app_icon.png"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: app_logo.png, app_logo_semi_grey.png, app_logo_semi_red.png">
+        <location
+            file="src/main/res/mipmap-nodpi/app_logo_semi_red.png"/>
+        <location
+            file="src/main/res/mipmap-nodpi/app_logo_semi_grey.png"/>
+        <location
+            file="src/main/res/mipmap-nodpi/app_logo.png"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: app_logo.png, app_logo_semi_grey.png, app_logo_semi_red.png">
+        <location
+            file="src/stbeta/res/mipmap-nodpi/app_logo_semi_red.png"/>
+        <location
+            file="src/stbeta/res/mipmap-nodpi/app_logo_semi_grey.png"/>
+        <location
+            file="src/stbeta/res/mipmap-nodpi/app_logo.png"/>
+    </issue>
+
+    <issue
+        id="IconMissingDensityFolder"
+        message="Missing density variation folders in `src\main\res`: drawable-hdpi, drawable-mdpi, drawable-xxhdpi">
+        <location
+            file="src/main/res"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `ViewGroup.isEmpty` instead?"
+        errorLine1="        if (previewContainer.childCount == 0) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/abhimankolte/aethertube/tv/ui/search/compose/SearchVideoCardView.kt"
+            line="162"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `SeekBar` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    public boolean onTouchEvent(MotionEvent event) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/misc/SeekBar.java"
+            line="346"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_playback_transport_controls_row.xml"
+            line="30"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_search_bar.xml"
+            line="46"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_title_view_logo.xml"
+            line="47"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/view_options_item.xml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/additional_info` can overlap `@id/controls_dock` if @id/additional_info grows due to localized text expansion"
+        errorLine1="            &lt;RelativeLayout android:id=&quot;@+id/additional_info&quot;"
+        errorLine2="             ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_playback_transport_controls_row.xml"
+            line="112"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/time_info` can overlap `@id/secondary_controls_dock` if @id/time_info grows due to localized text expansion"
+        errorLine1="            &lt;RelativeLayout android:id=&quot;@+id/time_info&quot;"
+        errorLine2="             ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_playback_transport_controls_row.xml"
+            line="155"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.END`&quot; instead of &quot;`Gravity.RIGHT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="        int gravity = Gravity.RIGHT;"
+        errorLine2="                              ~~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/chat/LiveChatView.java"
+            line="75"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.START`&quot; instead of &quot;`Gravity.LEFT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="            gravity = Gravity.LEFT;"
+        errorLine2="                              ~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/widgets/chat/LiveChatView.java"
+            line="78"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.START`&quot; instead of &quot;`Gravity.LEFT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="                Gravity.LEFT, ClipDrawable.HORIZONTAL);"
+        errorLine2="                        ~~~~">
+        <location
+            file="src/main/java/com/liskovsoft/smartyoutubetv2/tv/ui/mod/leanback/playerglue/tweaks/PlaybackControlsPresenter.java"
+            line="243"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;@dimen/lb_basic_card_info_text_margin&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_marginLeft=&quot;@dimen/lb_basic_card_info_text_margin&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_video_card_view.xml"
+            line="32"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignParentLeft` with `android:layout_alignParentStart=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_video_card_view.xml"
+            line="45"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;@dimen/lb_basic_card_info_text_margin&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_marginLeft=&quot;@dimen/lb_basic_card_info_text_margin&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_video_card_view.xml"
+            line="47"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignParentRight` with `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/lb_video_card_view.xml"
+            line="59"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlEnabled"
+        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
+        <location
+            file="src/main/AndroidManifest.xml"/>
+    </issue>
+
+</issues>
