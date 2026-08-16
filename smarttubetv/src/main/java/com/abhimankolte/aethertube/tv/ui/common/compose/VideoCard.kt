@@ -6,6 +6,7 @@
 
 package com.abhimankolte.aethertube.tv.ui.common.compose
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.palette.graphics.Palette
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.bumptech.glide.Glide
@@ -56,7 +58,9 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData
 import com.liskovsoft.smartyoutubetv2.common.utils.ClickbaitRemover
 import com.liskovsoft.smartyoutubetv2.tv.R
 import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.embedplayer.EmbedPlayerView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import android.graphics.Color as AndroidColor
 
 /** Where the video title sits relative to the artwork. */
@@ -126,7 +130,23 @@ fun VideoCard(
     val scrimAlpha = animateFloatAsState(if (isFocused) 0.9f else 0.7f, tween(FOCUS_ANIM_MS), label = "cardScrim")
     val ringColor = Color.White
     val ringInnerColor = Color.Black.copy(alpha = 0.55f)
-    val glowColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)
+
+    // Dynamic palette color-sync: the focus glow tints itself from the focused card's own thumbnail
+    // instead of always being the same static accent, closer to the ambient-lighting feel of a
+    // modern TV OS. Extraction only ever runs for the card that's actually focused right now - a
+    // grid can hold dozens of cards, and Palette scanning pixel data on all of them at once would be
+    // a real, measurable cost, unlike the flat accent this replaces. Skipped on low-end devices
+    // alongside the blur glow itself, and falls back to the flat accent while nothing's extracted
+    // yet (or extraction fails) so there's never a missing/blank glow.
+    // Not unwrapped with `by`, same reasoning as glowAlpha/dimAlpha/scrimAlpha below: this is read
+    // inside the drawBehind draw phase, not during composition, so an in-flight color transition
+    // (e.g. focus landing on a card with a very different thumbnail) redraws without recomposing.
+    val paletteColor = if (!lowEnd) rememberFocusPaletteColor(video.cardImageUrl, isFocused) else null
+    val glowColor = animateColorAsState(
+        (paletteColor ?: MaterialTheme.colorScheme.primary).copy(alpha = 0.55f),
+        tween(FOCUS_ANIM_MS),
+        label = "cardGlowColor",
+    )
 
     // Preview only ever runs for the focused card. The leanback card showed an animated preview image
     // straight away when the video has one, and otherwise waited a couple of seconds before spinning
@@ -164,7 +184,7 @@ fun VideoCard(
                     .drawBehind {
                         val a = glowAlpha.value
                         if (a > 0f) {
-                            drawRect(Brush.radialGradient(listOf(glowColor, Color.Transparent)), alpha = a)
+                            drawRect(Brush.radialGradient(listOf(glowColor.value, Color.Transparent)), alpha = a)
                         }
                     },
             )
@@ -289,6 +309,39 @@ fun VideoCard(
 }
 
 private enum class PreviewMode { None, AnimatedImage, Player }
+
+/**
+ * The focused card's dominant/vibrant color, or null while nothing's been extracted yet.
+ *
+ * A separate, small Glide bitmap fetch rather than hooking into the display [GlideImage] above -
+ * `glide-compose` doesn't expose the decoded bitmap directly, and the thumbnail is already on
+ * [DiskCacheStrategy.ALL], so this second request decodes from the cached bytes instead of hitting
+ * the network again. Downscaled to 96x96 before Palette even sees it: full-resolution extraction
+ * would cost far more than the visual result needs.
+ */
+@Composable
+private fun rememberFocusPaletteColor(imageUrl: String?, active: Boolean): Color? {
+    var color by remember { mutableStateOf<Color?>(null) }
+    val context = LocalContext.current
+
+    LaunchedEffect(imageUrl, active) {
+        if (!active || imageUrl == null) {
+            return@LaunchedEffect
+        }
+
+        color = withContext(Dispatchers.IO) {
+            try {
+                val bitmap = Glide.with(context).asBitmap().load(imageUrl).submit(96, 96).get()
+                val swatch = Palette.from(bitmap).generate().let { it.vibrantSwatch ?: it.dominantSwatch }
+                swatch?.let { Color(it.rgb) }
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+
+    return color
+}
 
 @Composable
 private fun CardTitleText(

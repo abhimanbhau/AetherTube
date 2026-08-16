@@ -279,6 +279,12 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended:' + composeMaterialIconsVersion
     debugImplementation 'androidx.compose.ui:ui-tooling:' + composeVersion
 
+    // Dynamic palette color-sync (focus glow tinted from the focused card's own thumbnail). A small,
+    // long-stable library - version pinned directly here rather than added to SharedModules'
+    // constants.gradle, which is upstream's own submodule. Plain palette, not palette-ktx: nothing
+    // here uses the Kotlin extension functions, just the core Palette/Swatch API.
+    implementation 'androidx.palette:palette:1.0.0'
+
     //////// END COMPOSE FOR TV //////////
 
     // Add the Firebase Crashlytics SDK.
