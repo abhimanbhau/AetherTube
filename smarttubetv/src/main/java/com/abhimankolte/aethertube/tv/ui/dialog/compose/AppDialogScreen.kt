@@ -92,6 +92,8 @@ fun AppDialogScreen(
     showBackButton: Boolean,
     onBack: () -> Unit,
     isOverlay: Boolean = false,
+    initialCategoryIndex: Int = 0,
+    onCategoryIndexChange: (Int) -> Unit = {},
 ) {
     // AppDialogPresenter#enableOverlay(true) (chapter notifications, SponsorBlock's in-player prompt)
     // means "float this over whatever's playing, don't block it" - those callers get a much lighter
@@ -135,6 +137,8 @@ fun AppDialogScreen(
             categories = categories,
             showBackButton = showBackButton,
             onBack = onBack,
+            initialCategoryIndex = initialCategoryIndex,
+            onCategoryIndexChange = onCategoryIndexChange,
             modifier = Modifier
                 .offset { IntOffset(x = (panelOffsetFraction * PANEL_WIDTH.roundToPx()).toInt(), y = 0) }
                 .fillMaxHeight()
@@ -159,6 +163,14 @@ fun AppDialogPanelContent(
     showBackButton: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    // Which category was open last time this frame was on screen, and a way to report changes back.
+    // Hoisted out of the composable on purpose: opening a nested dialog pushes a new frame, and only
+    // the topmost frame stays composed - so this frame leaves composition entirely and any remember()
+    // state inside it is destroyed. Popping back then rebuilt it with the first category selected,
+    // losing the user's place. That reads as "Back jumped me to the top of Settings" even though the
+    // frame stack itself popped correctly by exactly one level.
+    initialCategoryIndex: Int = 0,
+    onCategoryIndexChange: (Int) -> Unit = {},
 ) {
     // weight(1f), not just fillMaxSize(): a Column doesn't shrink a later, unweighted child's max-height
     // constraint by whatever DialogHeader (fixed height) already used - without weight, the option list
@@ -180,8 +192,8 @@ fun AppDialogPanelContent(
                 OptionList(category = category, modifier = Modifier.weight(1f).fillMaxWidth())
             }
         } else {
-            var selectedIndex by remember(categories) { mutableStateOf(0) }
-            var lastFocusedCategory by remember(categories) { mutableStateOf(0) }
+            var selectedIndex by remember(categories) { mutableStateOf(initialCategoryIndex.coerceIn(categories.indices)) }
+            var lastFocusedCategory by remember(categories) { mutableStateOf(initialCategoryIndex.coerceIn(categories.indices)) }
             val categoryRequesters = remember(categories) { categories.indices.map { FocusRequester() } }
 
             DialogHeader(title = title, showBackButton = showBackButton, onBack = onBack)
@@ -214,6 +226,9 @@ fun AppDialogPanelContent(
                             onSelected = {
                                 lastFocusedCategory = index
                                 selectedIndex = index
+                                // Report upward so the frame remembers this position for when a
+                                // nested dialog is opened from here and later popped back to.
+                                onCategoryIndexChange(index)
                             },
                             focusRequester = categoryRequesters.getOrNull(index),
                         )

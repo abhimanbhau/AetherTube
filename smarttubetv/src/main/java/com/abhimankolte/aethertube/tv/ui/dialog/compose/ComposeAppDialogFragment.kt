@@ -54,7 +54,10 @@ class ComposeAppDialogFragment :
         val isExpandable: Boolean,
         val isTransparent: Boolean,
         val isOverlay: Boolean,
-    )
+    ) {
+        /** Category open when a nested dialog was pushed from this frame - restored on pop. */
+        var categoryIndex: Int = 0
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
@@ -74,6 +77,8 @@ class ComposeAppDialogFragment :
                         showBackButton = frames.size > 1,
                         onBack = { goBack() },
                         isOverlay = frame.isOverlay,
+                        initialCategoryIndex = frame.categoryIndex,
+                        onCategoryIndexChange = { index -> frame.categoryIndex = index },
                     )
                 }
             }

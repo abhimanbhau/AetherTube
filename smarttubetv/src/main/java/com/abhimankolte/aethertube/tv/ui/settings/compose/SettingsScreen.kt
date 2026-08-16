@@ -66,6 +66,8 @@ fun SettingsScreen(
     detailCategories: List<OptionCategory>?,
     showDetailBackButton: Boolean,
     onDetailBack: () -> Unit,
+    detailCategoryIndex: Int = 0,
+    onDetailCategoryIndexChange: (Int) -> Unit = {},
 ) {
     // Nothing here requested initial system focus, so on cold entry the screen showed a category
     // visually "selected" but nothing was actually D-pad-focused - the first press did nothing until
@@ -141,6 +143,8 @@ fun SettingsScreen(
                     showBackButton = showDetailBackButton,
                     onBack = onDetailBack,
                     modifier = Modifier.fillMaxSize(),
+                    initialCategoryIndex = detailCategoryIndex,
+                    onCategoryIndexChange = onDetailCategoryIndexChange,
                 )
             }
         }

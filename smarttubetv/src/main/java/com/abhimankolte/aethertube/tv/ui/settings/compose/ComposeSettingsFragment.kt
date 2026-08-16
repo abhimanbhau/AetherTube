@@ -38,7 +38,10 @@ class ComposeSettingsFragment :
     private var detailViewId = 0
     private var isPausedFlag = false
 
-    private class DetailFrame(val categories: List<OptionCategory>, val title: CharSequence?)
+    private class DetailFrame(val categories: List<OptionCategory>, val title: CharSequence?) {
+        /** Category open when a nested dialog was pushed from this frame - restored on pop. */
+        var categoryIndex: Int = 0
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
@@ -58,6 +61,8 @@ class ComposeSettingsFragment :
                     detailCategories = frame?.categories,
                     showDetailBackButton = detailFrames.size > 1,
                     onDetailBack = { goBack() },
+                    detailCategoryIndex = frame?.categoryIndex ?: 0,
+                    onDetailCategoryIndexChange = { index -> frame?.categoryIndex = index },
                 )
             }
         }
