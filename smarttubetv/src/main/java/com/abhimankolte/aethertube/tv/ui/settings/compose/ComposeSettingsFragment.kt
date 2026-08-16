@@ -10,8 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
 import androidx.tv.material3.ExperimentalTvMaterial3Api
+import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsItem
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionCategory
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter
@@ -29,7 +29,9 @@ import com.liskovsoft.smartyoutubetv2.common.misc.AppDataSourceManager
  * while a category is open, so its nested sub-dialogs (e.g. screen dimming, per-category pickers)
  * land in the right pane here too instead of popping the app-wide dialog Activity on top of us.
  */
-class ComposeSettingsFragment : Fragment(), AppDialogView {
+class ComposeSettingsFragment :
+    Fragment(),
+    AppDialogView {
     private val items = mutableStateListOf<SettingsItem>()
     private var selectedIndex by mutableStateOf(-1)
     private val detailFrames = mutableStateListOf<DetailFrame>()
@@ -44,21 +46,19 @@ class ComposeSettingsFragment : Fragment(), AppDialogView {
     }
 
     @OptIn(ExperimentalTvMaterial3Api::class)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                AetherTubeTheme {
-                    val frame = detailFrames.lastOrNull()
-                    SettingsScreen(
-                        items = items,
-                        selectedIndex = selectedIndex,
-                        onItemSelected = ::selectItem,
-                        detailTitle = frame?.title?.toString(),
-                        detailCategories = frame?.categories,
-                        showDetailBackButton = detailFrames.size > 1,
-                        onDetailBack = { goBack() }
-                    )
-                }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = ComposeView(requireContext()).apply {
+        setContent {
+            AetherTubeTheme {
+                val frame = detailFrames.lastOrNull()
+                SettingsScreen(
+                    items = items,
+                    selectedIndex = selectedIndex,
+                    onItemSelected = ::selectItem,
+                    detailTitle = frame?.title?.toString(),
+                    detailCategories = frame?.categories,
+                    showDetailBackButton = detailFrames.size > 1,
+                    onDetailBack = { goBack() },
+                )
             }
         }
     }
@@ -128,7 +128,7 @@ class ComposeSettingsFragment : Fragment(), AppDialogView {
         isExpandable: Boolean,
         isTransparent: Boolean,
         isOverlay: Boolean,
-        id: Int
+        id: Int,
     ) {
         if (categories == null) {
             return

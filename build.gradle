@@ -14,6 +14,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
         // IntelliJ 'Read timed out' (error 403)
         // https://stackoverflow.com/questions/74258160/is-jcenter-down-permanently-31-oct
         //jcenter()
@@ -22,9 +23,38 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.13.0'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:' + kotlinVersion
         classpath 'org.jetbrains.kotlin:compose-compiler-gradle-plugin:' + kotlinVersion
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:6.25.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+    }
+}
+
+// Formatting/linting for this fork's own code only (com.abhimankolte.*). Deliberately never
+// touches com.liskovsoft.*, MediaServiceCore, or SharedModules - running a formatter over upstream
+// source would turn every future upstream merge into a wall of whitespace conflicts, on top of
+// code we don't maintain and shouldn't be reformatting anyway.
+apply plugin: 'com.diffplug.spotless'
+
+spotless {
+    kotlin {
+        target 'common/src/**/java/com/abhimankolte/**/*.kt', 'smarttubetv/src/**/java/com/abhimankolte/**/*.kt'
+        ktlint('1.3.1').editorConfigOverride([
+            // A KDoc immediately followed by a short // note on the very next line - the KDoc for
+            // the public contract, the // for an implementation detail right where it's relevant -
+            // is this codebase's established doc style, used throughout. Not a style mistake to fix.
+            'ktlint_standard_no-consecutive-comments': 'disabled',
+            // @Composable functions are PascalCase by design (HomeScreen, VideoCard, SearchBar) -
+            // the official Compose convention, since they're conceptually emitted UI elements, not
+            // plain functions. ktlint's default naming rule doesn't know about @Composable and
+            // would flag nearly every composable in this codebase.
+            'ktlint_standard_function-naming': 'disabled'
+        ])
+    }
+    java {
+        target 'common/src/**/java/com/abhimankolte/**/*.java', 'smarttubetv/src/**/java/com/abhimankolte/**/*.java'
+        googleJavaFormat('1.23.0').aosp()
+        removeUnusedImports()
     }
 }
 

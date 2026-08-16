@@ -2,8 +2,8 @@ package com.abhimankolte.aethertube.common.settings
 
 import android.content.Context
 import com.abhimankolte.aethertube.common.prefs.AetherTubePrefs
-import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.ExoFormatItem
+import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData
@@ -48,21 +48,21 @@ object SettingsRegistry {
      * "1080p60", not "1080p60 specifically in VP9", so the loss is theoretical.
      */
     private val VIDEO_PRESETS: List<Triple<Int, Int, String>?> = listOf(
-        null,                                  // 0 - auto, let the player decide
+        null, // 0 - auto, let the player decide
         Triple(426, 240, "avc"),
         Triple(640, 360, "avc"),
         Triple(854, 480, "avc"),
         Triple(1280, 720, "avc"),
-        Triple(1280, 720, "avc"),              // 5 - 720p60, fps differentiates it
+        Triple(1280, 720, "avc"), // 5 - 720p60, fps differentiates it
         Triple(1920, 1080, "avc"),
-        Triple(1920, 1080, "avc"),             // 7 - 1080p60
-        Triple(1920, 1080, "vp9"),             // 8 - 1080p60 vp9
+        Triple(1920, 1080, "avc"), // 7 - 1080p60
+        Triple(1920, 1080, "vp9"), // 8 - 1080p60 vp9
         Triple(2560, 1440, "vp9"),
-        Triple(2560, 1440, "vp9"),             // 10 - 1440p60
+        Triple(2560, 1440, "vp9"), // 10 - 1440p60
         Triple(3840, 2160, "vp9"),
-        Triple(3840, 2160, "vp9"),             // 12 - 2160p60
+        Triple(3840, 2160, "vp9"), // 12 - 2160p60
         Triple(1920, 1080, "av01"),
-        Triple(3840, 2160, "av01")             // 14 - 2160p60 av01
+        Triple(3840, 2160, "av01"), // 14 - 2160p60 av01
     )
 
     /** Frame rate per preset index, parallel to [VIDEO_PRESETS]. */
@@ -125,7 +125,7 @@ object SettingsRegistry {
         Field("visual_effects", 2, { AetherTubePrefs.instance(it).visualEffectsMode }, { c, v -> AetherTubePrefs.instance(c).visualEffectsMode = v }),
         Field("card_preview", 2, { ui(it).cardPreviewType }, { c, v -> ui(c).cardPreviewType = v }),
         Field("thumb_quality", 2, { ui(it).thumbQuality }, { c, v -> ui(c).thumbQuality = v }),
-        Field("card_multiline_title", 1, { ui(it).isCardMultilineTitleEnabled.b() }, { c, v -> ui(c).setCardMultilineTitleEnabled(v.t()) })
+        Field("card_multiline_title", 1, { ui(it).isCardMultilineTitleEnabled.b() }, { c, v -> ui(c).setCardMultilineTitleEnabled(v.t()) }),
     )
 
     /** Total width of the layout. Asserted against the budget in SettingsRegistryTest. */
@@ -175,7 +175,7 @@ object SettingsRegistry {
         val name: String,
         val bits: Int,
         val read: (Context) -> Int,
-        val write: (Context, Int) -> Unit
+        val write: (Context, Int) -> Unit,
     )
 
     // -- accessors --------------------------------------------------------------------------------

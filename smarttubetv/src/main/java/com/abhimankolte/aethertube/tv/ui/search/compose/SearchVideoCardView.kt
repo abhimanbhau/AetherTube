@@ -73,7 +73,7 @@ class SearchVideoCardView(context: Context) : FrameLayout(context) {
                 Glide.with(context)
                     .load(video.cardImageUrl)
                     .apply(ViewUtil.glideOptions())
-                    .error(R.drawable.card_placeholder)
+                    .error(R.drawable.card_placeholder),
             )
             .into(mainImage)
     }

@@ -25,7 +25,7 @@ class SettingsCodeTest {
             "Registry is ${SettingsRegistry.totalBits} bits but only ${SettingsCode.PAYLOAD_BITS} " +
                 "are available. Adding a field means either freeing bits elsewhere or moving to a " +
                 "longer v2 code - never silently dropping the tail.",
-            SettingsRegistry.totalBits <= SettingsCode.PAYLOAD_BITS
+            SettingsRegistry.totalBits <= SettingsCode.PAYLOAD_BITS,
         )
     }
 
@@ -111,7 +111,7 @@ class SettingsCodeTest {
         // actually covering the payload.
         assertTrue(
             "Accepted $accepted of $checked single-character corruptions",
-            accepted * 100 < checked
+            accepted * 100 < checked,
         )
     }
 

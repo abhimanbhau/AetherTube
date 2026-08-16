@@ -11,8 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
 import androidx.tv.material3.ExperimentalTvMaterial3Api
+import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionCategory
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter
 import com.liskovsoft.smartyoutubetv2.common.app.views.AppDialogView
@@ -33,7 +33,9 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.dialogs.AppDialogActivity
  * aren't rendered here - they're specialized streaming UIs, out of scope for a settings redesign and too
  * risky to half-implement. Any frame containing one falls back to the original leanback [AppDialogActivity].
  */
-class ComposeAppDialogFragment : Fragment(), AppDialogView {
+class ComposeAppDialogFragment :
+    Fragment(),
+    AppDialogView {
     private val frames = mutableStateListOf<DialogFrame>()
     private var dialogViewId by mutableStateOf(0)
     private var isPausedFlag = false
@@ -51,7 +53,7 @@ class ComposeAppDialogFragment : Fragment(), AppDialogView {
         val title: CharSequence?,
         val isExpandable: Boolean,
         val isTransparent: Boolean,
-        val isOverlay: Boolean
+        val isOverlay: Boolean,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,20 +63,18 @@ class ComposeAppDialogFragment : Fragment(), AppDialogView {
     }
 
     @OptIn(ExperimentalTvMaterial3Api::class)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                AetherTubeTheme {
-                    val frame = frames.lastOrNull()
-                    if (frame != null) {
-                        AppDialogScreen(
-                            title = frame.title?.toString(),
-                            categories = frame.categories,
-                            showBackButton = frames.size > 1,
-                            onBack = { goBack() },
-                            isOverlay = frame.isOverlay
-                        )
-                    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = ComposeView(requireContext()).apply {
+        setContent {
+            AetherTubeTheme {
+                val frame = frames.lastOrNull()
+                if (frame != null) {
+                    AppDialogScreen(
+                        title = frame.title?.toString(),
+                        categories = frame.categories,
+                        showBackButton = frames.size > 1,
+                        onBack = { goBack() },
+                        isOverlay = frame.isOverlay,
+                    )
                 }
             }
         }
@@ -129,7 +129,7 @@ class ComposeAppDialogFragment : Fragment(), AppDialogView {
         isExpandable: Boolean,
         isTransparent: Boolean,
         isOverlay: Boolean,
-        id: Int
+        id: Int,
     ) {
         if (categories == null) {
             return

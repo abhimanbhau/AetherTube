@@ -1,7 +1,6 @@
 package com.abhimankolte.aethertube.common.presenters.settings;
 
 import android.content.Context;
-
 import com.liskovsoft.smartyoutubetv2.common.R;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionItem;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem;
@@ -17,11 +16,11 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.PlayerSetti
  * item. Mirrors the main Settings categories (General, Main UI, Player) so nothing moved here is
  * harder to *find*, it's just out of the way of the everyday settings flow.
  *
- * Content Block (SponsorBlock) has no entry here - its per-segment-type action/color settings moved
- * back into the main Content Block screen, since SponsorBlock is one of the most-used settings areas
- * and hiding that behind a second menu made it harder to find, not easier.
+ * <p>Content Block (SponsorBlock) has no entry here - its per-segment-type action/color settings
+ * moved back into the main Content Block screen, since SponsorBlock is one of the most-used
+ * settings areas and hiding that behind a second menu made it harder to find, not easier.
  *
- * Each entry just calls the same category's existing {@code showLegacy()} method - no settings
+ * <p>Each entry just calls the same category's existing {@code showLegacy()} method - no settings
  * logic lives here, this is purely a second, less-visible front door to it.
  */
 public class LegacySettingsPresenter extends BasePresenter<Void> {
@@ -36,9 +35,18 @@ public class LegacySettingsPresenter extends BasePresenter<Void> {
     public void show() {
         AppDialogPresenter settingsPresenter = AppDialogPresenter.instance(getContext());
 
-        settingsPresenter.appendSingleButton(button(R.string.settings_general, () -> GeneralSettingsPresenter.instance(getContext()).showLegacy()));
-        settingsPresenter.appendSingleButton(button(R.string.settings_main_ui, () -> MainUISettingsPresenter.instance(getContext()).showLegacy()));
-        settingsPresenter.appendSingleButton(button(R.string.settings_player, () -> PlayerSettingsPresenter.instance(getContext()).showLegacy()));
+        settingsPresenter.appendSingleButton(
+                button(
+                        R.string.settings_general,
+                        () -> GeneralSettingsPresenter.instance(getContext()).showLegacy()));
+        settingsPresenter.appendSingleButton(
+                button(
+                        R.string.settings_main_ui,
+                        () -> MainUISettingsPresenter.instance(getContext()).showLegacy()));
+        settingsPresenter.appendSingleButton(
+                button(
+                        R.string.settings_player,
+                        () -> PlayerSettingsPresenter.instance(getContext()).showLegacy()));
 
         settingsPresenter.showDialog(getContext().getString(R.string.settings_legacy));
     }

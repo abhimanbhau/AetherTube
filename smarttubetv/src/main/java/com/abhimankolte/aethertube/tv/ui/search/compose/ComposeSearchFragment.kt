@@ -17,9 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
 import androidx.tv.material3.ExperimentalTvMaterial3Api
-import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video
+import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.VideoGroup
 import com.liskovsoft.smartyoutubetv2.common.app.models.search.MediaServiceSearchTagProvider
 import com.liskovsoft.smartyoutubetv2.common.app.models.search.SearchTagsProvider
@@ -38,7 +37,9 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.common.LeanbackActivity
 private const val VOICE_REQUEST_CODE = 8412
 private const val MIN_VOICE_QUERY_LENGTH = 2
 
-class ComposeSearchFragment : Fragment(), SearchView {
+class ComposeSearchFragment :
+    Fragment(),
+    SearchView {
     private lateinit var searchPresenter: SearchPresenter
     private lateinit var searchData: SearchData
     private var tagsProvider: MediaServiceSearchTagProvider? = null
@@ -74,31 +75,29 @@ class ComposeSearchFragment : Fragment(), SearchView {
     }
 
     @OptIn(ExperimentalTvMaterial3Api::class)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                AetherTubeTheme {
-                    SearchScreen(
-                        searchText = currentSearchText,
-                        onSearchTextChange = ::onSearchTextChanged,
-                        onSearchSubmit = { loadSearchResult(currentSearchText) },
-                        showProgress = showProgress,
-                        backdropUrl = focusedBackdropUrl,
-                        tags = tags,
-                        onTagClick = { tag -> startSearchInternal(tag.tag, enableRecognition = false) },
-                        onTagLongClick = { tag -> searchPresenter.onTagLongClicked(tag) },
-                        resultRows = resultRows,
-                        onVideoClick = { video -> searchPresenter.onVideoItemClicked(video) },
-                        onVideoFocus = { video ->
-                            searchPresenter.onVideoItemSelected(video)
-                            focusedBackdropUrl = video.cardImageUrl
-                        },
-                        onVideoLongClick = { video -> searchPresenter.onVideoItemLongClicked(video) },
-                        onScrollEnd = { video -> searchPresenter.onScrollEnd(video) },
-                        onSearchSettingsClick = { searchPresenter.onSearchSettingsClicked() },
-                        searchFieldFocusRequester = searchFieldFocusRequester
-                    )
-                }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = ComposeView(requireContext()).apply {
+        setContent {
+            AetherTubeTheme {
+                SearchScreen(
+                    searchText = currentSearchText,
+                    onSearchTextChange = ::onSearchTextChanged,
+                    onSearchSubmit = { loadSearchResult(currentSearchText) },
+                    showProgress = showProgress,
+                    backdropUrl = focusedBackdropUrl,
+                    tags = tags,
+                    onTagClick = { tag -> startSearchInternal(tag.tag, enableRecognition = false) },
+                    onTagLongClick = { tag -> searchPresenter.onTagLongClicked(tag) },
+                    resultRows = resultRows,
+                    onVideoClick = { video -> searchPresenter.onVideoItemClicked(video) },
+                    onVideoFocus = { video ->
+                        searchPresenter.onVideoItemSelected(video)
+                        focusedBackdropUrl = video.cardImageUrl
+                    },
+                    onVideoLongClick = { video -> searchPresenter.onVideoItemLongClicked(video) },
+                    onScrollEnd = { video -> searchPresenter.onScrollEnd(video) },
+                    onSearchSettingsClick = { searchPresenter.onSearchSettingsClicked() },
+                    searchFieldFocusRequester = searchFieldFocusRequester,
+                )
             }
         }
     }
@@ -271,12 +270,15 @@ class ComposeSearchFragment : Fragment(), SearchView {
     }
 
     private fun loadSearchTags(query: String) {
-        tagsProvider?.search(query, SearchTagsProvider.ResultsCallback { results ->
-            tags.clear()
-            if (results != null) {
-                tags.addAll(results)
-            }
-        })
+        tagsProvider?.search(
+            query,
+            SearchTagsProvider.ResultsCallback { results ->
+                tags.clear()
+                if (results != null) {
+                    tags.addAll(results)
+                }
+            },
+        )
     }
 
     private fun loadSearchResult(query: String) {
@@ -305,12 +307,10 @@ class ComposeSearchFragment : Fragment(), SearchView {
         return isVoice
     }
 
-    private fun isRecognitionAvailable(): Boolean {
-        return try {
-            SpeechRecognizer.isRecognitionAvailable(requireContext())
-        } catch (e: NullPointerException) {
-            false
-        }
+    private fun isRecognitionAvailable(): Boolean = try {
+        SpeechRecognizer.isRecognitionAvailable(requireContext())
+    } catch (e: NullPointerException) {
+        false
     }
 
     private fun startRecognition() {

@@ -19,13 +19,13 @@ import androidx.tv.material3.darkColorScheme
  * Deliberately not Material You / dynamic colour: TV boxes expose no meaningful wallpaper signal, so
  * a curated palette is both more intentional and consistent across every device.
  */
-private val Violet = Color(0xFFB47CF7)        // primary accent, the logo's own hue
+private val Violet = Color(0xFFB47CF7) // primary accent, the logo's own hue
 private val OnViolet = Color(0xFF150626)
-private val Cyan = Color(0xFF68C9F3)          // sampled straight from the logo's brightest accent
+private val Cyan = Color(0xFF68C9F3) // sampled straight from the logo's brightest accent
 private val OnCyan = Color(0xFF05283A)
-private val Lavender = Color(0xFFCFD2FF)      // the logo's specular highlight
+private val Lavender = Color(0xFFCFD2FF) // the logo's specular highlight
 private val OnLavender = Color(0xFF1B1B44)
-private val NearBlack = Color(0xFF100E16)     // violet-biased, not neutral grey
+private val NearBlack = Color(0xFF100E16) // violet-biased, not neutral grey
 private val Surface1 = Color(0xFF1C1826)
 private val Surface2 = Color(0xFF292338)
 private val TextPrimary = Color(0xFFEDEBF5)
@@ -59,5 +59,5 @@ val HomeColorScheme: ColorScheme = darkColorScheme(
     error = ErrorPink,
     onError = Color(0xFF3F0417),
     border = Color(0xFF332C42),
-    borderVariant = Color(0xFF272134)
+    borderVariant = Color(0xFF272134),
 )

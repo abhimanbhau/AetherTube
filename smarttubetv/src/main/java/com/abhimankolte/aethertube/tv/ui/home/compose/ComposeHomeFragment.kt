@@ -11,20 +11,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
 import androidx.tv.material3.ExperimentalTvMaterial3Api
+import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
+import com.abhimankolte.aethertube.tv.ui.settings.compose.ComposeSettingsActivity
 import com.abhimankolte.aethertube.tv.ui.shorts.ShortsPlayerActivity
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsGroup
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsItem
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.VideoGroup
+import com.liskovsoft.smartyoutubetv2.common.app.models.errors.ErrorFragmentData
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.BrowsePresenter
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SearchPresenter
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.service.SidebarService
 import com.liskovsoft.smartyoutubetv2.common.app.views.BrowseView
-import com.liskovsoft.smartyoutubetv2.common.app.models.errors.ErrorFragmentData
-import com.abhimankolte.aethertube.tv.ui.settings.compose.ComposeSettingsActivity
 
 /**
  * Compose-for-TV replacement for the app's leanback [com.liskovsoft.smartyoutubetv2.tv.ui.browse.BrowseFragment]
@@ -38,7 +38,9 @@ import com.abhimankolte.aethertube.tv.ui.settings.compose.ComposeSettingsActivit
  *    opens its own dedicated screen (see [com.abhimankolte.aethertube.tv.ui.settings.compose.ComposeSettingsActivity])
  *    via the gear icon, like Search's magnifier icon.
  */
-class ComposeHomeFragment : Fragment(), BrowseView {
+class ComposeHomeFragment :
+    Fragment(),
+    BrowseView {
     private lateinit var browsePresenter: BrowsePresenter
     private var isFragmentCreated = false
 
@@ -50,7 +52,6 @@ class ComposeHomeFragment : Fragment(), BrowseView {
     private val homeRows = mutableStateListOf<HomeRow>()
     private val rowsById = LinkedHashMap<Int, HomeRow>()
 
-
     // Every Compose Lazy layout keys its items (by videoId, falling back to channelId/hashCode) and
     // crashes outright (IllegalArgumentException: Key "..." was already used) on a repeat - unlike
     // leanback's RecyclerView adapters, which tolerated a duplicate item silently. A retried/duplicated
@@ -59,7 +60,6 @@ class ComposeHomeFragment : Fragment(), BrowseView {
     // different HomeRow objects, which neither row's own list can catch on its own. Track every identity
     // already present in this section/pane and drop repeats before they ever reach a row.
     private val seenVideoIds = HashSet<String>()
-
 
     private val settingsItems = mutableStateListOf<SettingsItem>()
     private var errorData by mutableStateOf<ErrorFragmentData?>(null)
@@ -99,11 +99,10 @@ class ComposeHomeFragment : Fragment(), BrowseView {
     // leaving mid-load would cache a spuriously-empty snapshot and that tab would appear dead forever.
     private var isCurrentSectionSettled = false
 
-
     private class SectionSnapshot(
         val rows: List<HomeRow>,
         val settingsItems: List<SettingsItem>,
-        val errorData: ErrorFragmentData?
+        val errorData: ErrorFragmentData?,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,39 +115,37 @@ class ComposeHomeFragment : Fragment(), BrowseView {
     }
 
     @OptIn(ExperimentalTvMaterial3Api::class)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                AetherTubeTheme {
-                    HomeScreen(
-                        sections = sections,
-                        selectedSectionId = lastFocusedSectionId,
-                        sectionType = currentSectionType,
-                        onSectionSelected = ::onSectionSelected,
-                        onSearchClick = { SearchPresenter.instance(requireContext()).startSearch(null) },
-                        onSettingsClick = { startActivity(Intent(requireContext(), ComposeSettingsActivity::class.java)) },
-                        showProgress = showProgress,
-                        backdropUrl = focusedBackdropUrl,
-                        rows = homeRows,
-                        errorData = errorData,
-                        onVideoClick = ::onVideoClicked,
-                        onVideoFocus = { video ->
-                            browsePresenter.onVideoItemSelected(video)
-                            // Only the spacious shelf view gets the ambient backdrop-follows-focus
-                            // treatment. A dense grid (My Videos, Subscriptions, History, etc.) has
-                            // cards close enough together that even a debounced crossfade still fires
-                            // constantly during normal browsing, reading as "the page refreshing".
-                            if (currentSectionType == BrowseSection.TYPE_ROW) {
-                                focusedBackdropUrl = video.cardImageUrl
-                            }
-                            video.videoId?.let { sectionFocusMemory[lastFocusedSectionId] = it }
-                        },
-                        onVideoLongClick = { video -> browsePresenter.onVideoItemLongClicked(video) },
-                        onScrollEnd = { video -> browsePresenter.onScrollEnd(video) },
-                        restoreFocusVideoId = pendingFocusVideoId,
-                        onFocusRestored = { pendingFocusVideoId = null }
-                    )
-                }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = ComposeView(requireContext()).apply {
+        setContent {
+            AetherTubeTheme {
+                HomeScreen(
+                    sections = sections,
+                    selectedSectionId = lastFocusedSectionId,
+                    sectionType = currentSectionType,
+                    onSectionSelected = ::onSectionSelected,
+                    onSearchClick = { SearchPresenter.instance(requireContext()).startSearch(null) },
+                    onSettingsClick = { startActivity(Intent(requireContext(), ComposeSettingsActivity::class.java)) },
+                    showProgress = showProgress,
+                    backdropUrl = focusedBackdropUrl,
+                    rows = homeRows,
+                    errorData = errorData,
+                    onVideoClick = ::onVideoClicked,
+                    onVideoFocus = { video ->
+                        browsePresenter.onVideoItemSelected(video)
+                        // Only the spacious shelf view gets the ambient backdrop-follows-focus
+                        // treatment. A dense grid (My Videos, Subscriptions, History, etc.) has
+                        // cards close enough together that even a debounced crossfade still fires
+                        // constantly during normal browsing, reading as "the page refreshing".
+                        if (currentSectionType == BrowseSection.TYPE_ROW) {
+                            focusedBackdropUrl = video.cardImageUrl
+                        }
+                        video.videoId?.let { sectionFocusMemory[lastFocusedSectionId] = it }
+                    },
+                    onVideoLongClick = { video -> browsePresenter.onVideoItemLongClicked(video) },
+                    onScrollEnd = { video -> browsePresenter.onScrollEnd(video) },
+                    restoreFocusVideoId = pendingFocusVideoId,
+                    onFocusRestored = { pendingFocusVideoId = null },
+                )
             }
         }
     }
@@ -183,7 +180,7 @@ class ComposeHomeFragment : Fragment(), BrowseView {
         }
 
         return video.belongsToShortsGroup() ||
-                (currentSectionType == BrowseSection.TYPE_SHORTS_GRID && video.isShorts)
+            (currentSectionType == BrowseSection.TYPE_SHORTS_GRID && video.isShorts)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -243,7 +240,10 @@ class ComposeHomeFragment : Fragment(), BrowseView {
         sections.removeAll(disabled)
 
         if (wasViewingDisabledSection) {
-            sections.firstOrNull()?.let { selectedSectionIndex = 0; focusSection(it) }
+            sections.firstOrNull()?.let {
+                selectedSectionIndex = 0
+                focusSection(it)
+            }
         } else {
             val newIndex = sections.indexOfFirst { it.id == lastFocusedSectionId }
             if (newIndex != -1) {
@@ -251,7 +251,6 @@ class ComposeHomeFragment : Fragment(), BrowseView {
             }
         }
     }
-
 
     // ---- Compose-driven user interaction ----
 
@@ -329,7 +328,6 @@ class ComposeHomeFragment : Fragment(), BrowseView {
         for (row in snapshot.rows) {
             rowsById[row.id] = row
         }
-
 
         settingsItems.clear()
         settingsItems.addAll(snapshot.settingsItems)

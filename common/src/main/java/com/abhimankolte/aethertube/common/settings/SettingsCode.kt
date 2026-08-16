@@ -64,7 +64,9 @@ object SettingsCode {
     private val DECODE: Map<Char, Int> = buildMap {
         ALPHABET.forEachIndexed { index, c -> put(c, index) }
         // Crockford's confusables: what people read off a screen should decode as what was meant.
-        put('I', 1); put('L', 1); put('O', 0)
+        put('I', 1)
+        put('L', 1)
+        put('O', 0)
     }
 
     /** Thrown for anything the user could plausibly have mistyped, with a message worth showing. */

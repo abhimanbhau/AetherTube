@@ -58,7 +58,7 @@ fun HeroBackdrop(imageUrl: String?, modifier: Modifier = Modifier) {
                         .load(imageUrl)
                         .transition(DrawableTransitionOptions.withCrossFade(400))
                         .into(imageView)
-                }
+                },
             )
         }
 
@@ -70,15 +70,15 @@ fun HeroBackdrop(imageUrl: String?, modifier: Modifier = Modifier) {
                 .drawBehind {
                     drawRect(
                         Brush.verticalGradient(
-                            listOf(backgroundColor.copy(alpha = 0.35f), backgroundColor.copy(alpha = 0.92f))
-                        )
+                            listOf(backgroundColor.copy(alpha = 0.35f), backgroundColor.copy(alpha = 0.92f)),
+                        ),
                     )
                     drawRect(
                         Brush.horizontalGradient(
-                            listOf(backgroundColor.copy(alpha = 0.75f), Color.Transparent)
-                        )
+                            listOf(backgroundColor.copy(alpha = 0.75f), Color.Transparent),
+                        ),
                     )
-                }
+                },
         )
     }
 }

@@ -2,9 +2,7 @@ package com.abhimankolte.aethertube.tv.ui.shorts;
 
 import android.content.Context;
 import android.util.AttributeSet;
-
 import androidx.annotation.Nullable;
-
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -24,7 +22,6 @@ import com.liskovsoft.smartyoutubetv2.common.exoplayer.other.ExoPlayerInitialize
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.versions.renderer.CustomOverridesRenderersFactory;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.versions.selector.RestoreTrackSelector;
-
 import java.io.InputStream;
 import java.util.List;
 
@@ -36,49 +33,54 @@ import java.util.List;
  * Upstream has exactly two {@link PlaybackView} implementations and neither fits:
  *
  * <ul>
- *   <li>{@code PlaybackFragment} is the real player, but it is a leanback {@code VideoSupportFragment}
- *       carrying a rows adapter, a transport-control glue, suggestions and seek preview. A vertical
- *       full-bleed feed would spend all its effort suppressing that UI.
- *   <li>{@code EmbedPlayerView} is the right <em>shape</em> - a bare ExoPlayer {@code PlayerView} that
- *       implements {@code PlaybackView} by stubbing every UI call - but it is deliberately crippled
- *       for card previews: it pins the format to SD, treats {@code setFormat} as a no-op, stubs
- *       {@code setAspectRatio}, and reports {@link #isEmbed()} {@code true}.
+ *   <li>{@code PlaybackFragment} is the real player, but it is a leanback {@code
+ *       VideoSupportFragment} carrying a rows adapter, a transport-control glue, suggestions and
+ *       seek preview. A vertical full-bleed feed would spend all its effort suppressing that UI.
+ *   <li>{@code EmbedPlayerView} is the right <em>shape</em> - a bare ExoPlayer {@code PlayerView}
+ *       that implements {@code PlaybackView} by stubbing every UI call - but it is deliberately
+ *       crippled for card previews: it pins the format to SD, treats {@code setFormat} as a no-op,
+ *       stubs {@code setAspectRatio}, and reports {@link #isEmbed()} {@code true}.
  * </ul>
  *
- * That last flag is the decisive one. Upstream branches on it in a dozen controllers, and every branch
- * is a "this is only a thumbnail preview, don't bother" shortcut: no watch-history reporting, no
- * suggestions, no next-video prefetch, and {@code VideoLoaderController} forces
+ * That last flag is the decisive one. Upstream branches on it in a dozen controllers, and every
+ * branch is a "this is only a thumbnail preview, don't bother" shortcut: no watch-history
+ * reporting, no suggestions, no next-video prefetch, and {@code VideoLoaderController} forces
  * {@code PLAYBACK_MODE_CLOSE} so playback simply stops at the end instead of looping or advancing.
  * A Shorts feed wants all of that behaviour, so it has to report itself as a real player.
  *
- * So this is EmbedPlayerView's scaffolding with the preview-specific compromises removed. It is a copy
- * rather than a subclass because the parts that need changing - format selection, mute, aspect - all
- * happen inside its private {@code createPlayerObjects()}. Copying a stub-heavy adapter into this
- * fork's own package costs nothing at merge time; editing upstream's would not.
+ * <p>So this is EmbedPlayerView's scaffolding with the preview-specific compromises removed. It is
+ * a copy rather than a subclass because the parts that need changing - format selection, mute,
+ * aspect - all happen inside its private {@code createPlayerObjects()}. Copying a stub-heavy
+ * adapter into this fork's own package costs nothing at merge time; editing upstream's would not.
  *
  * <h3>What upstream still drives</h3>
  *
  * Everything except pixels. {@link PlaybackPresenter} and its controller stack own video loading,
- * format selection, watch state, SponsorBlock and the next/previous walk through the group; this class
- * only supplies a surface and forwards the metadata the controllers push at it
- * ({@link #setTitle}, {@link #setChannelIcon}, {@link #setButtonState}) to whatever Compose UI is
+ * format selection, watch state, SponsorBlock and the next/previous walk through the group; this
+ * class only supplies a surface and forwards the metadata the controllers push at it ({@link
+ * #setTitle}, {@link #setChannelIcon}, {@link #setButtonState}) to whatever Compose UI is
  * listening.
  */
 public class ShortsPlayerView extends PlayerView implements PlaybackView {
     private static final String TAG = ShortsPlayerView.class.getSimpleName();
 
     /**
-     * How the Compose layer hears about state it cannot poll for. Everything here arrives on the main
-     * thread, pushed by upstream's controllers.
+     * How the Compose layer hears about state it cannot poll for. Everything here arrives on the
+     * main thread, pushed by upstream's controllers.
      */
     public interface Listener {
-        /** First frame is decoded and the surface has something real on it - safe to drop the poster. */
+        /**
+         * First frame is decoded and the surface has something real on it - safe to drop the
+         * poster.
+         */
         void onVideoLoaded();
 
         /** Buffering/spinner state, straight from {@code showProgressBar}. */
         void onLoadingChanged(boolean loading);
 
-        /** Title as resolved by the metadata round-trip, which is later than the card's own title. */
+        /**
+         * Title as resolved by the metadata round-trip, which is later than the card's own title.
+         */
         void onTitleChanged(String title);
 
         /** Channel avatar URL, or null before metadata lands. */
@@ -123,10 +125,12 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
         // All chrome is drawn in Compose on top of this view. ExoPlayer's own controller would both
         // duplicate it and steal D-pad focus from the feed.
         setUseController(false);
-        // The stage Compose hands us is already shaped to the video, so FIT is a no-op in the common
+        // The stage Compose hands us is already shaped to the video, so FIT is a no-op in the
+        // common
         // case and correctly letterboxes the occasional 1:1 or 4:5 short instead of cropping it.
         setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-        // No shutter: the poster layer in Compose covers the swap, and ExoPlayer's own black shutter
+        // No shutter: the poster layer in Compose covers the swap, and ExoPlayer's own black
+        // shutter
         // would flash over the poster during it.
         setShutterBackgroundColor(android.graphics.Color.TRANSPARENT);
     }
@@ -136,8 +140,8 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     /**
-     * Starts (or switches to) a video. Safe to call repeatedly; the engine is created once and reused
-     * for the life of the feed, which is what keeps paging cheap.
+     * Starts (or switches to) a video. Safe to call repeatedly; the engine is created once and
+     * reused for the life of the feed, which is what keeps paging cheap.
      */
     public void openVideo(@Nullable Video video) {
         if (video == null) {
@@ -151,8 +155,10 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
         Log.d(TAG, "openVideo: %s (engine=%s)", video.videoId, isEngineInitialized());
 
         // A card preview may well be running when the user clicks into the feed. It holds its own
-        // ExoPlayer and its own claim on PlaybackPresenter, and upstream's own comment on the matter is
-        // that it "doesn't dispose properly" - so evict it explicitly before taking over, exactly as
+        // ExoPlayer and its own claim on PlaybackPresenter, and upstream's own comment on the
+        // matter is
+        // that it "doesn't dispose properly" - so evict it explicitly before taking over, exactly
+        // as
         // PlaybackPresenter.openVideo() does when promoting a preview to the fullscreen player.
         PlaybackView current = mPlaybackPresenter.getView();
         if (current != null && current != this && current.isEmbed()) {
@@ -167,7 +173,8 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
 
     private void initPlayer() {
         if (isEngineInitialized()) {
-            // Re-assert ownership only when something else has taken the presenter - a dialog (quality,
+            // Re-assert ownership only when something else has taken the presenter - a dialog
+            // (quality,
             // comments) can hand it to another view and back while the feed is still alive.
             //
             // Deliberately not unconditional: setView() re-runs a "switching players" fixup that
@@ -193,10 +200,12 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
             return;
         }
 
-        DefaultTrackSelector trackSelector = new RestoreTrackSelector(new AdaptiveTrackSelection.Factory());
+        DefaultTrackSelector trackSelector =
+                new RestoreTrackSelector(new AdaptiveTrackSelection.Factory());
         mExoPlayerController.setTrackSelector(trackSelector);
 
-        DefaultRenderersFactory renderersFactory = new CustomOverridesRenderersFactory(getContext());
+        DefaultRenderersFactory renderersFactory =
+                new CustomOverridesRenderersFactory(getContext());
         mPlayer = mPlayerInitializer.createPlayer(getContext(), renderersFactory, trackSelector);
         mPlayer.setPlayWhenReady(true);
 
@@ -206,7 +215,8 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
 
         // Deliberately no selectFormat() here. EmbedPlayerView pins SD because a preview is a few
         // hundred pixels wide; a short fills the screen height, so it gets the user's configured
-        // quality like any other video - which VideoLoaderController applies through setFormat() below
+        // quality like any other video - which VideoLoaderController applies through setFormat()
+        // below
         // now that isEmbed() no longer short-circuits it.
         mPlaybackPresenter.onEngineInitialized();
     }
@@ -301,8 +311,8 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
 
     /**
      * False, unlike EmbedPlayerView. This is a real player: it should report watch history, load
-     * suggestions, prefetch the next video and honour the user's loop/auto-advance preference. See the
-     * class comment for why this single flag was the reason not to subclass EmbedPlayerView.
+     * suggestions, prefetch the next video and honour the user's loop/auto-advance preference. See
+     * the class comment for why this single flag was the reason not to subclass EmbedPlayerView.
      */
     @Override
     public boolean isEmbed() {
@@ -336,10 +346,10 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void updateSuggestions(VideoGroup group) { }
+    public void updateSuggestions(VideoGroup group) {}
 
     @Override
-    public void removeSuggestions(VideoGroup group) { }
+    public void removeSuggestions(VideoGroup group) {}
 
     @Override
     public int getSuggestionsIndex(VideoGroup group) {
@@ -352,13 +362,13 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void focusSuggestedItem(int index) { }
+    public void focusSuggestedItem(int index) {}
 
     @Override
-    public void focusSuggestedItem(Video video) { }
+    public void focusSuggestedItem(Video video) {}
 
     @Override
-    public void resetSuggestedPosition() { }
+    public void resetSuggestedPosition() {}
 
     @Override
     public boolean isSuggestionsEmpty() {
@@ -366,10 +376,10 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void clearSuggestions() { }
+    public void clearSuggestions() {}
 
     @Override
-    public void showOverlay(boolean show) { }
+    public void showOverlay(boolean show) {}
 
     /**
      * Always false. Upstream reads this to decide whether a key press belongs to a visible overlay;
@@ -382,26 +392,28 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void showSuggestions(boolean show) { }
+    public void showSuggestions(boolean show) {}
 
     /**
      * True, permanently. Read literally this means "the suggestions UI is currently occupying the
      * screen, so don't rebuild it", and for this view that is simply always the case: the feed owns
      * the whole screen and there is no suggestions surface to rebuild.
      *
-     * It is also load-bearing. Reporting false made {@code SuggestionsController.appendSuggestions()}
-     * walk every suggestion row in the metadata and call {@code continueGroupIfNeeded} on each - and
-     * because a short's suggestion rows are small, {@code shouldContinueRowGroup} said yes to all of
-     * them. That was nine parallel continuation requests per page change, every one of them fetching
-     * rows for a UI this view does not have. Answering truthfully makes appendSuggestions return
-     * immediately, while {@code syncCurrentVideo} and the metadata listeners - which is where the
-     * channel icon, the next-video link and the like counts come from - still run.
+     * <p>It is also load-bearing. Reporting false made {@code
+     * SuggestionsController.appendSuggestions()} walk every suggestion row in the metadata and call
+     * {@code continueGroupIfNeeded} on each - and because a short's suggestion rows are small,
+     * {@code shouldContinueRowGroup} said yes to all of them. That was nine parallel continuation
+     * requests per page change, every one of them fetching rows for a UI this view does not have.
+     * Answering truthfully makes appendSuggestions return immediately, while {@code
+     * syncCurrentVideo} and the metadata listeners - which is where the channel icon, the
+     * next-video link and the like counts come from - still run.
      *
-     * The other four callers were checked and all behave correctly under this answer: the menu key is
-     * handled here in Compose anyway, SponsorBlock's interactive skip dialog stays suppressed (right
-     * for a feed), clearSuggestions() is a no-op here, and the only VideoLoaderController branch that
-     * reads it is PLAYBACK_MODE_CLOSE - where suppressing "close the player at end of video" is what
-     * we want, since a feed should not exit itself because one short finished.
+     * <p>The other four callers were checked and all behave correctly under this answer: the menu
+     * key is handled here in Compose anyway, SponsorBlock's interactive skip dialog stays
+     * suppressed (right for a feed), clearSuggestions() is a no-op here, and the only
+     * VideoLoaderController branch that reads it is PLAYBACK_MODE_CLOSE - where suppressing "close
+     * the player at end of video" is what we want, since a feed should not exit itself because one
+     * short finished.
      */
     @Override
     public boolean isSuggestionsShown() {
@@ -409,7 +421,7 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void showControls(boolean show) { }
+    public void showControls(boolean show) {}
 
     @Override
     public boolean isControlsShown() {
@@ -422,19 +434,19 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void setButtonState(int buttonId, int buttonState) { }
+    public void setButtonState(int buttonId, int buttonState) {}
 
     @Override
-    public void setSeekPreviewTitle(String title) { }
+    public void setSeekPreviewTitle(String title) {}
 
     @Override
-    public void setNextTitle(Video nextVideo) { }
+    public void setNextTitle(Video nextVideo) {}
 
     @Override
-    public void showDebugInfo(boolean show) { }
+    public void showDebugInfo(boolean show) {}
 
     @Override
-    public void showSubtitles(boolean show) { }
+    public void showSubtitles(boolean show) {}
 
     @Override
     public void loadStoryboard() {
@@ -442,13 +454,13 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void setSeekBarSegments(List<SeekBarSegment> segments) { }
+    public void setSeekBarSegments(List<SeekBarSegment> segments) {}
 
     @Override
-    public void updateEndingTime() { }
+    public void updateEndingTime() {}
 
     @Override
-    public void setChatReceiver(ChatReceiver chatReceiver) { }
+    public void setChatReceiver(ChatReceiver chatReceiver) {}
 
     // ---------------------------------------------------------------------------------------------
     // PlayerEngine - straight delegation to ExoPlayerController
@@ -590,7 +602,7 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void blockEngine(boolean block) { }
+    public void blockEngine(boolean block) {}
 
     @Override
     public boolean isEngineBlocked() {
@@ -654,10 +666,10 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     /**
-     * Forwarded to the feed rather than applied here. {@code VideoLoaderController} reports the true
-     * format ratio as soon as it knows it (~0.5625 for a real short, but plenty of "shorts" are 1:1 or
-     * 4:5), and the Compose stage resizes to match - so the video fills its box exactly and RESIZE_MODE_FIT
-     * never has anything to letterbox.
+     * Forwarded to the feed rather than applied here. {@code VideoLoaderController} reports the
+     * true format ratio as soon as it knows it (~0.5625 for a real short, but plenty of "shorts"
+     * are 1:1 or 4:5), and the Compose stage resizes to match - so the video fills its box exactly
+     * and RESIZE_MODE_FIT never has anything to letterbox.
      */
     @Override
     public void setAspectRatio(float ratio) {
@@ -667,11 +679,11 @@ public class ShortsPlayerView extends PlayerView implements PlaybackView {
     }
 
     @Override
-    public void setRotationAngle(int angle) { }
+    public void setRotationAngle(int angle) {}
 
     @Override
-    public void setVideoFlipEnabled(boolean enabled) { }
+    public void setVideoFlipEnabled(boolean enabled) {}
 
     @Override
-    public void setVideoGravity(int gravity) { }
+    public void setVideoGravity(int gravity) {}
 }

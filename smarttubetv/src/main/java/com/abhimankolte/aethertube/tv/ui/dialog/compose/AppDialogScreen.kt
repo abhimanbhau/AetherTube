@@ -7,13 +7,12 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.border
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -24,18 +23,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.foundation.focusGroup
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
@@ -66,10 +65,12 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionItem
 
 private val LEFT_PANEL_WIDTH = 240.dp
 private const val FOCUS_ANIM_MS = 180
+
 // Apple TV-style focus scale: a light spring with a touch of overshoot instead of a rigid linear/cubic
 // tween - snappy enough not to lag behind fast D-pad navigation, but feels alive rather than mechanical.
 private val FocusScaleSpring = spring<Float>(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMediumLow)
 private val PANEL_WIDTH = 480.dp
+
 /** Matches the 220ms the old window transition used, but animated inside Compose - see AppDialogScreen. */
 private const val PANEL_ENTER_MS = 220
 private val PANEL_SHAPE = RoundedCornerShape(topStart = 24.dp, bottomStart = 24.dp)
@@ -90,7 +91,7 @@ fun AppDialogScreen(
     categories: List<OptionCategory>,
     showBackButton: Boolean,
     onBack: () -> Unit,
-    isOverlay: Boolean = false
+    isOverlay: Boolean = false,
 ) {
     // AppDialogPresenter#enableOverlay(true) (chapter notifications, SponsorBlock's in-player prompt)
     // means "float this over whatever's playing, don't block it" - those callers get a much lighter
@@ -109,7 +110,7 @@ fun AppDialogScreen(
     val panelOffsetFraction by animateFloatAsState(
         targetValue = if (isPanelVisible) 0f else 1f,
         animationSpec = tween(PANEL_ENTER_MS),
-        label = "dialogPanelSlide"
+        label = "dialogPanelSlide",
     )
 
     Box(
@@ -124,10 +125,10 @@ fun AppDialogScreen(
                 Brush.horizontalGradient(
                     0f to Color.Transparent,
                     0.55f to Color.Transparent,
-                    1f to Color.Black.copy(alpha = scrimAlpha)
-                )
+                    1f to Color.Black.copy(alpha = scrimAlpha),
+                ),
             ),
-        contentAlignment = Alignment.CenterEnd
+        contentAlignment = Alignment.CenterEnd,
     ) {
         AppDialogPanelContent(
             title = title,
@@ -139,7 +140,7 @@ fun AppDialogScreen(
                 .fillMaxHeight()
                 .width(PANEL_WIDTH)
                 .clip(PANEL_SHAPE)
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.surface),
         )
     }
 }
@@ -157,7 +158,7 @@ fun AppDialogPanelContent(
     categories: List<OptionCategory>,
     showBackButton: Boolean,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // weight(1f), not just fillMaxSize(): a Column doesn't shrink a later, unweighted child's max-height
     // constraint by whatever DialogHeader (fixed height) already used - without weight, the option list
@@ -188,13 +189,15 @@ fun AppDialogPanelContent(
                         .focusProperties {
                             onEnter = {
                                 categoryRequesters.getOrNull(lastFocusedCategory)?.let {
-                                    try { it.requestFocus() } catch (e: IllegalStateException) { }
+                                    try {
+                                        it.requestFocus()
+                                    } catch (e: IllegalStateException) { }
                                 }
                             }
                         }
                         .focusGroup()
                         .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .padding(horizontal = 8.dp, vertical = 16.dp),
                 ) {
                     categories.forEachIndexed { index, category ->
                         CategoryRow(
@@ -204,7 +207,7 @@ fun AppDialogPanelContent(
                                 lastFocusedCategory = index
                                 selectedIndex = index
                             },
-                            focusRequester = categoryRequesters.getOrNull(index)
+                            focusRequester = categoryRequesters.getOrNull(index),
                         )
                     }
                 }
@@ -213,14 +216,14 @@ fun AppDialogPanelContent(
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(1.dp)
-                        .background(MaterialTheme.colorScheme.border.copy(alpha = 0.5f))
+                        .background(MaterialTheme.colorScheme.border.copy(alpha = 0.5f)),
                 )
 
                 OptionList(
                     category = categories[selectedIndex],
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(1f)
+                        .weight(1f),
                 )
             }
         }
@@ -249,7 +252,7 @@ private fun DialogHeader(title: String?, showBackButton: Boolean, onBack: () -> 
             .fillMaxWidth()
             .padding(horizontal = 32.dp, vertical = 24.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(20.dp)
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         if (showBackButton) {
             BackButton(onClick = onBack)
@@ -260,7 +263,7 @@ private fun DialogHeader(title: String?, showBackButton: Boolean, onBack: () -> 
                 text = title,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -275,7 +278,7 @@ private fun BackButton(onClick: () -> Unit) {
     val tint by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
         tween(FOCUS_ANIM_MS),
-        label = "backTint"
+        label = "backTint",
     )
 
     Icon(
@@ -288,8 +291,8 @@ private fun BackButton(onClick: () -> Unit) {
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {}
-            )
+                onLongClick = {},
+            ),
     )
 }
 
@@ -300,7 +303,7 @@ private fun CategoryRow(
     title: String,
     isSelected: Boolean,
     onSelected: () -> Unit,
-    focusRequester: FocusRequester? = null
+    focusRequester: FocusRequester? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -308,7 +311,7 @@ private fun CategoryRow(
     val textColor by animateColorAsState(
         if (isFocused || isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurfaceVariant,
         tween(FOCUS_ANIM_MS),
-        label = "categoryText"
+        label = "categoryText",
     )
     val barColor by animateColorAsState(
         when {
@@ -317,7 +320,7 @@ private fun CategoryRow(
             else -> Color.Transparent
         },
         tween(FOCUS_ANIM_MS),
-        label = "categoryBar"
+        label = "categoryBar",
     )
 
     Row(
@@ -329,23 +332,23 @@ private fun CategoryRow(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onSelected,
-                onLongClick = {}
+                onLongClick = {},
             )
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Box(
             modifier = Modifier
                 .size(width = 3.dp, height = 18.dp)
-                .background(barColor)
+                .background(barColor),
         )
 
         Text(
             text = title,
             color = textColor,
             fontSize = 16.sp,
-            fontWeight = if (isSelected || isFocused) FontWeight.SemiBold else FontWeight.Normal
+            fontWeight = if (isSelected || isFocused) FontWeight.SemiBold else FontWeight.Normal,
         )
     }
 }
@@ -389,11 +392,13 @@ private fun OptionList(category: OptionCategory, modifier: Modifier = Modifier) 
                         onEnter = {
                             // Only attached while that row is composed; falling through to default
                             // entry is fine and is why this is not allowed to throw.
-                            try { entryRequester.requestFocus() } catch (e: IllegalStateException) { }
+                            try {
+                                entryRequester.requestFocus()
+                            } catch (e: IllegalStateException) { }
                         }
                     }
                     .focusGroup(),
-                contentPadding = PaddingValues(horizontal = 32.dp, vertical = 20.dp)
+                contentPadding = PaddingValues(horizontal = 32.dp, vertical = 20.dp),
             ) {
                 itemsIndexed(options, key = { index, _ -> index }) { index, item ->
                     val isChecked = when {
@@ -421,7 +426,7 @@ private fun OptionList(category: OptionCategory, modifier: Modifier = Modifier) 
                                     item.onSelect(newChecked)
                                 }
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -435,13 +440,13 @@ private fun LongTextContent(category: OptionCategory) {
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 32.dp, vertical = 20.dp)
+        contentPadding = PaddingValues(horizontal = 32.dp, vertical = 20.dp),
     ) {
         item {
             Text(
                 text = item?.description?.toString() ?: item?.title?.toString().orEmpty(),
                 color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 15.sp
+                fontSize = 15.sp,
             )
         }
     }
@@ -456,7 +461,7 @@ private fun OptionRow(
     isChecked: Boolean,
     onClick: () -> Unit,
     onFocused: () -> Unit = {},
-    focusRequester: FocusRequester? = null
+    focusRequester: FocusRequester? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -464,7 +469,7 @@ private fun OptionRow(
     val contentColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
         tween(FOCUS_ANIM_MS),
-        label = "optionContent"
+        label = "optionContent",
     )
     val scale by animateFloatAsState(if (isFocused) 1.02f else 1f, FocusScaleSpring, label = "optionScale")
 
@@ -478,11 +483,11 @@ private fun OptionRow(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {}
+                onLongClick = {},
             )
             .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (isCheckable) {
             CheckIndicator(checked = isChecked, tint = contentColor)
@@ -493,7 +498,7 @@ private fun OptionRow(
                 text = item.title?.toString().orEmpty(),
                 color = contentColor,
                 fontSize = 16.sp,
-                fontWeight = if (isFocused) FontWeight.SemiBold else FontWeight.Normal
+                fontWeight = if (isFocused) FontWeight.SemiBold else FontWeight.Normal,
             )
 
             val description = item.description?.toString()
@@ -511,14 +516,14 @@ private fun CheckIndicator(checked: Boolean, tint: Color) {
             .size(18.dp)
             .background(if (checked) tint else Color.Transparent, CircleShape)
             .border(BorderStroke(1.5.dp, tint), CircleShape),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         if (checked) {
             Icon(
                 imageVector = Icons.Filled.Check,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.background,
-                modifier = Modifier.size(12.dp)
+                modifier = Modifier.size(12.dp),
             )
         }
     }

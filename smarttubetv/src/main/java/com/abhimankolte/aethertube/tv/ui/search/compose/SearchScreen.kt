@@ -1,6 +1,6 @@
 @file:OptIn(
     androidx.tv.material3.ExperimentalTvMaterial3Api::class,
-    androidx.compose.ui.ExperimentalComposeUiApi::class
+    androidx.compose.ui.ExperimentalComposeUiApi::class,
 )
 
 package com.abhimankolte.aethertube.tv.ui.search.compose
@@ -25,8 +25,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -39,7 +43,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
-import kotlinx.coroutines.delay
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +50,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusDirection
@@ -56,14 +58,11 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -71,12 +70,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
@@ -84,7 +77,7 @@ import com.abhimankolte.aethertube.tv.ui.common.compose.CardTitle
 import com.abhimankolte.aethertube.tv.ui.common.compose.VideoCard
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video
 import com.liskovsoft.smartyoutubetv2.common.app.models.search.vineyard.Tag
-import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData
+import kotlinx.coroutines.delay
 
 private val CARD_WIDTH = 220.dp
 private val CARD_HEIGHT = 124.dp
@@ -92,10 +85,12 @@ private val CARD_SHAPE = RoundedCornerShape(14.dp)
 private val CARD_TITLE_SIZE = 14.sp
 private val CARD_TITLE_LINE_HEIGHT = 18.sp
 private const val FOCUS_ANIM_MS = 180
+
 // Apple TV-style focus scale: a light spring with a touch of overshoot instead of a rigid linear/cubic
 // tween - snappy enough not to lag behind fast D-pad navigation, but feels alive rather than mechanical.
 private val FocusScaleSpring = spring<Float>(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMediumLow)
 private const val BACKDROP_DEBOUNCE_MS = 220L
+
 // Mirrors leanback's ViewUtil.ROW_SCROLL_CONTINUE_NUM - start fetching the next page once the viewport
 // is within this many items of the end, rather than waiting for the last item to actually be reached.
 private const val ROW_SCROLL_CONTINUE_NUM = 4
@@ -120,7 +115,7 @@ fun SearchScreen(
     onScrollEnd: (Video) -> Unit,
     onSearchSettingsClick: () -> Unit,
     searchFieldFocusRequester: FocusRequester,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // See HomeScreen's identical debounce - flicking focus across the result grid fired a full-screen
     // Glide crossfade per card without this, reading as "the page refreshing".
@@ -148,7 +143,7 @@ fun SearchScreen(
                 onSettingsClick = onSearchSettingsClick,
                 focusRequester = searchFieldFocusRequester,
                 hasTags = tags.isNotEmpty(),
-                firstTagFocusRequester = firstTagFocusRequester
+                firstTagFocusRequester = firstTagFocusRequester,
             )
 
             if (tags.isNotEmpty()) {
@@ -157,7 +152,7 @@ fun SearchScreen(
                     onTagClick = onTagClick,
                     onTagLongClick = onTagLongClick,
                     firstTagFocusRequester = firstTagFocusRequester,
-                    upFocusRequester = searchFieldFocusRequester
+                    upFocusRequester = searchFieldFocusRequester,
                 )
             }
 
@@ -167,7 +162,7 @@ fun SearchScreen(
             // past the visible area by however tall those fixed-height siblings are.
             LazyColumn(
                 modifier = Modifier.weight(1f).fillMaxWidth(),
-                contentPadding = PaddingValues(vertical = 8.dp)
+                contentPadding = PaddingValues(vertical = 8.dp),
             ) {
                 items(resultRows, key = { it.id }) { row ->
                     VideoResultRow(
@@ -175,7 +170,7 @@ fun SearchScreen(
                         onVideoClick = onVideoClick,
                         onVideoFocus = onVideoFocus,
                         onVideoLongClick = onVideoLongClick,
-                        onScrollEnd = onScrollEnd
+                        onScrollEnd = onScrollEnd,
                     )
                 }
             }
@@ -192,7 +187,7 @@ private fun SearchBar(
     onSettingsClick: () -> Unit,
     focusRequester: FocusRequester,
     hasTags: Boolean,
-    firstTagFocusRequester: FocusRequester
+    firstTagFocusRequester: FocusRequester,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -201,12 +196,12 @@ private fun SearchBar(
     val borderColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.border,
         tween(FOCUS_ANIM_MS),
-        label = "searchBarBorder"
+        label = "searchBarBorder",
     )
     val iconColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
         tween(FOCUS_ANIM_MS),
-        label = "searchIconColor"
+        label = "searchIconColor",
     )
 
     Row(
@@ -214,7 +209,7 @@ private fun SearchBar(
             .fillMaxWidth()
             .padding(horizontal = 32.dp, vertical = 24.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(
             modifier = Modifier
@@ -224,7 +219,7 @@ private fun SearchBar(
                 .border(BorderStroke(2.dp, borderColor), CircleShape)
                 .padding(horizontal = 24.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Icon(imageVector = Icons.Filled.Search, contentDescription = null, tint = iconColor)
 
@@ -276,7 +271,7 @@ private fun SearchBar(
                 textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface, fontSize = 20.sp),
                 cursorBrush = Brush.verticalGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primary)),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { onSearchSubmit() })
+                keyboardActions = KeyboardActions(onSearch = { onSearchSubmit() }),
             )
 
             if (showProgress) {
@@ -300,7 +295,7 @@ private fun SearchSettingsIcon(onClick: () -> Unit) {
     val tint by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
         tween(FOCUS_ANIM_MS),
-        label = "searchSettingsTint"
+        label = "searchSettingsTint",
     )
 
     Icon(
@@ -313,8 +308,8 @@ private fun SearchSettingsIcon(onClick: () -> Unit) {
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {}
-            )
+                onLongClick = {},
+            ),
     )
 }
 
@@ -324,13 +319,13 @@ private fun TagsRow(
     onTagClick: (Tag) -> Unit,
     onTagLongClick: (Tag) -> Unit,
     firstTagFocusRequester: FocusRequester,
-    upFocusRequester: FocusRequester
+    upFocusRequester: FocusRequester,
 ) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 24.dp, bottom = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         itemsIndexed(tags, key = { _, tag -> if (tag.tagId != 0L) tag.tagId else tag.tag.hashCode().toLong() }) { index, tag ->
             TagChip(
@@ -338,7 +333,7 @@ private fun TagsRow(
                 onClick = { onTagClick(tag) },
                 onLongClick = { onTagLongClick(tag) },
                 focusRequester = if (index == 0) firstTagFocusRequester else null,
-                upFocusRequester = upFocusRequester
+                upFocusRequester = upFocusRequester,
             )
         }
     }
@@ -351,7 +346,7 @@ private fun TagChip(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     focusRequester: FocusRequester?,
-    upFocusRequester: FocusRequester
+    upFocusRequester: FocusRequester,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -359,12 +354,12 @@ private fun TagChip(
     val backgroundColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
         tween(FOCUS_ANIM_MS),
-        label = "tagBackground"
+        label = "tagBackground",
     )
     val textColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
         tween(FOCUS_ANIM_MS),
-        label = "tagText"
+        label = "tagText",
     )
 
     Box(
@@ -383,14 +378,14 @@ private fun TagChip(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = onLongClick
-            )
+                onLongClick = onLongClick,
+            ),
     ) {
         Text(
             text = tag.tag.orEmpty(),
             color = textColor,
             fontWeight = if (isFocused) FontWeight.SemiBold else FontWeight.Normal,
-            modifier = Modifier.padding(horizontal = 18.dp, vertical = 9.dp)
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 9.dp),
         )
     }
 }
@@ -401,7 +396,7 @@ private fun VideoResultRow(
     onVideoClick: (Video) -> Unit,
     onVideoFocus: (Video) -> Unit,
     onVideoLongClick: (Video) -> Unit,
-    onScrollEnd: (Video) -> Unit
+    onScrollEnd: (Video) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val lastVideo = row.videos.lastOrNull()
@@ -430,14 +425,14 @@ private fun VideoResultRow(
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
-            modifier = Modifier.padding(start = 32.dp, bottom = 12.dp)
+            modifier = Modifier.padding(start = 32.dp, bottom = 12.dp),
         )
 
         LazyRow(
             state = listState,
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 32.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // index fallback, not hashCode(): Video.hashCode() is content-based, so two null-videoId
             // entries with otherwise-identical fields collide and crash the LazyRow.
@@ -454,10 +449,9 @@ private fun VideoResultRow(
                     contentPadding = 4.dp,
                     onClick = { onVideoClick(video) },
                     onFocus = { onVideoFocus(video) },
-                    onLongClick = { onVideoLongClick(video) }
+                    onLongClick = { onVideoLongClick(video) },
                 )
             }
         }
     }
 }
-

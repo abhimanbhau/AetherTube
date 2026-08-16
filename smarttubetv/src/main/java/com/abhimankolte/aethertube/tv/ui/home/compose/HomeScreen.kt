@@ -1,9 +1,14 @@
 @file:OptIn(
     androidx.tv.material3.ExperimentalTvMaterial3Api::class,
-    androidx.compose.ui.ExperimentalComposeUiApi::class
+    androidx.compose.ui.ExperimentalComposeUiApi::class,
 )
 
 package com.abhimankolte.aethertube.tv.ui.home.compose
+
+// Lazy layouts below are androidx.compose.foundation's. They were briefly androidx.tv.foundation's
+// TvLazy* fork, which existed because older Compose could not move D-pad focus into not-yet-composed
+// items - lists dead-ended at one screenful. Modern Compose handles TV focus natively, which is why
+// androidx.tv 1.0.0 removed TvLazy* entirely.
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.RepeatMode
@@ -14,44 +19,34 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-// Lazy layouts are androidx.compose.foundation's. They were briefly androidx.tv.foundation's
-// TvLazy* fork, which existed because older Compose could not move D-pad focus into
-// not-yet-composed items - lists dead-ended at one screenful. Modern Compose handles TV focus
-// natively, which is why androidx.tv 1.0.0 removed TvLazy* entirely.
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.grid.itemsIndexed as gridItemsIndexed
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -60,7 +55,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
-import kotlinx.coroutines.delay
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,20 +62,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -96,9 +88,11 @@ import com.abhimankolte.aethertube.tv.ui.common.compose.VideoCard
 import com.abhimankolte.aethertube.tv.ui.search.compose.HeroBackdrop
 import com.abhimankolte.aethertube.tv.ui.search.compose.SearchVideoCardView
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection
-import com.liskovsoft.smartyoutubetv2.common.app.models.errors.ErrorFragmentData
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video
+import com.liskovsoft.smartyoutubetv2.common.app.models.errors.ErrorFragmentData
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData
+import kotlinx.coroutines.delay
+import androidx.compose.foundation.lazy.grid.itemsIndexed as gridItemsIndexed
 
 private val FEATURED_CARD_WIDTH = 360.dp
 private val FEATURED_CARD_HEIGHT = 202.dp
@@ -107,6 +101,7 @@ private val CARD_HEIGHT = 135.dp
 private val CARD_SHAPE = RoundedCornerShape(16.dp)
 private val TOP_NAV_HEIGHT = 84.dp
 private const val FOCUS_ANIM_MS = 180
+
 // Title metrics are explicit so the strip always fits exactly two lines - Compose 1.10's text
 // metrics differ from 1.4's, and a hardcoded height silently clipped the second line.
 private val CARD_TITLE_SIZE = 13.sp
@@ -115,12 +110,15 @@ private val CARD_TITLE_HEIGHT = 38.dp
 private val FEATURED_TITLE_SIZE = 16.sp
 private val FEATURED_TITLE_LINE_HEIGHT = 20.sp
 private val FEATURED_TITLE_HEIGHT = 46.dp
+
 // Apple TV-style focus scale: a light spring with a touch of overshoot instead of a rigid linear/cubic
 // tween - snappy enough not to lag behind fast D-pad navigation, but feels alive rather than mechanical.
 private val FocusScaleSpring = spring<Float>(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMediumLow)
 private const val BACKDROP_DEBOUNCE_MS = 220L
+
 /** Breathing room inside the nav icons' focus chip. */
 private val NAV_ICON_PADDING = 10.dp
+
 // Mirrors leanback's ViewUtil.GRID_SCROLL_CONTINUE_NUM / ROW_SCROLL_CONTINUE_NUM: start fetching the
 // next page once the viewport is within this many items of the end, rather than waiting to hit it.
 private const val GRID_SCROLL_CONTINUE_NUM = 10
@@ -148,7 +146,7 @@ fun HomeScreen(
     onScrollEnd: (Video) -> Unit,
     restoreFocusVideoId: String?,
     onFocusRestored: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // Rapidly flicking focus across a dense grid fired a full-screen Glide crossfade on every single
     // card - visually reads as "the page refreshing". Debounce so the backdrop only updates once focus
@@ -194,7 +192,7 @@ fun HomeScreen(
                 showProgress = showProgress,
                 activeTabFocusRequester = activeTabFocusRequester,
                 navRowFocusRequester = topNavFocusRequester,
-                modifier = Modifier.onFocusChanged { state -> isTopNavFocused = state.hasFocus }
+                modifier = Modifier.onFocusChanged { state -> isTopNavFocused = state.hasFocus },
             )
 
             // Weighted, not just fillMaxSize(): a Column doesn't shrink a later, unweighted child's
@@ -214,28 +212,30 @@ fun HomeScreen(
                     // Only for the first load of a section - once rows exist, showProgress toggling for
                     // pagination/refresh shouldn't blank out content the user is already looking at.
                     ShimmerContent()
-                } else when (sectionType) {
-                    BrowseSection.TYPE_ROW -> ShelvesContent(
-                        rows = rows,
-                        topNavFocusRequester = topNavFocusRequester,
-                        restoreFocusVideoId = restoreFocusVideoId,
-                        onFocusRestored = onFocusRestored,
-                        onVideoClick = onVideoClick,
-                        onVideoFocus = onVideoFocus,
-                        onVideoLongClick = onVideoLongClick,
-                        onScrollEnd = onScrollEnd
-                    )
-                    else -> GridContent(
-                        rows = rows,
-                        showRowHeaders = sectionType == BrowseSection.TYPE_MULTI_GRID,
-                        topNavFocusRequester = topNavFocusRequester,
-                        restoreFocusVideoId = restoreFocusVideoId,
-                        onFocusRestored = onFocusRestored,
-                        onVideoClick = onVideoClick,
-                        onVideoFocus = onVideoFocus,
-                        onVideoLongClick = onVideoLongClick,
-                        onScrollEnd = onScrollEnd
-                    )
+                } else {
+                    when (sectionType) {
+                        BrowseSection.TYPE_ROW -> ShelvesContent(
+                            rows = rows,
+                            topNavFocusRequester = topNavFocusRequester,
+                            restoreFocusVideoId = restoreFocusVideoId,
+                            onFocusRestored = onFocusRestored,
+                            onVideoClick = onVideoClick,
+                            onVideoFocus = onVideoFocus,
+                            onVideoLongClick = onVideoLongClick,
+                            onScrollEnd = onScrollEnd,
+                        )
+                        else -> GridContent(
+                            rows = rows,
+                            showRowHeaders = sectionType == BrowseSection.TYPE_MULTI_GRID,
+                            topNavFocusRequester = topNavFocusRequester,
+                            restoreFocusVideoId = restoreFocusVideoId,
+                            onFocusRestored = onFocusRestored,
+                            onVideoClick = onVideoClick,
+                            onVideoFocus = onVideoFocus,
+                            onVideoLongClick = onVideoLongClick,
+                            onScrollEnd = onScrollEnd,
+                        )
+                    }
                 }
             }
         }
@@ -250,13 +250,13 @@ private fun ShimmerContent() {
         initialValue = 0.25f,
         targetValue = 0.5f,
         animationSpec = infiniteRepeatable(tween(700), repeatMode = RepeatMode.Reverse),
-        label = "shimmerAlpha"
+        label = "shimmerAlpha",
     )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 16.dp)
+            .padding(vertical = 16.dp),
     ) {
         repeat(3) { rowIndex ->
             Column(modifier = Modifier.padding(vertical = if (rowIndex == 0) 8.dp else 14.dp)) {
@@ -265,14 +265,14 @@ private fun ShimmerContent() {
                         .padding(start = 40.dp, bottom = 14.dp)
                         .size(width = 160.dp, height = if (rowIndex == 0) 26.dp else 20.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha)),
                 )
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 40.dp),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
                     val cardWidth = if (rowIndex == 0) FEATURED_CARD_WIDTH else CARD_WIDTH
                     val cardHeight = if (rowIndex == 0) FEATURED_CARD_HEIGHT else CARD_HEIGHT
@@ -282,7 +282,7 @@ private fun ShimmerContent() {
                             modifier = Modifier
                                 .size(width = cardWidth, height = cardHeight)
                                 .clip(CARD_SHAPE)
-                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha)),
                         )
                     }
                 }
@@ -299,14 +299,14 @@ private fun ErrorContent(data: ErrorFragmentData) {
             .fillMaxSize()
             .padding(horizontal = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = data.message.orEmpty(),
             color = MaterialTheme.colorScheme.onBackground,
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(bottom = 20.dp)
+            modifier = Modifier.padding(bottom = 20.dp),
         )
 
         val actionText = data.actionText
@@ -325,12 +325,12 @@ private fun ErrorActionButton(text: String, onClick: () -> Unit) {
     val backgroundColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
         tween(FOCUS_ANIM_MS),
-        label = "errorActionBackground"
+        label = "errorActionBackground",
     )
     val contentColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
         tween(FOCUS_ANIM_MS),
-        label = "errorActionContent"
+        label = "errorActionContent",
     )
 
     Box(
@@ -342,9 +342,9 @@ private fun ErrorActionButton(text: String, onClick: () -> Unit) {
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {}
+                onLongClick = {},
             )
-            .padding(horizontal = 28.dp, vertical = 14.dp)
+            .padding(horizontal = 28.dp, vertical = 14.dp),
     ) {
         Text(text = text, color = contentColor, fontWeight = if (isFocused) FontWeight.SemiBold else FontWeight.Normal)
     }
@@ -359,7 +359,7 @@ private fun ShelvesContent(
     onVideoClick: (Video) -> Unit,
     onVideoFocus: (Video) -> Unit,
     onVideoLongClick: (Video) -> Unit,
-    onScrollEnd: (Video) -> Unit
+    onScrollEnd: (Video) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val restRows = rows.drop(1)
@@ -385,7 +385,7 @@ private fun ShelvesContent(
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 16.dp)
+        contentPadding = PaddingValues(vertical = 16.dp),
     ) {
         item {
             // The carousel is always the topmost row - D-pad up from within it has nothing else to
@@ -396,7 +396,7 @@ private fun ShelvesContent(
                 onVideoClick = onVideoClick,
                 onVideoFocus = onVideoFocus,
                 onVideoLongClick = onVideoLongClick,
-                topNavFocusRequester = topNavFocusRequester
+                topNavFocusRequester = topNavFocusRequester,
             )
         }
 
@@ -411,7 +411,7 @@ private fun ShelvesContent(
                 onVideoClick = onVideoClick,
                 onVideoFocus = onVideoFocus,
                 onVideoLongClick = onVideoLongClick,
-                onScrollEnd = onScrollEnd
+                onScrollEnd = onScrollEnd,
             )
         }
     }
@@ -428,7 +428,7 @@ private fun FeaturedCarousel(
     onVideoClick: (Video) -> Unit,
     onVideoFocus: (Video) -> Unit,
     onVideoLongClick: (Video) -> Unit,
-    topNavFocusRequester: FocusRequester
+    topNavFocusRequester: FocusRequester,
 ) {
     if (videos.isEmpty()) {
         return
@@ -440,7 +440,7 @@ private fun FeaturedCarousel(
             .fillMaxWidth()
             .height(340.dp)
             .padding(horizontal = 40.dp, vertical = 8.dp)
-            .clip(CARD_SHAPE)
+            .clip(CARD_SHAPE),
     ) { index ->
         val video = videos[index]
 
@@ -452,11 +452,11 @@ private fun FeaturedCarousel(
                 .focusProperties { up = topNavFocusRequester }
                 .combinedClickable(
                     onClick = { onVideoClick(video) },
-                    onLongClick = { onVideoLongClick(video) }
+                    onLongClick = { onVideoLongClick(video) },
                 )
                 .onFocusChanged { state ->
                     if (state.isFocused) onVideoFocus(video)
-                }
+                },
         ) {
             CarouselBackdrop(video = video)
 
@@ -464,14 +464,14 @@ private fun FeaturedCarousel(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(28.dp),
-                verticalArrangement = Arrangement.Bottom
+                verticalArrangement = Arrangement.Bottom,
             ) {
                 Text(
                     text = video.title.orEmpty(),
                     color = Color.White,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 2
+                    maxLines = 2,
                 )
             }
         }
@@ -489,7 +489,7 @@ private fun CarouselBackdrop(video: Video) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .onSizeChanged { sizePx = it }
+            .onSizeChanged { sizePx = it },
     ) {
         if (sizePx.width > 0 && sizePx.height > 0) {
             AndroidView(
@@ -499,7 +499,7 @@ private fun CarouselBackdrop(video: Video) {
                 onReset = { view ->
                     view.stopPreview()
                     view.unbind()
-                }
+                },
             )
         }
 
@@ -509,9 +509,9 @@ private fun CarouselBackdrop(video: Video) {
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.85f)),
-                        startY = sizePx.height * 0.35f
-                    )
-                )
+                        startY = sizePx.height * 0.35f,
+                    ),
+                ),
         )
     }
 }
@@ -533,7 +533,7 @@ private fun GridContent(
     onVideoClick: (Video) -> Unit,
     onVideoFocus: (Video) -> Unit,
     onVideoLongClick: (Video) -> Unit,
-    onScrollEnd: (Video) -> Unit
+    onScrollEnd: (Video) -> Unit,
 ) {
     val gridState = rememberLazyGridState()
     val focusRequester = remember { FocusRequester() }
@@ -613,7 +613,7 @@ private fun GridContent(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         gridItemsIndexed(
             entries,
@@ -627,7 +627,7 @@ private fun GridContent(
                     is GridEntry.VideoEntry -> entry.video.videoId ?: "video_$index"
                 }
             },
-            span = { _, entry -> if (entry is GridEntry.Header) GridItemSpan(maxLineSpan) else GridItemSpan(1) }
+            span = { _, entry -> if (entry is GridEntry.Header) GridItemSpan(maxLineSpan) else GridItemSpan(1) },
         ) { index, entry ->
             when (entry) {
                 is GridEntry.Header -> Text(
@@ -635,7 +635,7 @@ private fun GridContent(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    modifier = Modifier.padding(vertical = 12.dp)
+                    modifier = Modifier.padding(vertical = 12.dp),
                 )
                 is GridEntry.VideoEntry -> {
                     val video = entry.video
@@ -658,7 +658,7 @@ private fun GridContent(
                         },
                         onClick = { onVideoClick(video) },
                         onFocus = { onVideoFocus(video) },
-                        onLongClick = { onVideoLongClick(video) }
+                        onLongClick = { onVideoLongClick(video) },
                     )
                 }
             }
@@ -671,7 +671,6 @@ private sealed class GridEntry {
     class VideoEntry(val video: Video) : GridEntry()
 }
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TopNav(
@@ -683,7 +682,7 @@ private fun TopNav(
     showProgress: Boolean,
     activeTabFocusRequester: FocusRequester,
     navRowFocusRequester: FocusRequester,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // One single scrollable strip - Settings and Search are just its first two items, not pinned
     // outside it - matching how Apple TV/Google TV/Netflix top bars are actually structured. A plain
@@ -734,7 +733,7 @@ private fun TopNav(
             .horizontalScroll(tabScrollState)
             .padding(horizontal = 40.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(32.dp)
+        horizontalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         NavIconButton(Icons.Filled.Settings, "Settings", onSettingsClick)
         NavIconButton(Icons.Filled.Search, "Search", onSearchClick)
@@ -757,7 +756,7 @@ private fun TopNav(
                 // default search wraps around to the first focusable on the row (settings icon),
                 // which - since a tab switches its section the instant it's focused - reads as
                 // "pressing right on the last tab teleports me back to the first tab".
-                isLastTab = tabIndex == visibleSections.lastIndex
+                isLastTab = tabIndex == visibleSections.lastIndex,
             )
         }
 
@@ -785,12 +784,12 @@ private fun NavIconButton(icon: ImageVector, contentDescription: String, onClick
     val background by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
         tween(FOCUS_ANIM_MS),
-        label = "navIconBackground"
+        label = "navIconBackground",
     )
     val tint by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
         tween(FOCUS_ANIM_MS),
-        label = "navIconTint"
+        label = "navIconTint",
     )
 
     Box(
@@ -802,10 +801,10 @@ private fun NavIconButton(icon: ImageVector, contentDescription: String, onClick
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {}
+                onLongClick = {},
             )
             .padding(NAV_ICON_PADDING),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Icon(imageVector = icon, contentDescription = contentDescription, tint = tint)
     }
@@ -824,7 +823,7 @@ private fun SectionTab(
     onSelected: () -> Unit,
     focusRequester: FocusRequester? = null,
     bringIntoViewRequester: BringIntoViewRequester? = null,
-    isLastTab: Boolean = false
+    isLastTab: Boolean = false,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -836,7 +835,7 @@ private fun SectionTab(
             else -> MaterialTheme.colorScheme.onSurfaceVariant
         },
         tween(FOCUS_ANIM_MS),
-        label = "tabText"
+        label = "tabText",
     )
     val scale by animateFloatAsState(if (isFocused) 1.08f else 1f, FocusScaleSpring, label = "tabScale")
 
@@ -853,7 +852,7 @@ private fun SectionTab(
                     Modifier.focusProperties { right = FocusRequester.Cancel }
                 } else {
                     Modifier
-                }
+                },
             )
             .onFocusChanged { state ->
                 if (state.isFocused) {
@@ -864,9 +863,9 @@ private fun SectionTab(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onSelected,
-                onLongClick = {}
+                onLongClick = {},
             ),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = title,
@@ -874,7 +873,7 @@ private fun SectionTab(
             fontSize = 18.sp,
             lineHeight = 18.sp, // pinned - Bold vs Normal have slightly different natural line heights,
             // which without this reflows the whole fixed-height TopNav bar by a pixel or two on every focus change
-            fontWeight = if (isSelected || isFocused) FontWeight.Bold else FontWeight.Normal
+            fontWeight = if (isSelected || isFocused) FontWeight.Bold else FontWeight.Normal,
         )
 
         Box(
@@ -882,7 +881,7 @@ private fun SectionTab(
                 .padding(top = 6.dp)
                 .size(width = if (isSelected) 20.dp else 0.dp, height = 3.dp)
                 .clip(RoundedCornerShape(50))
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colorScheme.primary),
         )
     }
 }
@@ -896,7 +895,7 @@ private fun HomeShelf(
     onVideoClick: (Video) -> Unit,
     onVideoFocus: (Video) -> Unit,
     onVideoLongClick: (Video) -> Unit,
-    onScrollEnd: (Video) -> Unit
+    onScrollEnd: (Video) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val focusRequester = remember { FocusRequester() }
@@ -941,14 +940,14 @@ private fun HomeShelf(
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
             fontSize = if (featured) 28.sp else 20.sp,
-            modifier = Modifier.padding(start = 40.dp, bottom = 14.dp)
+            modifier = Modifier.padding(start = 40.dp, bottom = 14.dp),
         )
 
         LazyRow(
             state = listState,
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 40.dp),
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             // index fallback, not hashCode(): Video.hashCode() is content-based, so two null-videoId
             // entries with otherwise-identical fields collide and crash the LazyRow.
@@ -966,7 +965,7 @@ private fun HomeShelf(
                     focusRequester = if (video.videoId == restoreFocusVideoId) focusRequester else null,
                     onClick = { onVideoClick(video) },
                     onFocus = { onVideoFocus(video) },
-                    onLongClick = { onVideoLongClick(video) }
+                    onLongClick = { onVideoLongClick(video) },
                 )
             }
         }
@@ -981,4 +980,3 @@ private fun requestFocusSafely(focusRequester: FocusRequester) {
         // no-op: not composed yet, D-pad navigation just keeps whatever focus it already had
     }
 }
-

@@ -4,16 +4,14 @@ package com.abhimankolte.aethertube.tv.ui.settings.compose
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,20 +20,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.focusGroup
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
@@ -68,7 +65,7 @@ fun SettingsScreen(
     detailTitle: String?,
     detailCategories: List<OptionCategory>?,
     showDetailBackButton: Boolean,
-    onDetailBack: () -> Unit
+    onDetailBack: () -> Unit,
 ) {
     // Nothing here requested initial system focus, so on cold entry the screen showed a category
     // visually "selected" but nothing was actually D-pad-focused - the first press did nothing until
@@ -96,7 +93,7 @@ fun SettingsScreen(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
     ) {
         // A plain Column, not a LazyColumn. focusRestorer restores by matching an *attached* child
         // node (see FocusRestorer.restoreFocusedChild), and a lazy layout does not keep off-screen
@@ -116,7 +113,7 @@ fun SettingsScreen(
                 }
                 .focusGroup()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 12.dp, vertical = 20.dp)
+                .padding(horizontal = 12.dp, vertical = 20.dp),
         ) {
             items.forEachIndexed { index, item ->
                 SettingsCategoryRow(
@@ -124,7 +121,7 @@ fun SettingsScreen(
                     isSelected = index == selectedIndex,
                     onSelected = { onItemSelected(index) },
                     onFocused = { lastFocusedRow = index },
-                    focusRequester = focusRequesters.getOrNull(index)
+                    focusRequester = focusRequesters.getOrNull(index),
                 )
             }
         }
@@ -133,7 +130,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(1.dp)
-                .background(MaterialTheme.colorScheme.border.copy(alpha = 0.4f))
+                .background(MaterialTheme.colorScheme.border.copy(alpha = 0.4f)),
         )
 
         Box(modifier = Modifier.weight(1f).fillMaxHeight().focusGroup()) {
@@ -143,7 +140,7 @@ fun SettingsScreen(
                     categories = detailCategories,
                     showBackButton = showDetailBackButton,
                     onBack = onDetailBack,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }
@@ -166,7 +163,7 @@ private fun SettingsCategoryRow(
     isSelected: Boolean,
     onSelected: () -> Unit,
     onFocused: () -> Unit,
-    focusRequester: FocusRequester? = null
+    focusRequester: FocusRequester? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -178,12 +175,12 @@ private fun SettingsCategoryRow(
             else -> androidx.compose.ui.graphics.Color.Transparent
         },
         tween(FOCUS_ANIM_MS),
-        label = "settingsCategoryBackground"
+        label = "settingsCategoryBackground",
     )
     val contentColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
         tween(FOCUS_ANIM_MS),
-        label = "settingsCategoryContent"
+        label = "settingsCategoryContent",
     )
 
     Row(
@@ -206,18 +203,18 @@ private fun SettingsCategoryRow(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onSelected,
-                onLongClick = {}
+                onLongClick = {},
             )
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (item.imageResId > 0) {
             Icon(
                 painter = painterResource(id = item.imageResId),
                 contentDescription = null,
                 tint = contentColor,
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier.size(22.dp),
             )
         }
 
@@ -226,7 +223,7 @@ private fun SettingsCategoryRow(
             color = contentColor,
             fontSize = 16.sp,
             fontWeight = if (isSelected || isFocused) FontWeight.SemiBold else FontWeight.Normal,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }

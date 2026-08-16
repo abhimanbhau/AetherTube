@@ -2,8 +2,8 @@ package com.abhimankolte.aethertube.tv.ui.common.compose
 
 import android.app.ActivityManager
 import android.content.Context
-import com.abhimankolte.aethertube.common.prefs.AetherTubePrefs
 import androidx.compose.runtime.staticCompositionLocalOf
+import com.abhimankolte.aethertube.common.prefs.AetherTubePrefs
 import com.liskovsoft.sharedutils.mylogger.Log
 
 /**
@@ -44,12 +44,10 @@ object DevicePerformance {
      * guess and is wrong in both: a 2-core Android TV emulator reports as low-end while being fine,
      * and some cheap boxes report capable hardware and still struggle.
      */
-    fun shouldSkipEffects(context: Context): Boolean {
-        return when (AetherTubePrefs.instance(context).visualEffectsMode) {
-            AetherTubePrefs.EFFECTS_ALWAYS -> false
-            AetherTubePrefs.EFFECTS_NEVER -> true
-            else -> isLowEnd(context)
-        }
+    fun shouldSkipEffects(context: Context): Boolean = when (AetherTubePrefs.instance(context).visualEffectsMode) {
+        AetherTubePrefs.EFFECTS_ALWAYS -> false
+        AetherTubePrefs.EFFECTS_NEVER -> true
+        else -> isLowEnd(context)
     }
 
     fun isLowEnd(context: Context): Boolean {
@@ -71,7 +69,10 @@ object DevicePerformance {
         Log.d(
             TAG,
             "low-end=%s (isLowRamDevice=%s, memoryClass=%sMB, cores=%s)",
-            lowEnd, lowRam, memoryClass, cores
+            lowEnd,
+            lowRam,
+            memoryClass,
+            cores,
         )
         return lowEnd
     }

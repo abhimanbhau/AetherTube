@@ -1,20 +1,16 @@
 @file:OptIn(
     androidx.tv.material3.ExperimentalTvMaterial3Api::class,
     androidx.compose.foundation.ExperimentalFoundationApi::class,
-    com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi::class
+    com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi::class,
 )
 
 package com.abhimankolte.aethertube.tv.ui.common.compose
 
-import android.graphics.Color as AndroidColor
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,16 +28,16 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -61,20 +57,24 @@ import com.liskovsoft.smartyoutubetv2.common.utils.ClickbaitRemover
 import com.liskovsoft.smartyoutubetv2.tv.R
 import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.embedplayer.EmbedPlayerView
 import kotlinx.coroutines.delay
+import android.graphics.Color as AndroidColor
 
 /** Where the video title sits relative to the artwork. */
 enum class CardTitle {
     /** Below the artwork, outside it (Home). */
     Below,
+
     /** Overlaid on the artwork's bottom edge (Search). */
-    Overlay
+    Overlay,
 }
 
 private const val FOCUS_ANIM_MS = 180
 private const val PLAYER_START_DELAY_MS = 2_000L
+
 /** Focus ring: chunky bright outer + thin dark inner, so it reads over any thumbnail. */
 private val RING_WIDTH = 4.dp
 private val RING_INNER_WIDTH = 1.5.dp
+
 /** Unfocused cards are dimmed - the one cue a bright thumbnail can't camouflage. */
 private const val UNFOCUSED_DIM = 0.35f
 
@@ -108,7 +108,7 @@ fun VideoCard(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: Dp = 0.dp,
-    focusRequester: FocusRequester? = null
+    focusRequester: FocusRequester? = null,
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
@@ -166,7 +166,7 @@ fun VideoCard(
                         if (a > 0f) {
                             drawRect(Brush.radialGradient(listOf(glowColor, Color.Transparent)), alpha = a)
                         }
-                    }
+                    },
             )
         }
 
@@ -195,7 +195,7 @@ fun VideoCard(
                             topLeft = Offset(outer / 2f, outer / 2f),
                             size = Size(size.width - outer, size.height - outer),
                             cornerRadius = CornerRadius(r),
-                            style = Stroke(width = outer)
+                            style = Stroke(width = outer),
                         )
                         val i = outer + inner / 2f
                         drawRoundRect(
@@ -203,10 +203,10 @@ fun VideoCard(
                             topLeft = Offset(i, i),
                             size = Size(size.width - i * 2f, size.height - i * 2f),
                             cornerRadius = CornerRadius((r - outer).coerceAtLeast(0f)),
-                            style = Stroke(width = inner)
+                            style = Stroke(width = inner),
                         )
                     }
-                }
+                },
         ) {
             // Static thumbnail. Deliberately NOT ViewUtil.glideOptions(): that sets
             // skipMemoryCache(true) so animated previews restart from frame one, and the leanback card
@@ -221,63 +221,68 @@ fun VideoCard(
                             Brush.verticalGradient(
                                 colors = listOf(Color.Transparent, Color.Black.copy(alpha = scrimAlpha.value)),
                                 startY = 0.4f * size.height,
-                                endY = size.height
-                            )
+                                endY = size.height,
+                            ),
                         )
-                    }
+                    },
             ) {
-            GlideImage(
-                model = ClickbaitRemover.updateThumbnail(video, mainUIData.thumbQuality),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            ) { request ->
-                request
-                    .override(widthPx, heightPx)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .error(
-                        Glide.with(context)
-                            .load(video.cardImageUrl)
-                            .error(R.drawable.card_placeholder)
-                    )
-            }
-
-            when (previewMode) {
-                PreviewMode.AnimatedImage -> GlideImage(
-                    model = video.previewUrl,
+                GlideImage(
+                    model = ClickbaitRemover.updateThumbnail(video, mainUIData.thumbQuality),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) { request ->
-                    // No caching here, unlike the thumbnail: it's what makes the animation start from
-                    // its first frame each time rather than resuming mid-loop.
-                    request.diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+                    request
+                        .override(widthPx, heightPx)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .error(
+                            Glide.with(context)
+                                .load(video.cardImageUrl)
+                                .error(R.drawable.card_placeholder),
+                        )
                 }
-                PreviewMode.Player -> VideoPreviewPlayer(
-                    video = video,
-                    muted = previewType == MainUIData.CARD_PREVIEW_MUTED,
-                    lowQuality = minOf(widthPx, heightPx) < 300
-                )
-                PreviewMode.None -> Unit
-            }
+
+                when (previewMode) {
+                    PreviewMode.AnimatedImage -> GlideImage(
+                        model = video.previewUrl,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    ) { request ->
+                        // No caching here, unlike the thumbnail: it's what makes the animation start from
+                        // its first frame each time rather than resuming mid-loop.
+                        request.diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+                    }
+                    PreviewMode.Player -> VideoPreviewPlayer(
+                        video = video,
+                        muted = previewType == MainUIData.CARD_PREVIEW_MUTED,
+                        lowQuality = minOf(widthPx, heightPx) < 300,
+                    )
+                    PreviewMode.None -> Unit
+                }
             }
 
             if (titlePlacement == CardTitle.Overlay) {
                 CardTitleText(
-                    video, titleFontSize, titleLineHeight, isFocused,
-                    Modifier.align(Alignment.BottomStart).padding(horizontal = 10.dp, vertical = 8.dp)
+                    video,
+                    titleFontSize,
+                    titleLineHeight,
+                    isFocused,
+                    Modifier.align(Alignment.BottomStart).padding(horizontal = 10.dp, vertical = 8.dp),
                 )
             }
-
         }
 
         if (titlePlacement == CardTitle.Below) {
             CardTitleText(
-                video, titleFontSize, titleLineHeight, isFocused,
+                video,
+                titleFontSize,
+                titleLineHeight,
+                isFocused,
                 Modifier
                     .align(Alignment.BottomStart)
                     .padding(horizontal = 10.dp)
-                    .size(width = width - 20.dp, height = titleHeight)
+                    .size(width = width - 20.dp, height = titleHeight),
             )
         }
     }
@@ -291,7 +296,7 @@ private fun CardTitleText(
     fontSize: TextUnit,
     lineHeight: TextUnit,
     isFocused: Boolean,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     Text(
         text = video.title.orEmpty(),
@@ -302,7 +307,7 @@ private fun CardTitleText(
         // line height silently clips the second line.
         lineHeight = lineHeight,
         maxLines = 2,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -325,7 +330,7 @@ private fun VideoPreviewPlayer(video: Video, muted: Boolean, lowQuality: Boolean
             }.also { player = it }
         },
         modifier = Modifier.fillMaxSize(),
-        onRelease = { it.finish() }
+        onRelease = { it.finish() },
     )
 
     // Opening from an effect rather than AndroidView's update lambda: update re-runs on every
@@ -334,4 +339,3 @@ private fun VideoPreviewPlayer(video: Video, muted: Boolean, lowQuality: Boolean
         player?.openVideo(video)
     }
 }
-

@@ -158,7 +158,7 @@ class ShortsFeed(seed: Video) {
                     // automatically or a dead group turns into a request loop on every press.
                     exhausted = true
                     Log.e(TAG, "Could not continue shorts group: %s", error.message)
-                }
+                },
             )
     }
 

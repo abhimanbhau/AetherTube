@@ -1,6 +1,6 @@
 @file:OptIn(
     androidx.tv.material3.ExperimentalTvMaterial3Api::class,
-    com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi::class
+    com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi::class,
 )
 
 package com.abhimankolte.aethertube.tv.ui.shorts
@@ -112,7 +112,7 @@ fun ShortsScreen(
     onTogglePlay: () -> Unit,
     onSeek: (Long) -> Unit,
     onOpenMenu: (Video) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val current = feed.current
     val focusRequester = remember { FocusRequester() }
@@ -210,7 +210,7 @@ fun ShortsScreen(
                 }
 
                 true
-            }
+            },
     ) {
         val pageHeightPx = constraints.maxHeight.toFloat()
 
@@ -228,14 +228,14 @@ fun ShortsScreen(
                         .fillMaxSize()
                         .scale(1.3f)
                         .blur(56.dp)
-                        .graphicsLayer { alpha = 0.45f }
+                        .graphicsLayer { alpha = 0.45f },
                 ) { it.diskCacheStrategy(DiskCacheStrategy.ALL) }
             }
 
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.35f))
+                    .background(Color.Black.copy(alpha = 0.35f)),
             )
         }
 
@@ -247,11 +247,11 @@ fun ShortsScreen(
                 .align(Alignment.Center)
                 .graphicsLayer { translationY = slide.value * pageHeightPx }
                 .clip(RoundedCornerShape(14.dp))
-                .background(Color.Black)
+                .background(Color.Black),
         ) {
             AndroidView(
                 factory = { playerView },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
                 // No update lambda on purpose: it re-runs on every recomposition - roughly once a
                 // frame while anything here animates - and this fork has already been bitten once by
                 // driving image loading from one. Video changes go through LaunchedEffect instead.
@@ -264,7 +264,7 @@ fun ShortsScreen(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
-                        .graphicsLayer { alpha = if (showPoster) 1f else 0f }
+                        .graphicsLayer { alpha = if (showPoster) 1f else 0f },
                 ) { it.diskCacheStrategy(DiskCacheStrategy.ALL) }
             }
 
@@ -276,7 +276,7 @@ fun ShortsScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 10.dp)
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
             )
         }
 
@@ -293,13 +293,13 @@ fun ShortsScreen(
                         translationY = (slide.value + direction) * pageHeightPx
                     }
                     .clip(RoundedCornerShape(14.dp))
-                    .background(Color.Black)
+                    .background(Color.Black),
             ) {
                 GlideImage(
                     model = next.cardImageUrl,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) { it.diskCacheStrategy(DiskCacheStrategy.ALL) }
 
                 ShortsScrim()
@@ -313,7 +313,7 @@ fun ShortsScreen(
                 channelIconUrl = channelIconUrl,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(start = 56.dp, bottom = 56.dp, end = 56.dp)
+                    .padding(start = 56.dp, bottom = 56.dp, end = 56.dp),
             )
         }
 
@@ -324,7 +324,7 @@ fun ShortsScreen(
             canGoDown = feed.hasNext() || feed.isLoadingMore,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .padding(end = 40.dp)
+                .padding(end = 40.dp),
         )
 
         if (!playing && !showPoster) {
@@ -336,13 +336,13 @@ fun ShortsScreen(
                     .size(84.dp)
                     .clip(CircleShape)
                     .background(Color.Black.copy(alpha = 0.55f)),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,
                     contentDescription = "Paused",
                     tint = Color.White,
-                    modifier = Modifier.size(44.dp)
+                    modifier = Modifier.size(44.dp),
                 )
             }
         }
@@ -352,7 +352,7 @@ fun ShortsScreen(
 /** Keys the feed owns outright; their key-ups must not reach anything underneath. */
 private val CONSUMED_KEYS = setOf(
     Key.DirectionDown, Key.DirectionUp, Key.DirectionLeft, Key.DirectionRight,
-    Key.DirectionCenter, Key.Enter, Key.MediaPlayPause, Key.Menu, Key.Back
+    Key.DirectionCenter, Key.Enter, Key.MediaPlayPause, Key.Menu, Key.Back,
 )
 
 @Composable
@@ -366,10 +366,10 @@ private fun ShortsScrim() {
                 drawRect(
                     brush = Brush.verticalGradient(
                         0.55f to Color.Transparent,
-                        1f to Color.Black.copy(alpha = 0.75f)
-                    )
+                        1f to Color.Black.copy(alpha = 0.75f),
+                    ),
                 )
-            }
+            },
     )
 }
 
@@ -377,7 +377,7 @@ private fun ShortsScrim() {
 private fun ShortsProgress(
     positionMs: Long,
     durationMs: Long,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fraction = if (durationMs > 0) (positionMs.toFloat() / durationMs).coerceIn(0f, 1f) else 0f
 
@@ -385,13 +385,13 @@ private fun ShortsProgress(
         modifier = modifier
             .height(3.dp)
             .clip(RoundedCornerShape(2.dp))
-            .background(Color.White.copy(alpha = 0.25f))
+            .background(Color.White.copy(alpha = 0.25f)),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(fraction)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colorScheme.primary),
         )
     }
 }
@@ -400,12 +400,12 @@ private fun ShortsProgress(
 private fun ShortsMetadata(
     video: Video,
     channelIconUrl: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.width(520.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             if (channelIconUrl != null) {
                 GlideImage(
@@ -414,7 +414,7 @@ private fun ShortsMetadata(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(36.dp)
-                        .clip(CircleShape)
+                        .clip(CircleShape),
                 ) { it.diskCacheStrategy(DiskCacheStrategy.ALL) }
             }
 
@@ -425,7 +425,7 @@ private fun ShortsMetadata(
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }
@@ -436,7 +436,7 @@ private fun ShortsMetadata(
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -453,31 +453,31 @@ private fun ShortsPositionHint(
     total: Int,
     canGoUp: Boolean,
     canGoDown: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Icon(
             imageVector = Icons.Filled.KeyboardArrowUp,
             contentDescription = null,
             tint = Color.White.copy(alpha = if (canGoUp) 0.85f else 0.2f),
-            modifier = Modifier.size(28.dp)
+            modifier = Modifier.size(28.dp),
         )
 
         Text(
             text = "${index + 1} / $total",
             style = MaterialTheme.typography.labelSmall,
-            color = Color.White.copy(alpha = 0.75f)
+            color = Color.White.copy(alpha = 0.75f),
         )
 
         Icon(
             imageVector = Icons.Filled.KeyboardArrowDown,
             contentDescription = null,
             tint = Color.White.copy(alpha = if (canGoDown) 0.85f else 0.2f),
-            modifier = Modifier.size(28.dp)
+            modifier = Modifier.size(28.dp),
         )
     }
 }

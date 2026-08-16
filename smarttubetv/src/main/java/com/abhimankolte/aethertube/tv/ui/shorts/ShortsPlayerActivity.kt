@@ -97,7 +97,7 @@ class ShortsPlayerActivity : LeanbackActivity() {
                     },
                     onOpenMenu = { video ->
                         VideoMenuPresenter.instance(this).showMenu(video)
-                    }
+                    },
                 )
             }
         }
