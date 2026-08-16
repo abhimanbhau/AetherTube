@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Shorts feed's video surface.
+
+    This exists purely to set surface_type - PlayerView reads it in its constructor, so it cannot be
+    changed after the fact and a programmatically built PlayerView is stuck with the default
+    SurfaceView.
+
+    TextureView is required here, not a preference. A SurfaceView is composited by SurfaceFlinger in
+    its own layer rather than drawn into the view hierarchy, so it ignores the transforms Compose puts
+    above it: the stage translates during a page change and is clipped to rounded corners, and under
+    that graphicsLayer the surface's hole-punch is confined to an offscreen layer, leaving the stage
+    solid black with the video behind everything and the poster overlay cleared away with it.
+    A TextureView draws as an ordinary view, so translation, clipping, alpha and Compose content
+    layered on top all behave.
+
+    The cost is real - TextureView goes through an extra GPU copy and cannot use the hardware video
+    plane - but it applies to one portrait video at a time here, and correctness is not optional.
+    Upstream keeps both a SurfaceViewWrapper and a TextureViewWrapper for the same reason.
+-->
+<com.abhimankolte.aethertube.tv.ui.shorts.ShortsPlayerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:surface_type="texture_view" />

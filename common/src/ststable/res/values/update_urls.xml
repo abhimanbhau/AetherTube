@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Deliberately empty.
+
+        This array used to point at upstream SmartTube's release manifest, which meant AetherTube
+        offered its own users SmartTube builds and installed them - silently converting them to a
+        different app. That is a trust problem, not a branding one.
+
+        An empty array is the safe state: AppVersionChecker explicitly handles a zero-length list by
+        logging and doing nothing, so the in-app updater is simply inert. Populate this with our own
+        release manifest once there is a release pipeline to point it at.
+    -->
+    <string-array name="update_urls"/>
+</resources>

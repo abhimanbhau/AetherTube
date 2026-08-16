@@ -1,0 +1,5 @@
+<resources translatable="false">
+    <string name="search_label">AetherTube</string>
+    <string name="settings_description">AetherTube Videos</string>
+    <string name="search_authority">com.abhimankolte.aethertube.fdroid.search_provider</string>
+</resources>

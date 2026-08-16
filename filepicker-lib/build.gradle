@@ -1,0 +1,42 @@
+apply from: gradle.ext.sharedModulesConstants
+apply plugin: 'com.android.library'
+
+android {
+
+    namespace 'arte.programar.materialfile'
+    compileSdkVersion project.properties.compileSdkVersion
+    defaultConfig {
+        minSdkVersion project.properties.minSdkVersion
+        targetSdkVersion project.properties.targetSdkVersion
+        versionCode 19
+        versionName '3.0.1'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.recyclerview:recyclerview:' + recyclerviewXVersion
+    implementation 'com.google.android.material:material:' + materialVersion
+    implementation 'androidx.fragment:fragment:' + annotationXVersion
+
+    implementation project(':fragment-1.1.0')
+}
+
+// Gradle 8: 'classifier' was removed in favour of 'archiveClassifier', and this task must be
+// registered lazily - the previous eager form read android.sourceSets before the android {} block
+// above had been evaluated, which surfaced as "compileSdkVersion is not specified".
+tasks.register('sourceJar', Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}

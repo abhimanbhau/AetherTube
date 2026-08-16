@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Upstream SmartTube's Telegram and Discord are their community channels, not ours - pointing
+        users there for an AetherTube problem would be both wrong and unfair to that community.
+        GitHub Issues on this repo is the only channel that actually exists for this fork.
+    -->
+    <string-array name="feedback">
+        <item>GitHub Issues|https://github.com/abhimanbhau/AetherTube/issues</item>
+    </string-array>
+</resources>
