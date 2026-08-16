@@ -114,6 +114,7 @@ fun SearchScreen(
     onVideoLongClick: (Video) -> Unit,
     onScrollEnd: (Video) -> Unit,
     onSearchSettingsClick: () -> Unit,
+    onVoiceSearchClick: () -> Unit,
     searchFieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
@@ -141,6 +142,7 @@ fun SearchScreen(
                 onSearchSubmit = onSearchSubmit,
                 showProgress = showProgress,
                 onSettingsClick = onSearchSettingsClick,
+                onVoiceSearchClick = onVoiceSearchClick,
                 focusRequester = searchFieldFocusRequester,
                 hasTags = tags.isNotEmpty(),
                 firstTagFocusRequester = firstTagFocusRequester,
@@ -185,6 +187,7 @@ private fun SearchBar(
     onSearchSubmit: () -> Unit,
     showProgress: Boolean,
     onSettingsClick: () -> Unit,
+    onVoiceSearchClick: () -> Unit,
     focusRequester: FocusRequester,
     hasTags: Boolean,
     firstTagFocusRequester: FocusRequester,
@@ -280,11 +283,40 @@ private fun SearchBar(
                 Text(text = "...", color = iconColor)
             }
 
-            Icon(imageVector = Icons.Filled.Mic, contentDescription = null, tint = iconColor)
+            // ComposeSearchFragment.startVoiceRecognition() is fully implemented (backs onto
+            // SpeechRecognizer via the presenter) but was never reachable from this icon - it sat here
+            // as a plain, non-interactive Icon.
+            SearchVoiceIcon(onClick = onVoiceSearchClick)
         }
 
         SearchSettingsIcon(onClick = onSettingsClick)
     }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun SearchVoiceIcon(onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val tint by animateColorAsState(
+        if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+        tween(FOCUS_ANIM_MS),
+        label = "searchVoiceTint",
+    )
+
+    Icon(
+        imageVector = Icons.Filled.Mic,
+        contentDescription = "Voice search",
+        tint = tint,
+        modifier = Modifier
+            .clip(CircleShape)
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+                onLongClick = {},
+            ),
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)

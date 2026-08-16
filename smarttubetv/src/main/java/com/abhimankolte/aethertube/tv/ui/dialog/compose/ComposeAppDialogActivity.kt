@@ -52,6 +52,11 @@ class ComposeAppDialogActivity : MotherActivity() {
 
     override fun finish() {
         if (isBackPressed && fragment.canGoBack()) {
+            // Reset here, not just in onResume(): this branch returns without the activity actually
+            // finishing, so onResume() never re-fires to clear it. A finish() called programmatically
+            // afterward (not via a back-key press) would otherwise still see the stale true and
+            // mistakenly pop a dialog level instead of finishing.
+            isBackPressed = false
             fragment.goBack()
             return
         }

@@ -167,7 +167,15 @@ fun AppDialogPanelContent(
     Column(modifier = modifier) {
         if (categories.size <= 1) {
             val category = categories.firstOrNull()
-            DialogHeader(title = title ?: category?.title?.toString(), showBackButton = showBackButton, onBack = onBack)
+            // category?.title alone renders blank for OptionCategory.singleSwitch()/singleButton() -
+            // neither factory sets it, only their one OptionItem's own title. categoryDisplayTitle()
+            // already falls back to that (used a few lines down for the multi-category list); the
+            // single-category header just wasn't using it.
+            DialogHeader(
+                title = title ?: category?.let { categoryDisplayTitle(it) },
+                showBackButton = showBackButton,
+                onBack = onBack,
+            )
             if (category != null) {
                 OptionList(category = category, modifier = Modifier.weight(1f).fillMaxWidth())
             }

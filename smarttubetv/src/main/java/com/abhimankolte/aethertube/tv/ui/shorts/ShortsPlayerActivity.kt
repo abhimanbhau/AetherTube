@@ -84,8 +84,11 @@ class ShortsPlayerActivity : LeanbackActivity() {
                     channelIconUrl = channelIconUrl,
                     onPlayVideo = { video ->
                         // Metadata is per-video; drop the previous video's before the new one lands or
-                        // the wrong avatar shows for a moment.
+                        // the wrong avatar/aspect ratio shows for a moment - e.g. a 1:1 short's box
+                        // otherwise holds until the incoming 9:16 short's ratio decodes, ShortsScreen's
+                        // 0f fallback (DEFAULT_ASPECT) is the standard vertical box every short starts as.
                         channelIconUrl = null
+                        aspectRatio = 0f
                         playerView.openVideo(video)
                     },
                     onExit = { finish() },

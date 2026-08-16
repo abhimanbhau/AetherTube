@@ -33,13 +33,24 @@ compatibility — is SmartTube's work, tracked from upstream and left alone wher
 
 ## What's different from SmartTube
 
-| | SmartTube | AetherTube |
-|---|---|---|
-| **Interface** | Leanback (View-based) | Jetpack Compose for TV — on by default, one toggle back to leanback |
-| **Shorts** | Opens one at a time | Dedicated full-bleed vertical feed — scroll like the real thing |
-| **Moving your settings** | Google Drive backup | A 12-character code you type on the next device — no account, nothing to breach |
-| **Updates** | SmartTube's release manifest | This repo's own signed releases, checked in-app |
-| Everything else — SponsorBlock, adjustable playback speed, HDR/8K/60fps, live chat, no Google account requirement | ✅ | ✅ unchanged |
+**🔑 Move your whole setup in 12 characters.** Every setting you've tuned — video quality,
+playback behavior, SponsorBlock, interface tweaks — collapses into a short code like
+`3G41-96RJ-ARGN`. Setting up a new TV, or wiped and reinstalled? Type the code in and you're
+back exactly where you left off. No account, no cloud, nothing to breach — the code *is* the
+backup. (Settings → AetherTube → Transfer settings)
+
+**📱 Shorts that actually feel like Shorts.** A dedicated, full-bleed vertical feed — flick up,
+next video, exactly like the app on your phone. SmartTube opens each one like a regular video;
+this scrolls.
+
+**🎨 A UI built for now, not stretched onto a TV from a decade-old toolkit.** The whole browsing
+and playback experience, rebuilt from scratch in Jetpack Compose.
+
+**🔔 Updates that find you.** AetherTube checks for its own new releases and tells you right in
+the app — no more remembering to come back and check GitHub for a new APK.
+
+Everything else — SponsorBlock, adjustable playback speed, HDR/8K/60fps, live chat, no Google
+account requirement — is SmartTube's, unchanged.
 
 <br>
 

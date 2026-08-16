@@ -96,6 +96,7 @@ class ComposeSearchFragment :
                     onVideoLongClick = { video -> searchPresenter.onVideoItemLongClicked(video) },
                     onScrollEnd = { video -> searchPresenter.onScrollEnd(video) },
                     onSearchSettingsClick = { searchPresenter.onSearchSettingsClicked() },
+                    onVoiceSearchClick = { startVoiceRecognition() },
                     searchFieldFocusRequester = searchFieldFocusRequester,
                 )
             }
