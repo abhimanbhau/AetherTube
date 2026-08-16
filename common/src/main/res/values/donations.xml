@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Deliberately empty.
+
+        This carried upstream SmartTube's Patreon, a PayPal address and a dozen crypto wallets.
+        Shipping those behind AetherTube's branding would take money from people who believe they are
+        supporting this fork and quietly route it elsewhere - and swapping in our own accounts while
+        running on upstream's work would be no better.
+
+        AboutSettingsPresenter.appendDonation() skips the whole category when this array is empty, so
+        the Donation entry simply does not appear.
+
+        Upstream is credited in the README, which is the right place for it.
+    -->
+    <string-array name="donations"/>
+</resources>
