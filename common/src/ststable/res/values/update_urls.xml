@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        Points at our own release manifest, generated and attached by release.yml on every
-        release. /releases/latest/download/ is GitHub's built-in "always the newest non-draft,
-        non-prerelease release" redirect - no moving tag to maintain, unlike upstream's scheme.
+        STABLE CHANNEL. /releases/latest/download/ is GitHub's built-in "newest non-draft,
+        non-prerelease release" redirect, so it resolves to whatever release.yml last published and
+        silently skips every beta-latest prerelease CI.yml puts out. That single property is what
+        guarantees a stable install is never offered a beta build - there is no version comparison
+        or channel flag doing the work, just the redirect.
 
-        AppVersionChecker compares versionCode, not versionName - release.yml bumps versionCode
-        to the release date (YYYYMMDD) on every run specifically so this comparison means
-        something. See docs/ROADMAP.md if that ever needs revisiting.
+        Published by release.yml, which only runs when a human pushes a v* tag. See
+        common/src/stbeta/res/values/update_urls.xml for the other side of the split.
     -->
     <string-array name="update_urls">
         <item>https://github.com/abhimanbhau/AetherTube/releases/latest/download/update_manifest.json</item>

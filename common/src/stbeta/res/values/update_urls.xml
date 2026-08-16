@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        Points at our own release manifest, generated and attached by release.yml on every
-        release. /releases/latest/download/ is GitHub's built-in "always the newest non-draft,
-        non-prerelease release" redirect - no moving tag to maintain, unlike upstream's scheme.
+        BETA CHANNEL. Deliberately NOT /releases/latest/download/ like the stable flavor uses - that
+        redirect resolves to the newest *non-prerelease* release, which is exactly what keeps stable
+        users from ever being offered a beta build. The flip side is that it can never point at a
+        beta, so beta installs need a fixed address of their own.
 
-        AppVersionChecker compares versionCode, not versionName - release.yml bumps versionCode
-        to the release date (YYYYMMDD) on every run specifically so this comparison means
-        something. See docs/ROADMAP.md if that ever needs revisiting.
+        beta-latest is a rolling tag: CI.yml deletes and recreates it on every push to master, so
+        this URL always serves the newest beta manifest without anything here needing to change.
+
+        The two channels are separate apps (applicationId .beta vs .stable), so they update
+        independently and neither can overwrite the other.
     -->
     <string-array name="update_urls">
-        <item>https://github.com/abhimanbhau/AetherTube/releases/latest/download/update_manifest.json</item>
+        <item>https://github.com/abhimanbhau/AetherTube/releases/download/beta-latest/update_manifest.json</item>
     </string-array>
 </resources>

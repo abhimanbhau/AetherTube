@@ -8,18 +8,18 @@ name: Release
 # KEY_PASSWORD. Unlike the beta CI build, this workflow refuses to produce an unsigned
 # release - an unsigned APK can't be installed as an update over a signed install anyway.
 #
-# The nightly schedule below is gated on check-for-changes so a quiet night doesn't republish
-# identical APKs under a new tag - that's release-notification spam for anyone watching the repo,
-# for zero new content. Nightly runs are also tagged/published as --prerelease, which keeps them
-# out of GitHub's /releases/latest redirect (see common/src/main/res/values/update_urls.xml) - so
-# the in-app updater only ever offers users a deliberately tagged/dispatched release, never an
-# unreviewed nightly build.
+# THIS IS THE STABLE CHANNEL. It builds the ststable flavor (applicationId
+# com.abhimankolte.aethertube.stable) and publishes a normal, non-prerelease GitHub release, which is
+# what /releases/latest/download/ resolves to - see common/src/ststable/res/values/update_urls.xml.
+#
+# It only ever runs when a human pushes a v* tag (or dispatches it). There is deliberately no
+# schedule: the beta channel in CI.yml already ships every commit automatically to a separate app, so
+# stable moves only when someone decides it should. That separation is the entire point - a bug that
+# lands on master reaches beta testers immediately and stable users not at all.
 
 on:
   push:
     tags: [ "v*" ]
-  schedule:
-    - cron: '0 0 * * *'
   workflow_dispatch:
     inputs:
       version_name:
@@ -30,38 +30,7 @@ permissions:
   contents: write
 
 jobs:
-  check-for-changes:
-    if: github.event_name == 'schedule'
-    runs-on: ubuntu-latest
-    outputs:
-      has_changes: ${{ steps.changes.outputs.has_changes }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-        with:
-          fetch-depth: 0
-
-      - name: Check for commits since the last release tag
-        id: changes
-        run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || echo "")
-
-          if [ -z "$LAST_TAG" ]; then
-            echo "No previous release tag found - proceeding."
-            echo "has_changes=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          COUNT=$(git rev-list "$LAST_TAG"..HEAD --count)
-          echo "$COUNT commit(s) since $LAST_TAG"
-          echo "has_changes=$([ "$COUNT" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
-
   release:
-    needs: [check-for-changes]
-    # needs: on a job that's itself conditionally skipped (schedule-only) would otherwise skip this
-    # job too by default on every non-schedule trigger - always() overrides that so tag-push/manual
-    # runs are unaffected, and the actual gating is this condition, not the implicit needs check.
-    if: always() && (github.event_name != 'schedule' || needs.check-for-changes.outputs.has_changes == 'true')
     runs-on: ubuntu-latest
     env:
       HAS_SIGNING_KEY: ${{ secrets.SIGNING_KEY != '' }}
@@ -98,14 +67,6 @@ jobs:
           elif [ "${{ github.ref_type }}" = "tag" ]; then
             TAG="${{ github.ref_name }}"
             VERSION_NAME="${TAG#v}"
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            # build.gradle's versionName only moves when a maintainer bumps it by hand, so reusing
-            # it as-is would try to recreate the same tag on the second qualifying night in a row
-            # and fail outright (gh release create errors on an existing tag). Suffix with the date
-            # to keep every nightly tag unique regardless of how often versionName itself changes.
-            BASE_VERSION_NAME=$(grep "versionName" smarttubetv/build.gradle | head -n 1 | awk -F'"' '{print $2}')
-            VERSION_NAME="${BASE_VERSION_NAME}-nightly.$(date -u +%Y%m%d)"
-            TAG="v$VERSION_NAME"
           else
             VERSION_NAME=$(grep "versionName" smarttubetv/build.gradle | head -n 1 | awk -F'"' '{print $2}')
             TAG="v$VERSION_NAME"
@@ -147,7 +108,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build signed release APKs
-        run: ./gradlew clean assembleStbetaRelease
+        run: ./gradlew clean assembleStstableRelease
 
       - name: Build changelog from commits since the previous release
         id: changelog
@@ -184,7 +145,7 @@ jobs:
 
       - name: Generate update manifest
         run: |
-          cd smarttubetv/build/outputs/apk/stbeta/release
+          cd smarttubetv/build/outputs/apk/ststable/release
 
           # An unquoted glob that matches zero files expands to the literal pattern (a garbage
           # filename that then ends up embedded as a real download URL in the manifest); one that
@@ -239,17 +200,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Nightly builds are marked prerelease so GitHub's /releases/latest redirect - what
-          # AppVersionChecker points at - keeps skipping straight past them to the last deliberately
-          # tagged/dispatched release. They're still fully public on the Releases page for anyone
-          # who wants one on purpose.
-          PRERELEASE_FLAG=""
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            PRERELEASE_FLAG="--prerelease"
-          fi
-
+          # Deliberately NOT --prerelease: this is the stable channel, and being the newest
+          # non-prerelease is exactly what makes /releases/latest/download/ resolve here for
+          # ststable installs. The beta channel publishes its own prerelease from CI.yml.
           gh release create "${{ steps.version.outputs.TAG }}" \
-            ./smarttubetv/build/outputs/apk/stbeta/release/*.apk \
+            ./smarttubetv/build/outputs/apk/ststable/release/*.apk \
             ./update_manifest.json \
             --title "AetherTube ${{ steps.version.outputs.VERSION_NAME }}" \
             --generate-notes \

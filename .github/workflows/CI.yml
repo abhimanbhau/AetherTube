@@ -40,6 +40,7 @@ jobs:
           sed -i "s/versionName \"\(.*\)\"/versionName \"\1-nightly-${{ github.run_number }}\"/" smarttubetv/build.gradle
           sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" smarttubetv/build.gradle
           echo "VERSION_NAME=$(grep "versionName" smarttubetv/build.gradle | head -n 1 | awk -F'"' '{print $2}')" >> $GITHUB_OUTPUT
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_OUTPUT
 
       - name: Configure Build Signing
         if: ${{ env.HAS_SIGNING_KEY == 'true' }}
@@ -126,6 +127,65 @@ jobs:
           path: ./smarttubetv/build/outputs/apk/stbeta/release/*_x86.apk
           if-no-files-found: error
 
+      # Beta needs its own update manifest, exactly like the stable channel's. Beta installs cannot
+      # use /releases/latest/download/ - that redirect deliberately skips prereleases, which is what
+      # keeps stable users off beta builds - so common/src/stbeta/res/values/update_urls.xml points
+      # at this rolling beta-latest tag instead. Without a manifest here the beta app would never
+      # see its own updates at all.
+      - name: Generate beta update manifest
+        if: ${{ env.HAS_SIGNING_KEY == 'true' }}
+        run: |
+          cd smarttubetv/build/outputs/apk/stbeta/release
+
+          # Same exactly-one-match validation as release.yml: an unmatched glob would otherwise be
+          # embedded as a literal, broken download URL and only fail much later, on a user's device.
+          find_one() {
+            local pattern="$1"
+            local matches=(./*"$pattern")
+            if [ ! -e "${matches[0]}" ]; then
+              echo "No file matching *$pattern in $(pwd)" >&2
+              exit 1
+            fi
+            if [ "${#matches[@]}" -ne 1 ]; then
+              echo "Expected exactly one file matching *$pattern, found ${#matches[@]}: ${matches[*]}" >&2
+              exit 1
+            fi
+            basename "${matches[0]}"
+          }
+
+          UNIVERSAL=$(find_one "_universal.apk")
+          ARM64=$(find_one "_arm64-v8a.apk")
+          ARMV7=$(find_one "_armeabi-v7a.apk")
+          X86=$(find_one "_x86.apk")
+          cd "${{ github.workspace }}"
+
+          BASE="https://github.com/${{ github.repository }}/releases/download/beta-latest"
+
+          # Beta has no "previous tag" to diff against - beta-latest is a rolling tag that always
+          # points at the newest build - so just show the most recent commits.
+          CHANGELOG=$(git log --no-merges --pretty=format:'%s' -12 | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          if [ -z "$CHANGELOG" ] || [ "$CHANGELOG" = "[]" ]; then
+            CHANGELOG='["Continuous beta build."]'
+          fi
+
+          jq -n \
+            --arg universal "$BASE/$UNIVERSAL" \
+            --arg arm64 "$BASE/$ARM64" \
+            --arg armv7 "$BASE/$ARMV7" \
+            --arg x86 "$BASE/$X86" \
+            --arg versionName "${{ steps.get_version.outputs.VERSION_NAME }}" \
+            --argjson versionCode "${{ steps.get_version.outputs.VERSION_CODE }}" \
+            --argjson changelog "$CHANGELOG" \
+            '{
+              package: {
+                downloadUrl: $universal,
+                "downloadUrlList_arm64-v8a": [$arm64],
+                "downloadUrlList_armeabi-v7a": [$armv7],
+                "downloadUrlList_x86": [$x86]
+              }
+            } + { ($versionName): { versionCode: $versionCode, changelog: $changelog } }' \
+            > update_manifest.json
+
       # Only runs when signing secrets are configured - an unsigned APK published here would be a
       # broken update chain for anyone who installs it (see release.yml's own reasoning for the
       # same refusal). Rolling tag, not append-only: gh release create errors on a tag that already
@@ -146,6 +206,7 @@ jobs:
 
           gh release create beta-latest \
             ./smarttubetv/build/outputs/apk/stbeta/release/*.apk \
+            ./update_manifest.json \
             --title "AetherTube Beta (Latest Commit)" \
             --notes "Continuous build from commit ${{ github.sha }} (run #${{ github.run_number }}). Not a stable release - see the Releases page for those." \
             --prerelease
