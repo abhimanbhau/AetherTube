@@ -73,6 +73,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.tv.material3.Icon
@@ -385,7 +386,9 @@ private fun VideoResultRow(
             contentPadding = PaddingValues(horizontal = 32.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(row.videos, key = { video -> video.videoId ?: video.hashCode().toString() }) { video ->
+            // index fallback, not hashCode(): Video.hashCode() is content-based, so two null-videoId
+            // entries with otherwise-identical fields collide and crash the LazyRow.
+            itemsIndexed(row.videos, key = { index, video -> video.videoId ?: "video_$index" }) { _, video ->
                 VideoCard(
                     video = video,
                     width = CARD_WIDTH,

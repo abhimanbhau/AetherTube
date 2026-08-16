@@ -65,7 +65,13 @@ jobs:
           # existing install. versionName is cosmetic; this can't be. Date-based so it's always
           # both increasing and larger than the 2397 this fork inherited from upstream - the
           # existing baseline needs no migration, it's just already smaller than any real date.
-          VERSION_CODE=$(date -u +%Y%m%d)
+          #
+          # The 2-digit run-number suffix matters: two releases on the same UTC day (a manual
+          # re-run to fix something, on top of the automated one) would otherwise share a
+          # versionCode, and Android refuses to install an "update" that doesn't strictly increase
+          # it. run_number always increases within this workflow, so plain YYYYMMDD + (run_number
+          # mod 100) can't collide same-day short of 100 releases in one day.
+          VERSION_CODE="$(date -u +%Y%m%d)$(printf '%02d' $((${{ github.run_number }} % 100)))"
 
           echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_OUTPUT"
           echo "VERSION_CODE=$VERSION_CODE" >> "$GITHUB_OUTPUT"
@@ -90,10 +96,31 @@ jobs:
       - name: Generate update manifest
         run: |
           cd smarttubetv/build/outputs/apk/stbeta/release
-          UNIVERSAL=$(basename *_universal.apk)
-          ARM64=$(basename *_arm64-v8a.apk)
-          ARMV7=$(basename *_armeabi-v7a.apk)
-          X86=$(basename *_x86.apk)
+
+          # An unquoted glob that matches zero files expands to the literal pattern (a garbage
+          # filename that then ends up embedded as a real download URL in the manifest); one that
+          # matches multiple files passes all of them to basename, which prints multiple lines
+          # into what's supposed to be a single filename. Both fail silently downstream instead of
+          # here, where the actual problem is. Fail loudly instead - a build producing something
+          # other than exactly one APK per ABI is itself a problem worth stopping on.
+          find_one() {
+            local pattern="$1"
+            local matches=(./*"$pattern")
+            if [ ! -e "${matches[0]}" ]; then
+              echo "No file matching *$pattern in $(pwd)" >&2
+              exit 1
+            fi
+            if [ "${#matches[@]}" -ne 1 ]; then
+              echo "Expected exactly one file matching *$pattern, found ${#matches[@]}: ${matches[*]}" >&2
+              exit 1
+            fi
+            basename "${matches[0]}"
+          }
+
+          UNIVERSAL=$(find_one "_universal.apk")
+          ARM64=$(find_one "_arm64-v8a.apk")
+          ARMV7=$(find_one "_armeabi-v7a.apk")
+          X86=$(find_one "_x86.apk")
           cd "${{ github.workspace }}"
 
           BASE="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.TAG }}"

@@ -617,10 +617,14 @@ private fun GridContent(
     ) {
         gridItemsIndexed(
             entries,
-            key = { _, entry ->
+            key = { index, entry ->
                 when (entry) {
                     is GridEntry.Header -> "header_${entry.rowId}"
-                    is GridEntry.VideoEntry -> entry.video.videoId ?: entry.video.hashCode().toString()
+                    // Video.hashCode() is content-based (videoId, playlistId, ...), so two entries
+                    // with identical null fields (placeholders, or a genuine duplicate from the
+                    // feed) produce the same hash - a real IllegalArgumentException risk, not a
+                    // hypothetical one. index is guaranteed unique within this render.
+                    is GridEntry.VideoEntry -> entry.video.videoId ?: "video_$index"
                 }
             },
             span = { _, entry -> if (entry is GridEntry.Header) GridItemSpan(maxLineSpan) else GridItemSpan(1) }
@@ -946,7 +950,9 @@ private fun HomeShelf(
             contentPadding = PaddingValues(horizontal = 40.dp),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            items(row.videos, key = { video -> video.videoId ?: video.hashCode().toString() }) { video ->
+            // index fallback, not hashCode(): Video.hashCode() is content-based, so two null-videoId
+            // entries with otherwise-identical fields collide and crash the LazyRow.
+            itemsIndexed(row.videos, key = { index, video -> video.videoId ?: "video_$index" }) { _, video ->
                 VideoCard(
                     video = video,
                     width = if (featured) FEATURED_CARD_WIDTH else CARD_WIDTH,
