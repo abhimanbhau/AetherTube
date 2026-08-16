@@ -21,9 +21,26 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 /**
+ * Deliberately tiny. 16:9 at this size still carries the artwork's colour composition - which is all
+ * an out-of-focus background needs - while being small enough that the upscale is unmistakably soft
+ * on any panel size.
+ */
+private const val BACKDROP_SAMPLE_W = 64
+private const val BACKDROP_SAMPLE_H = 36
+
+/**
  * Google TV-style ambient background: a heavily blurred, dimmed crossfade of whatever video/tag
- * currently has focus, sitting behind the whole screen. Blur degrades gracefully to a plain
- * (unblurred) dimmed image pre-API 31 - Modifier.blur() is a no-op there rather than a crash.
+ * currently has focus, sitting behind the whole screen.
+ *
+ * The blur comes from **downsampling**, not from [androidx.compose.ui.draw.blur]: the artwork is
+ * fetched at [BACKDROP_SAMPLE_W]x[BACKDROP_SAMPLE_H] and stretched across the viewport, so the
+ * GPU's own bilinear filtering does the smoothing for free. That matters for two reasons.
+ * `Modifier.blur()` is a silent no-op below API 31, which meant the app's signature look simply
+ * never appeared on any device older than Android 12 - and there was no way to tell from inside the
+ * app, since nothing errors, the effect just isn't there. It's also the more expensive option where
+ * it does work: a full-viewport RenderEffect re-runs on every image change, whereas a 64x36 texture
+ * upscale costs essentially nothing. `Modifier.blur()` is still applied on top where available, but
+ * only as extra polish - the ambient look no longer depends on it.
  */
 @Composable
 fun HeroBackdrop(imageUrl: String?, modifier: Modifier = Modifier) {
@@ -43,8 +60,10 @@ fun HeroBackdrop(imageUrl: String?, modifier: Modifier = Modifier) {
                 },
                 modifier = Modifier
                     .fillMaxSize()
+                    // Polish only, not the source of the effect (see the class comment). Still skipped
+                    // on weak hardware, where the downsampled upscale alone already reads as blurred.
                     .then(if (lowEnd) Modifier else Modifier.blur(48.dp))
-                    .alpha(if (lowEnd) 0.35f else 0.55f),
+                    .alpha(0.55f),
                 update = { imageView ->
                     // update runs on every recomposition of whatever hosts this backdrop, not just when
                     // imageUrl actually changes - guard against Glide re-triggering (and resetting the
@@ -56,6 +75,7 @@ fun HeroBackdrop(imageUrl: String?, modifier: Modifier = Modifier) {
 
                     Glide.with(imageView.context)
                         .load(imageUrl)
+                        .override(BACKDROP_SAMPLE_W, BACKDROP_SAMPLE_H)
                         .transition(DrawableTransitionOptions.withCrossFade(400))
                         .into(imageView)
                 },

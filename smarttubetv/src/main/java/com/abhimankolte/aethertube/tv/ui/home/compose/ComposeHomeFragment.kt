@@ -306,6 +306,18 @@ class ComposeHomeFragment :
         lastFocusedSectionId = section.id
         pendingFocusVideoId = sectionFocusMemory[section.id]
 
+        // Pinned error/notification sections - the "Update" tab AppUpdatePresenter.pinUpdateSection()
+        // adds, most visibly - carry their own ErrorFragmentData and have nothing to load. Upstream's
+        // BrowsePresenter.updateSection() handles TYPE_ERROR by calling showProgressBar(false) and
+        // nothing else, so it never pushes that data at the view: the tab appeared in the strip and
+        // then rendered a completely empty page. Read it off the section directly instead.
+        if (section.type == BrowseSection.TYPE_ERROR) {
+            clearContent()
+            errorData = section.data as? ErrorFragmentData
+            isCurrentSectionSettled = true
+            return
+        }
+
         val cached = sectionCache[section.id]
         if (cached != null) {
             restoreContent(cached)

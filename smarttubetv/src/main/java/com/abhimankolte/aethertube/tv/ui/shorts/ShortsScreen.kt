@@ -80,6 +80,10 @@ private const val SEEK_STEP_MS = 5_000L
 /** Position polling interval. Only feeds the progress bar, so it can be lazy. */
 private const val PROGRESS_POLL_MS = 300L
 
+/** Ambient backdrop sample size - see the note at its call site. Tiny on purpose. */
+private const val AMBIENT_SAMPLE_W = 64
+private const val AMBIENT_SAMPLE_H = 36
+
 /**
  * The vertical Shorts feed.
  *
@@ -232,28 +236,33 @@ fun ShortsScreen(
 
         // A 9:16 video on a 16:9 screen leaves two thirds of the width empty. Filling it with a
         // blurred, over-scaled copy of the artwork is what stops the feed reading as a small window on
-        // black. Skipped on weak hardware - a full-screen blur is among the more expensive things we
-        // could ask a cheap box for, and this one is pure decoration.
-        if (!lowEnd) {
-            current?.cardImageUrl?.let { url ->
-                GlideImage(
-                    model = url,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .scale(1.3f)
-                        .blur(56.dp)
-                        .graphicsLayer { alpha = 0.45f },
-                ) { it.diskCacheStrategy(DiskCacheStrategy.ALL) }
-            }
-
-            Box(
+        // black.
+        //
+        // The softness comes from the override() downsample below, not from Modifier.blur() - the
+        // latter is a silent no-op below API 31, so this whole effect was invisible on anything older
+        // than Android 12 with no way to tell from inside the app. Same fix as HeroBackdrop; see its
+        // class comment. Rendered on every device now, since a 64x36 upscale is far cheaper than the
+        // RenderEffect it replaces; blur() stays on top purely as polish where it's supported.
+        current?.cardImageUrl?.let { url ->
+            GlideImage(
+                model = url,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.35f)),
-            )
+                    .scale(1.3f)
+                    .then(if (lowEnd) Modifier else Modifier.blur(56.dp))
+                    .graphicsLayer { alpha = 0.45f },
+            ) {
+                it.override(AMBIENT_SAMPLE_W, AMBIENT_SAMPLE_H).diskCacheStrategy(DiskCacheStrategy.ALL)
+            }
         }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.35f)),
+        )
 
         // ---- The stage: the one and only video surface ------------------------------------------
         Box(

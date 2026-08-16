@@ -59,7 +59,15 @@ public class AetherTubePrefs {
     private void restoreState() {
         String[] split = Helpers.splitData(mPrefs.getProfileData(AETHERTUBE_DATA));
 
-        mVisualEffectsMode = Helpers.parseInt(split, 0, EFFECTS_AUTO);
+        // Defaults to ALWAYS, not AUTO. The ambient blur is the single most recognisable thing about
+        // this fork's UI, and AUTO was switching it off on capable hardware: the heuristic's strongest
+        // signal is ActivityManager.isLowRamDevice, which a great many Android TV boxes report true
+        // regardless of how capable they actually are. Guessing wrong in that direction silently
+        // removes the app's signature look; guessing wrong the other way costs some GPU time on a
+        // device whose owner can still pick "Auto (match device)" or "Always off" explicitly. This
+        // also makes the setting robust against ever failing to restore - the fallback is now the
+        // look people expect rather than the absence of it.
+        mVisualEffectsMode = Helpers.parseInt(split, 0, EFFECTS_ALWAYS);
     }
 
     private void persistState() {
