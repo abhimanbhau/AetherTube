@@ -5,6 +5,9 @@ on:
     branches: [ "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,8 +31,14 @@ jobs:
       - name: Update Version Name
         id: get_version
         run: |
-          # Keep the original code to make the nightly and original builds interchangeable
+          # versionCode needs to actually increase between beta builds too, or a device that
+          # installed today's beta can't install tomorrow's over it (Android refuses a same-or-lower
+          # versionCode "update", same rule release.yml already follows). Suffix range is 00-49,
+          # release.yml uses 50-99 for the same day - keeps the two workflows' independent
+          # github.run_number sequences from ever landing on the same versionCode on the same date.
+          VERSION_CODE="$(date -u +%Y%m%d)$(printf '%02d' $((${{ github.run_number }} % 50)))"
           sed -i "s/versionName \"\(.*\)\"/versionName \"\1-nightly-${{ github.run_number }}\"/" smarttubetv/build.gradle
+          sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" smarttubetv/build.gradle
           echo "VERSION_NAME=$(grep "versionName" smarttubetv/build.gradle | head -n 1 | awk -F'"' '{print $2}')" >> $GITHUB_OUTPUT
 
       - name: Configure Build Signing
@@ -116,3 +125,22 @@ jobs:
           name: AetherTube_${{ steps.get_version.outputs.VERSION_NAME }}_x86
           path: ./smarttubetv/build/outputs/apk/stbeta/release/*_x86.apk
           if-no-files-found: error
+
+      # Only runs when signing secrets are configured - an unsigned APK published here would be a
+      # broken update chain for anyone who installs it (see release.yml's own reasoning for the
+      # same refusal). Rolling tag, not append-only: gh release create errors on a tag that already
+      # exists, --clobber only covers re-uploading same-named assets, not recreating the release
+      # object itself - delete-then-recreate is the reliable way to keep this a single moving target.
+      - name: Publish Beta Pre-Release
+        if: ${{ env.HAS_SIGNING_KEY == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete beta-latest --yes --cleanup-tag || true
+
+          gh release create beta-latest \
+            ./smarttubetv/build/outputs/apk/stbeta/release/*.apk \
+            --title "AetherTube Beta (Latest Commit)" \
+            --notes "Continuous build from commit ${{ github.sha }} (run #${{ github.run_number }}). Not a stable release - see the Releases page for those." \
+            --prerelease \
+            --target ${{ github.sha }}
