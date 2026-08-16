@@ -51,6 +51,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
@@ -141,6 +142,8 @@ fun HomeScreen(
     onSectionSelected: (Int) -> Unit,
     onSearchClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    accountAvatarUrl: String?,
+    onAccountClick: () -> Unit,
     showProgress: Boolean,
     backdropUrl: String?,
     rows: List<HomeRow>,
@@ -194,6 +197,8 @@ fun HomeScreen(
                 onSectionSelected = onSectionSelected,
                 onSearchClick = onSearchClick,
                 onSettingsClick = onSettingsClick,
+                accountAvatarUrl = accountAvatarUrl,
+                onAccountClick = onAccountClick,
                 showProgress = showProgress,
                 activeTabFocusRequester = activeTabFocusRequester,
                 navRowFocusRequester = topNavFocusRequester,
@@ -709,6 +714,8 @@ private fun TopNav(
     onSectionSelected: (Int) -> Unit,
     onSearchClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    accountAvatarUrl: String?,
+    onAccountClick: () -> Unit,
     showProgress: Boolean,
     activeTabFocusRequester: FocusRequester,
     navRowFocusRequester: FocusRequester,
@@ -767,6 +774,7 @@ private fun TopNav(
     ) {
         NavIconButton(Icons.Filled.Settings, "Settings", onSettingsClick, isFirstIcon = true)
         NavIconButton(Icons.Filled.Search, "Search", onSearchClick)
+        AccountAvatarButton(avatarUrl = accountAvatarUrl, onClick = onAccountClick)
 
         // Settings is its own dedicated screen (see ComposeSettingsActivity), reached via the gear
         // icon above like Search's magnifier - not a tab, so it's excluded from this tab strip.
@@ -847,6 +855,57 @@ private fun NavIconButton(
         contentAlignment = Alignment.Center,
     ) {
         Icon(imageVector = icon, contentDescription = contentDescription, tint = tint)
+    }
+}
+
+/**
+ * Current account's avatar, next to Search/Settings - tapping it opens the account quick-switcher
+ * (see [AccountSelectionPresenter][com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.AccountSelectionPresenter])
+ * instead of requiring a trip through Settings. Same focus/scale language as [NavIconButton], just
+ * rendering a circular image instead of a tinted vector - a generic person glyph stands in for
+ * signed-out/no-avatar accounts.
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun AccountAvatarButton(avatarUrl: String?, onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val scale by animateFloatAsState(if (isFocused) 1.12f else 1f, FocusScaleSpring, label = "accountAvatarScale")
+    val background by animateColorAsState(
+        if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
+        tween(FOCUS_ANIM_MS),
+        label = "accountAvatarBackground",
+    )
+
+    Box(
+        modifier = Modifier
+            .scale(scale)
+            .clip(CircleShape)
+            .background(background)
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+                onLongClick = {},
+            )
+            .padding(NAV_ICON_PADDING),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (avatarUrl != null) {
+            GlideImage(
+                model = avatarUrl,
+                contentDescription = "Account",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(24.dp).clip(CircleShape),
+            ) { it.diskCacheStrategy(DiskCacheStrategy.ALL) }
+        } else {
+            val tint by animateColorAsState(
+                if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
+                tween(FOCUS_ANIM_MS),
+                label = "accountAvatarTint",
+            )
+            Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Account", tint = tint)
+        }
     }
 }
 

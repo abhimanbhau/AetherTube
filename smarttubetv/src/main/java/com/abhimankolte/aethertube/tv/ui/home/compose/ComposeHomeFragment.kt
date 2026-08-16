@@ -15,6 +15,7 @@ import androidx.tv.material3.ExperimentalTvMaterial3Api
 import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
 import com.abhimankolte.aethertube.tv.ui.settings.compose.ComposeSettingsActivity
 import com.abhimankolte.aethertube.tv.ui.shorts.ShortsPlayerActivity
+import com.liskovsoft.mediaserviceinterfaces.oauth.Account
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsGroup
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsItem
@@ -23,8 +24,10 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.data.VideoGroup
 import com.liskovsoft.smartyoutubetv2.common.app.models.errors.ErrorFragmentData
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.BrowsePresenter
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SearchPresenter
+import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.AccountSelectionPresenter
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.service.SidebarService
 import com.liskovsoft.smartyoutubetv2.common.app.views.BrowseView
+import com.liskovsoft.youtubeapi.service.YouTubeServiceManager
 
 /**
  * Compose-for-TV replacement for the app's leanback [com.liskovsoft.smartyoutubetv2.tv.ui.browse.BrowseFragment]
@@ -49,6 +52,12 @@ class ComposeHomeFragment :
     private var currentSectionType by mutableStateOf(BrowseSection.TYPE_ROW)
     private var showProgress by mutableStateOf(false)
     private var focusedBackdropUrl by mutableStateOf<String?>(null)
+
+    // Backs the TopNav avatar button (see onAccountClick below). SignInService.addOnAccountChange
+    // has no matching remove method, so this listener - and the closure capturing this fragment -
+    // outlives any one fragment instance; harmless here since it only ever writes into a
+    // mutableStateOf, and account switches are a rare, user-driven event, not a hot path.
+    private var currentAccount by mutableStateOf<Account?>(null)
     private val homeRows = mutableStateListOf<HomeRow>()
     private val rowsById = LinkedHashMap<Int, HomeRow>()
 
@@ -112,6 +121,10 @@ class ComposeHomeFragment :
         diskCache = SectionDiskCache(requireContext())
         browsePresenter = BrowsePresenter.instance(requireContext())
         browsePresenter.setView(this)
+
+        val signInService = YouTubeServiceManager.instance().signInService
+        currentAccount = signInService.selectedAccount
+        signInService.addOnAccountChange { account -> currentAccount = account }
     }
 
     @OptIn(ExperimentalTvMaterial3Api::class)
@@ -125,6 +138,8 @@ class ComposeHomeFragment :
                     onSectionSelected = ::onSectionSelected,
                     onSearchClick = { SearchPresenter.instance(requireContext()).startSearch(null) },
                     onSettingsClick = { startActivity(Intent(requireContext(), ComposeSettingsActivity::class.java)) },
+                    accountAvatarUrl = currentAccount?.avatarImageUrl,
+                    onAccountClick = { AccountSelectionPresenter.instance(requireContext()).show(true) },
                     showProgress = showProgress,
                     backdropUrl = focusedBackdropUrl,
                     rows = homeRows,
