@@ -17,6 +17,9 @@ on:
         description: "Version name for this release (defaults to the tag, or build.gradle's versionName for a manual run)"
         required: false
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
