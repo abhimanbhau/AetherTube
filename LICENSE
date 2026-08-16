@@ -3,12 +3,6 @@ MIT License
 Copyright (c) 2020-present yuliskov
 Copyright (c) 2026-present Abhiman Kolte
 
-AetherTube is a fork of SmartTube (https://github.com/yuliskov/SmartTube).
-The original copyright notice above is retained as MIT requires; the second
-line covers the changes made in this fork. Bundled third-party sources
-(exoplayer-amzn, leanback, chatkit, commons-io and the git submodules) carry
-their own licences, which are unmodified.
-
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
