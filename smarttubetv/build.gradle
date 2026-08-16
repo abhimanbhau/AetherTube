@@ -56,6 +56,16 @@ android {
     // known set changes deliberately.
     lint {
         baseline = file("lint-baseline.xml")
+
+        // Deliberate, not a baseline candidate: release.yml and CI.yml both derive versionCode
+        // from the release date (YYYYMMDD + a 2-digit suffix) so it's always increasing without
+        // tracking any state - see the comment on VERSION_CODE in both workflow files. That
+        // scheme intentionally lands in the range lint calls out here (currently ~95% of
+        // Int.MAX_VALUE, still safely under it until roughly year 2100). A baseline entry would
+        // need constant regeneration since the exact flagged value changes every single day;
+        // disabling the rule is the correct tool for "we've reviewed this and it's on purpose",
+        // not "we haven't gotten to it yet".
+        disable 'HighAppVersionCode'
     }
 
     // FIX: Default interface methods are only supported starting with Android N (--min-api 24)
