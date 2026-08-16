@@ -131,6 +131,12 @@ jobs:
       # same refusal). Rolling tag, not append-only: gh release create errors on a tag that already
       # exists, --clobber only covers re-uploading same-named assets, not recreating the release
       # object itself - delete-then-recreate is the reliable way to keep this a single moving target.
+      #
+      # No --target: an explicit commit SHA there made GitHub's release list sort this release as
+      # the *oldest* on the page instead of the newest, even though its own created_at was the most
+      # recent of all releases - the stable releases (created via release.yml, which also omits
+      # --target) sorted correctly. Omitting it targets the default branch the same way release.yml
+      # already does, which resolves to this exact commit anyway since that's what's checked out.
       - name: Publish Beta Pre-Release
         if: ${{ env.HAS_SIGNING_KEY == 'true' }}
         env:
@@ -142,5 +148,4 @@ jobs:
             ./smarttubetv/build/outputs/apk/stbeta/release/*.apk \
             --title "AetherTube Beta (Latest Commit)" \
             --notes "Continuous build from commit ${{ github.sha }} (run #${{ github.run_number }}). Not a stable release - see the Releases page for those." \
-            --prerelease \
-            --target ${{ github.sha }}
+            --prerelease

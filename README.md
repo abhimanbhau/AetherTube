@@ -29,6 +29,13 @@ compatibility — is SmartTube's work, tracked from upstream and left alone wher
 > whole point of this fork — but it's one toggle away from SmartTube's original leanback interface
 > (Settings → AetherTube → **New UI (beta)**) if you'd rather fall back.
 
+> [!WARNING]
+> **Most of this code was written or substantially modified with AI assistance** (an LLM
+> agent, working under the maintainer's direction), not hand-written line by line. It's been
+> tested on one device, not audited, and comes with **no warranty of any kind** — see
+> [LICENSE](LICENSE). Use it, fork it, read the code before you trust it with your setup, and
+> don't expect timely support: this is a personal project, not a maintained product.
+
 <br>
 
 ## What's different from SmartTube
