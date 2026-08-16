@@ -12,6 +12,8 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.BrowsePresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.base.BasePresenter;
+import com.abhimankolte.aethertube.common.prefs.AetherTubePrefs;
+import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.utils.LoadingManager;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
@@ -65,6 +67,14 @@ public class AppUpdatePresenter extends BasePresenter<Void> implements AppUpdate
             LoadingManager.showLoading(getContext(), false);
             showUpdateDialog(versionName, changelog, apkPath);
         } else if (GeneralData.instance(getContext()).isOldUpdateNotificationsEnabled()) {
+            // Don't re-prompt for a version the user already said no to. AppUpdateChecker only
+            // advances its "last checked" timestamp when no update is found, so once one IS found
+            // the staleness gate stays permanently open and every check re-fires this dialog. A
+            // forced check (Settings -> check for updates) deliberately ignores this.
+            if (Helpers.equals(versionName, AetherTubePrefs.instance(getContext()).getDismissedUpdateVersion())) {
+                return;
+            }
+
             showUpdateDialog(versionName, changelog, apkPath);
         } else {
             pinUpdateSection(versionName, changelog, apkPath);
@@ -104,7 +114,15 @@ public class AppUpdatePresenter extends BasePresenter<Void> implements AppUpdate
         //}, mUpdateChecker.isUpdateCheckEnabled()));
 
         //mSettingsPresenter.setOnFinish(getOnFinish());
-        mSettingsPresenter.showDialog(String.format("%s %s", getContext().getString(R.string.app_name), versionName), AppUpdatePresenter::unhold);
+        // Record the version on dismissal so the guard in onUpdateFound() can suppress it next time.
+        // Fires whether the user installed or backed out; installing makes it moot, since the new
+        // build reports a different version anyway.
+        mSettingsPresenter.showDialog(String.format("%s %s", getContext().getString(R.string.app_name), versionName), () -> {
+            if (getContext() != null) {
+                AetherTubePrefs.instance(getContext()).setDismissedUpdateVersion(versionName);
+            }
+            unhold();
+        });
     }
 
     private void pinUpdateSection(String versionName, List<String> changelog, String apkPath) {

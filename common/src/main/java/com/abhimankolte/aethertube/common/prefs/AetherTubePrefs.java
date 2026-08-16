@@ -32,6 +32,7 @@ public class AetherTubePrefs {
 
     private final AppPrefs mPrefs;
     private int mVisualEffectsMode;
+    private String mDismissedUpdateVersion;
 
     private AetherTubePrefs(Context context) {
         mPrefs = AppPrefs.instance(context.getApplicationContext());
@@ -68,9 +69,28 @@ public class AetherTubePrefs {
         // also makes the setting robust against ever failing to restore - the fallback is now the
         // look people expect rather than the absence of it.
         mVisualEffectsMode = Helpers.parseInt(split, 0, EFFECTS_ALWAYS);
+        mDismissedUpdateVersion = Helpers.parseStr(split, 1);
     }
 
     private void persistState() {
-        mPrefs.setProfileData(AETHERTUBE_DATA, Helpers.mergeData(mVisualEffectsMode));
+        mPrefs.setProfileData(AETHERTUBE_DATA, Helpers.mergeData(mVisualEffectsMode, mDismissedUpdateVersion));
+    }
+
+    /**
+     * Version name of the update the user last dismissed, or null.
+     *
+     * <p>Needed because the upstream checker only advances its "last checked" timestamp when there
+     * is <em>no</em> update available - when one is found it never does, so the staleness gate stays
+     * open and every subsequent check re-fires. That was harmless while the default notification
+     * style was a pinned sidebar row (re-pinning is idempotent), but it makes the dialog style
+     * reappear on every check until the update is actually installed.
+     */
+    public String getDismissedUpdateVersion() {
+        return mDismissedUpdateVersion;
+    }
+
+    public void setDismissedUpdateVersion(String versionName) {
+        mDismissedUpdateVersion = versionName;
+        persistState();
     }
 }
