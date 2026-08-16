@@ -10,15 +10,17 @@ SmartTube's work, tracked from upstream and left alone wherever possible. See
 [NOTICE.md](NOTICE.md) for the attribution this project runs on.
 
 **Status: personal / experimental.** Built for one setup (an Android TV box, `armeabi-v7a`),
-not tested broadly, no promises about other devices. The Compose UI is opt-in and off by default;
-switching it on falls back to SmartTube's original interface at any time.
+not tested broadly, no promises about other devices. The Compose UI is on by default — it's the
+whole point of this fork — but it's one toggle away from SmartTube's original leanback interface
+(Settings → AetherTube → "New UI (beta)") if you'd rather fall back.
 
 ---
 
 ### What's different from SmartTube
 
-- **Compose for TV interface** *(opt-in, "New UI (beta)" in Settings → AetherTube)* — the home,
-  browse and player screens rebuilt in Jetpack Compose instead of the leanback widget toolkit.
+- **Compose for TV interface** *(on by default — toggle off via "New UI (beta)" in Settings →
+  AetherTube if you want the original)* — the home, browse and player screens rebuilt in Jetpack
+  Compose instead of the leanback widget toolkit.
 - **Vertical Shorts player** — a dedicated, full-bleed vertical feed for Shorts: scroll up/down
   between videos instead of opening them one at a time.
 - **Portable settings codes** — Settings → AetherTube → Transfer settings generates a short
