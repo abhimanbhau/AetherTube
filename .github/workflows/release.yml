@@ -46,7 +46,7 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Determine version name and tag
+      - name: Determine version name, code and tag
         id: version
         run: |
           if [ -n "${{ github.event.inputs.version_name }}" ]; then
@@ -59,9 +59,19 @@ jobs:
             VERSION_NAME=$(grep "versionName" smarttubetv/build.gradle | head -n 1 | awk -F'"' '{print $2}')
             TAG="v$VERSION_NAME"
           fi
+
+          # versionCode drives the actual "is there an update" check on both sides: it's what
+          # AppVersionChecker compares, and it's what Android itself refuses to downgrade over an
+          # existing install. versionName is cosmetic; this can't be. Date-based so it's always
+          # both increasing and larger than the 2397 this fork inherited from upstream - the
+          # existing baseline needs no migration, it's just already smaller than any real date.
+          VERSION_CODE=$(date -u +%Y%m%d)
+
           echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "VERSION_CODE=$VERSION_CODE" >> "$GITHUB_OUTPUT"
           echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
           sed -i "s/versionName \"\(.*\)\"/versionName \"$VERSION_NAME\"/" smarttubetv/build.gradle
+          sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" smarttubetv/build.gradle
 
       - name: Configure Build Signing
         run: |
@@ -77,11 +87,43 @@ jobs:
       - name: Build signed release APKs
         run: ./gradlew clean assembleStbetaRelease
 
+      - name: Generate update manifest
+        run: |
+          cd smarttubetv/build/outputs/apk/stbeta/release
+          UNIVERSAL=$(basename *_universal.apk)
+          ARM64=$(basename *_arm64-v8a.apk)
+          ARMV7=$(basename *_armeabi-v7a.apk)
+          X86=$(basename *_x86.apk)
+          cd "${{ github.workspace }}"
+
+          BASE="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.TAG }}"
+
+          # Keyed by DeviceHelpers.getPrimaryAbi() - the raw Build.SUPPORTED_ABIS[0] string, which
+          # is exactly the arch suffix already in these filenames. AppVersionChecker checks these
+          # ABI-specific keys before falling back to the plain downloadUrl (the universal APK).
+          jq -n \
+            --arg universal "$BASE/$UNIVERSAL" \
+            --arg arm64 "$BASE/$ARM64" \
+            --arg armv7 "$BASE/$ARMV7" \
+            --arg x86 "$BASE/$X86" \
+            --arg versionName "${{ steps.version.outputs.VERSION_NAME }}" \
+            --argjson versionCode "${{ steps.version.outputs.VERSION_CODE }}" \
+            '{
+              package: {
+                downloadUrl: $universal,
+                "downloadUrlList_arm64-v8a": [$arm64],
+                "downloadUrlList_armeabi-v7a": [$armv7],
+                "downloadUrlList_x86": [$x86]
+              }
+            } + { ($versionName): { versionCode: $versionCode, changelog: ["Automated release - see the GitHub Release notes for details."] } }' \
+            > update_manifest.json
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "${{ steps.version.outputs.TAG }}" \
             ./smarttubetv/build/outputs/apk/stbeta/release/*.apk \
+            ./update_manifest.json \
             --title "AetherTube ${{ steps.version.outputs.VERSION_NAME }}" \
             --generate-notes
