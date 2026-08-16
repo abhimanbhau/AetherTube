@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sampled from this flavor's own app_icon tile so the adaptive background matches it. -->
+    <color name="app_icon_background">#2E095B</color>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Adaptive icon (API 26+). Without this the launcher only had a legacy square bitmap to work
+    with, so on Android TV launchers that mask icons to circles the rounded-square tile sat there
+    as a square among circles.
+
+    The foreground is that same tile scaled to 82% of the 108dp canvas: small enough that the
+    beta badge stays inside the guaranteed-visible centre, large enough that the tile's own
+    rounded edge falls outside every mask shape and is therefore never drawn. The background is
+    the tile's own dark colour, so the seam between the two layers doesn't read on square masks
+    either.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/app_icon_background" />
+    <foreground android:drawable="@mipmap/app_icon_foreground" />
+    <!--
+        Themed icons (API 33+). Alpha derived from the artwork's own luminance - the tile is bright
+        rings on a near-black field, so the rings survive and the background falls away. RGB is
+        irrelevant here; the launcher supplies the tint.
+    -->
+    <monochrome android:drawable="@mipmap/app_icon_monochrome" />
+</adaptive-icon>
