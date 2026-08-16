@@ -196,7 +196,20 @@ fun VideoCard(
                 .clip(shape)
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
-                .onFocusChanged { isFocused = it.isFocused }
+                .onFocusChanged {
+                    isFocused = it.isFocused
+                    // Forward focus gain to the caller, not just to this card's own visual state.
+                    // This was silently dropped when Home's and Search's separate card
+                    // implementations were merged into this one: every call site still passed
+                    // onFocus (it drives the ambient backdrop and the presenter's selected-item
+                    // tracking), but nothing here ever called it - so the backdrop stopped following
+                    // focus across shelves and grids and appeared frozen on whatever loaded first.
+                    // FeaturedCarousel kept working only because it wires onVideoFocus itself
+                    // instead of going through VideoCard.
+                    if (it.isFocused) {
+                        onFocus()
+                    }
+                }
                 .combinedClickable(onClick = onClick, onLongClick = onLongClick)
                 // Dim veil and both focus rings used to be three more full-card child Boxes stacked
                 // on top of the artwork. Drawn here instead: three fewer layout nodes per card (27 on
