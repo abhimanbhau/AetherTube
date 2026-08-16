@@ -52,6 +52,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
@@ -132,6 +133,12 @@ fun SearchScreen(
     Box(modifier = modifier.fillMaxSize()) {
         HeroBackdrop(imageUrl = debouncedBackdropUrl)
 
+        // Shared so Down from the search field and Up from any tag chip land on the same target
+        // deterministically, instead of Compose's default spatial search picking whichever chip
+        // is geometrically closest to the (wide, full-row) search field's center - which is
+        // rarely the first suggestion once there are more than two or three tags.
+        val firstTagFocusRequester = remember { FocusRequester() }
+
         Column(modifier = Modifier.fillMaxSize()) {
             SearchBar(
                 searchText = searchText,
@@ -139,11 +146,19 @@ fun SearchScreen(
                 onSearchSubmit = onSearchSubmit,
                 showProgress = showProgress,
                 onSettingsClick = onSearchSettingsClick,
-                focusRequester = searchFieldFocusRequester
+                focusRequester = searchFieldFocusRequester,
+                hasTags = tags.isNotEmpty(),
+                firstTagFocusRequester = firstTagFocusRequester
             )
 
             if (tags.isNotEmpty()) {
-                TagsRow(tags = tags, onTagClick = onTagClick, onTagLongClick = onTagLongClick)
+                TagsRow(
+                    tags = tags,
+                    onTagClick = onTagClick,
+                    onTagLongClick = onTagLongClick,
+                    firstTagFocusRequester = firstTagFocusRequester,
+                    upFocusRequester = searchFieldFocusRequester
+                )
             }
 
             // weight(1f), not just fillMaxSize(): a Column doesn't shrink a later, unweighted child's
@@ -175,7 +190,9 @@ private fun SearchBar(
     onSearchSubmit: () -> Unit,
     showProgress: Boolean,
     onSettingsClick: () -> Unit,
-    focusRequester: FocusRequester
+    focusRequester: FocusRequester,
+    hasTags: Boolean,
+    firstTagFocusRequester: FocusRequester
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -230,7 +247,19 @@ private fun SearchBar(
                             // BasicTextField can swallow DPAD Down as a cursor-navigation key on some TV
                             // devices/keyboards instead of letting it fall through to TV focus navigation -
                             // force it down to whatever's below (tags row or results) explicitly.
-                            focusManager.moveFocus(FocusDirection.Down)
+                            //
+                            // moveFocus(Down) alone used Compose's default spatial search: it picks
+                            // whichever focusable is geometrically closest to this field's center, and this
+                            // field spans nearly the full row width while the tag row starts at the left
+                            // edge - past two or three tags, that's rarely tag #0. Go straight to the first
+                            // tag when there are any; runCatching covers the one frame where it's requested
+                            // before TagsRow has composed it (tags flips true and the LazyRow needs a beat).
+                            if (hasTags) {
+                                runCatching { firstTagFocusRequester.requestFocus() }
+                                    .onFailure { focusManager.moveFocus(FocusDirection.Down) }
+                            } else {
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
                             true
                         } else if (event.key == Key.Enter || event.key == Key.NumPadEnter || event.key == Key.DirectionCenter) {
                             // KeyboardActions.onSearch only fires through an actual bound software IME's
@@ -290,22 +319,40 @@ private fun SearchSettingsIcon(onClick: () -> Unit) {
 }
 
 @Composable
-private fun TagsRow(tags: List<Tag>, onTagClick: (Tag) -> Unit, onTagLongClick: (Tag) -> Unit) {
+private fun TagsRow(
+    tags: List<Tag>,
+    onTagClick: (Tag) -> Unit,
+    onTagLongClick: (Tag) -> Unit,
+    firstTagFocusRequester: FocusRequester,
+    upFocusRequester: FocusRequester
+) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 24.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(tags, key = { tag -> if (tag.tagId != 0L) tag.tagId else tag.tag.hashCode().toLong() }) { tag ->
-            TagChip(tag = tag, onClick = { onTagClick(tag) }, onLongClick = { onTagLongClick(tag) })
+        itemsIndexed(tags, key = { _, tag -> if (tag.tagId != 0L) tag.tagId else tag.tag.hashCode().toLong() }) { index, tag ->
+            TagChip(
+                tag = tag,
+                onClick = { onTagClick(tag) },
+                onLongClick = { onTagLongClick(tag) },
+                focusRequester = if (index == 0) firstTagFocusRequester else null,
+                upFocusRequester = upFocusRequester
+            )
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun TagChip(tag: Tag, onClick: () -> Unit, onLongClick: () -> Unit) {
+private fun TagChip(
+    tag: Tag,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    focusRequester: FocusRequester?,
+    upFocusRequester: FocusRequester
+) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     val scale by animateFloatAsState(if (isFocused) 1.06f else 1f, FocusScaleSpring, label = "tagScale")
@@ -323,6 +370,12 @@ private fun TagChip(tag: Tag, onClick: () -> Unit, onLongClick: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(vertical = 4.dp)
+            .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
+            // Up is otherwise unspecified spatial search again - same failure mode as the search
+            // field's Down key, just in reverse. Every chip (not only the first) gets this, since
+            // the row scrolls and whichever chip is focused when Up is pressed should return to
+            // the field it came from, not wherever geometry happens to land.
+            .focusProperties { up = upFocusRequester }
             .scale(scale)
             .clip(CircleShape)
             .background(backgroundColor)
