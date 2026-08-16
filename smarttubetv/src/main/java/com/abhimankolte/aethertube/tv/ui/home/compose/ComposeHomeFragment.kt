@@ -442,6 +442,15 @@ class ComposeHomeFragment :
         } else {
             existing.videos.addAll(newVideos)
         }
+
+        // Seed the ambient backdrop from the first item to arrive, rather than waiting for focus to
+        // land on a card. focusedBackdropUrl is otherwise only ever set by onVideoFocus, and focus
+        // starts on the TopNav - so on a fresh launch the backdrop stayed empty (just the flat
+        // background colour) until the user happened to arrow down into a shelf. The screen's most
+        // distinctive element was missing exactly when someone first looks at it.
+        if (currentSectionType == BrowseSection.TYPE_ROW && focusedBackdropUrl == null) {
+            focusedBackdropUrl = newVideos.firstOrNull { it.cardImageUrl != null }?.cardImageUrl
+        }
     }
 
     override fun updateSection(group: SettingsGroup) {
