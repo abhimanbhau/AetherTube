@@ -137,8 +137,24 @@ fun ShortsScreen(
         derivedStateOf { readyVideoId == null || readyVideoId != current?.videoId || slide.value != 0f }
     }
 
+    // Tracks whichever video has already been handed to the player, so page()'s early dispatch
+    // below and this effect settling onto the same video afterward don't both call onPlayVideo for
+    // it - openVideo() is safe to call repeatedly, but a second call for the video already loading
+    // would restart its format/decode pipeline from scratch instead of letting the first one finish,
+    // which would throw away exactly the head start this is meant to create.
+    var requestedVideoId by remember { mutableStateOf<String?>(null) }
+
+    fun requestPlay(video: Video) {
+        if (video.videoId != requestedVideoId) {
+            requestedVideoId = video.videoId
+            onPlayVideo(video)
+        }
+    }
+
+    // Covers the initial video on entry and any change the feed didn't get through page() below -
+    // upstream auto-advancing at end of video, most notably (see ShortsFeed.syncTo()).
     LaunchedEffect(current?.videoId) {
-        current?.let(onPlayVideo)
+        current?.let(::requestPlay)
     }
 
     LaunchedEffect(Unit) {
@@ -160,6 +176,12 @@ fun ShortsScreen(
             if (delta > 0) feed.loadMoreIfNeeded()
             return
         }
+
+        // Start the target video's network/decode pipeline now, overlapping it with the slide
+        // animation instead of waiting until the animation finishes to even begin - safe because
+        // showPoster (above) stays true for the whole slide regardless of when this fires, so
+        // nothing about the swap becomes visible any earlier than it already was.
+        requestPlay(target)
 
         scope.launch {
             direction = delta.toFloat()
@@ -251,15 +273,18 @@ fun ShortsScreen(
                 // driving image loading from one. Video changes go through LaunchedEffect instead.
             )
 
-            current?.let { video ->
-                GlideImage(
-                    model = video.cardImageUrl,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer { alpha = if (showPoster) 1f else 0f },
-                ) { it.diskCacheStrategy(DiskCacheStrategy.ALL) }
+            // Composed only while actually needed, not kept around at alpha 0 - the flip is a raw
+            // boolean with no fade to preserve (see showPoster above), so there's nothing an
+            // always-present node buys here over composing it fresh each time it's needed.
+            if (showPoster) {
+                current?.let { video ->
+                    GlideImage(
+                        model = video.cardImageUrl,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    ) { it.diskCacheStrategy(DiskCacheStrategy.ALL) }
+                }
             }
 
             ShortsScrim()
