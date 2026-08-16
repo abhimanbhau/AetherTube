@@ -53,8 +53,16 @@ this scrolls.
 **🎨 A UI built for now, not stretched onto a TV from a decade-old toolkit.** The whole browsing
 and playback experience, rebuilt from scratch in Jetpack Compose.
 
-**🔔 Updates that find you.** AetherTube checks for its own new releases and tells you right in
-the app — no more remembering to come back and check GitHub for a new APK.
+**🌌 A screen that reacts to what you're looking at.** The background carries a softly blurred wash
+of the focused video's own artwork, and the focus glow picks up that thumbnail's dominant colour —
+so the whole screen shifts as you move across a shelf. Closer to an ambient-lighting effect than a
+grid of boxes.
+
+**🔔 Updates that find you.** AetherTube checks for its own new releases and tells you right in the
+app, with the actual list of what changed — no remembering to come back and check GitHub for an APK.
+
+Small things too: your account avatar sits in the top bar, so switching profiles is one click
+instead of a trip through Settings.
 
 Everything else — SponsorBlock, adjustable playback speed, HDR/8K/60fps, live chat, no Google
 account requirement — is SmartTube's, unchanged.
@@ -110,12 +118,34 @@ layout assumes a single-maintainer project rather than a community one (see
 > same reason: neither is officially published anywhere. Get builds from this repository's
 > **[Releases](../../releases)** page only. Do not trust an AetherTube APK from anywhere else.
 
+### Stable or beta?
+
+AetherTube ships as **two separate apps**. They have different package names, so they install side
+by side, update independently, and neither can overwrite the other:
+
+| | **Stable** | **Beta** |
+| :--- | :--- | :--- |
+| Released | when a version is tagged deliberately | automatically, on every change |
+| On the releases page | marked **Latest** | marked **Pre-release** |
+| Package | `…aethertube.stable` | `…aethertube.beta` |
+| Good for | actually watching things | seeing new work early, and finding its bugs |
+
+**Take stable unless you want to help test.** Because they're genuinely separate installs, you can
+run both on the same TV — keep stable as the one you actually use, and let beta be the one that
+occasionally breaks. Each only ever updates itself: a beta build is never offered to a stable
+install.
+
+### Sideloading
+
 To install on an Android TV device without a Play Store side-load path, use a file manager app,
 a USB stick, or ADB (`adb install <apk>`). SmartTube's README has a more detailed walkthrough of
 sideloading if you need one.
 
-Once installed, AetherTube checks for new releases itself — no need to come back and check this
-page manually.
+Grab the `_universal.apk` if you're unsure which to pick — the per-architecture builds
+(`arm64-v8a`, `armeabi-v7a`, `x86`) are just smaller.
+
+Once installed, AetherTube checks for new releases on its own channel — no need to come back and
+check this page manually.
 
 <br>
 
@@ -135,8 +165,12 @@ Build with JDK 17+ set as `JAVA_HOME` (Android Studio's bundled JBR works):
 
 ```bash
 export JAVA_HOME="/path/to/jdk-17-or-newer"
-./gradlew :smarttubetv:assembleStbetaDebug
+./gradlew :smarttubetv:assembleStbetaDebug     # beta channel
+./gradlew :smarttubetv:assembleStstableDebug   # stable channel
 ```
+
+The two flavors build the same code — they differ only in package name and which release channel
+they look to for updates (see [Stable or beta?](#stable-or-beta)).
 
 Release builds look for a `keystore.properties` file at the repo root (developer-local, not
 tracked in git):
