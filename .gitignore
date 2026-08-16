@@ -47,6 +47,11 @@ build/
 log.txt
 android.keystore
 android-upd2.keystore
+# Any signing keystore, by extension rather than a fixed name - this must never be tracked.
+*.keystore
+*.jks
+*.p12
+keystore.properties
 build.log
 notes.txt
 out.txt
