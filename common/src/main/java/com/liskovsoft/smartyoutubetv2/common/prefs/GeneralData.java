@@ -629,7 +629,10 @@ public class GeneralData implements ProfileChangeListener {
         mMasterPassword = Helpers.parseStr(split, 41);
         // StackOverflow on old devices?
         //mIsOldHomeLookEnabled = Helpers.parseBoolean(split, 42, Build.VERSION.SDK_INT <= 19);
-        mIsOldUpdateNotificationsEnabled = Helpers.parseBoolean(split, 43, false);
+        // Default true (dialog popup) rather than upstream's false (pinned sidebar/TopNav tab) - a
+        // dialog is a one-time interruption you dismiss; a pinned tab sits there permanently until
+        // installed, which reads as clutter rather than a notification.
+        mIsOldUpdateNotificationsEnabled = Helpers.parseBoolean(split, 43, true);
         mScreensaverDimmingPercents = Helpers.parseInt(split, 44, 80);
         mNextPreviousAction = Helpers.parseInt(split, 45, ACTION_UNDEFINED);
         mIsRemapPlayToOKEnabled = Helpers.parseBoolean(split, 46, false);

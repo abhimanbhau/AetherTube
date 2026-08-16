@@ -10,6 +10,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionItem;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.base.BasePresenter;
+import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.AppUpdatePresenter;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.utils.SimpleEditDialog;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class AetherTubeSettingsPresenter extends BasePresenter<Void> {
     public void show() {
         AppDialogPresenter settingsPresenter = AppDialogPresenter.instance(getContext());
 
+        appendCheckForUpdates(settingsPresenter);
         appendNewUi(settingsPresenter);
         appendVisualEffects(settingsPresenter);
         appendSettingsCode(settingsPresenter);
@@ -55,6 +57,20 @@ public class AetherTubeSettingsPresenter extends BasePresenter<Void> {
                         MessageHelpers.showLongMessage(getContext(), R.string.msg_restart_app);
                     }
                 });
+    }
+
+    /**
+     * Duplicated from {@code AboutSettingsPresenter} rather than moved out of it: that's upstream's
+     * file, and pulling this one line out would be its own small merge-conflict surface on every
+     * future sync for a cosmetic reorganisation. It stays in About too - this just gives it a second,
+     * more visible home, since "check for updates" was easy to lose track of at the bottom of a long
+     * upstream settings screen.
+     */
+    private void appendCheckForUpdates(AppDialogPresenter settingsPresenter) {
+        settingsPresenter.appendSingleButton(
+                UiOptionItem.from(
+                        getContext().getString(R.string.check_for_updates),
+                        option -> AppUpdatePresenter.instance(getContext()).start(true)));
     }
 
     private void appendNewUi(AppDialogPresenter settingsPresenter) {
