@@ -32,6 +32,36 @@ whole point of this fork — but it's one toggle away from SmartTube's original 
 Everything else — SponsorBlock, adjustable playback speed, HDR/8K/60fps playback, live chat, no
 Google account requirement — is SmartTube's, unchanged.
 
+### Screenshots
+
+<table>
+<tr>
+<td width="50%">
+<img src="images/screenshots/home.jpg" alt="Home"><br>
+<strong>Home</strong> — Compose UI browse screen
+</td>
+<td width="50%">
+<img src="images/screenshots/shorts-grid.jpg" alt="Shorts grid"><br>
+<strong>Shorts</strong> — grid entry point
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="images/screenshots/shorts-player-1.jpg" alt="Vertical Shorts player"><br>
+<strong>Vertical Shorts player</strong> — scroll up/down between videos
+</td>
+<td width="50%">
+<img src="images/screenshots/settings-new-ui.jpg" alt="Settings"><br>
+<strong>Settings</strong> — New UI toggle and portable settings codes
+</td>
+</tr>
+</table>
+
+<img src="images/screenshots/playback-format-dialog.jpg" alt="Advanced playback settings"><br>
+<strong>Manual format selection</strong> — one of SmartTube's features, carried over unchanged
+
+All captured on an Android TV emulator running this fork's Compose UI.
+
 ### Limitations
 
 Same as upstream: not supported on phones/tablets, comment support is unstable, and voice
