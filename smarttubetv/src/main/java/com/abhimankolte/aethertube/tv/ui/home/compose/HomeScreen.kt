@@ -559,6 +559,11 @@ private fun GridContent(
     // land on an unrelated, unpredictable tab.
     val topRowIndices by remember(entries) {
         derivedStateOf<Set<Int>> {
+            // Without this guard, "topmost row" meant topmost *visible* row - scroll to row 10 and
+            // its cards inherit the up-to-TopNav redirect meant for row 0, so Up from row 10 skipped
+            // rows 1-9 entirely. Only the row that's actually first in the list should ever escape
+            // upward past the grid; anywhere else, Up should move within the grid like normal.
+            if (gridState.firstVisibleItemIndex > 0) return@derivedStateOf emptySet()
             val visible = gridState.layoutInfo.visibleItemsInfo
             val topVideoRow = visible
                 .filter { entries.getOrNull(it.index) is GridEntry.VideoEntry }
