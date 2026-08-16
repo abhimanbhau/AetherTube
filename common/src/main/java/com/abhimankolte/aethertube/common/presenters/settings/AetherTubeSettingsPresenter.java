@@ -77,6 +77,11 @@ public class AetherTubeSettingsPresenter extends BasePresenter<Void> {
      *
      * <p>Card previews are deliberately NOT covered here: that is its own explicit setting under
      * Main UI, and a performance heuristic should not quietly override something the user chose.
+     *
+     * <p>{@code mRestartApp} matters here specifically: {@code AetherTubeTheme} resolves
+     * {@code LocalLowEndDevice} once per Activity via {@code remember(context)}, so a change made
+     * here has no visible effect in an Activity that was already alive when the user made it -
+     * without the restart prompt this looked like the setting silently doing nothing.
      */
     private void appendVisualEffects(AppDialogPresenter settingsPresenter) {
         List<OptionItem> options = new ArrayList<>();
@@ -85,17 +90,26 @@ public class AetherTubeSettingsPresenter extends BasePresenter<Void> {
         options.add(
                 UiOptionItem.from(
                         "Auto (match device)",
-                        option -> mPrefs.setVisualEffectsMode(AetherTubePrefs.EFFECTS_AUTO),
+                        option -> {
+                            mPrefs.setVisualEffectsMode(AetherTubePrefs.EFFECTS_AUTO);
+                            mRestartApp = true;
+                        },
                         current == AetherTubePrefs.EFFECTS_AUTO));
         options.add(
                 UiOptionItem.from(
                         "Always on",
-                        option -> mPrefs.setVisualEffectsMode(AetherTubePrefs.EFFECTS_ALWAYS),
+                        option -> {
+                            mPrefs.setVisualEffectsMode(AetherTubePrefs.EFFECTS_ALWAYS);
+                            mRestartApp = true;
+                        },
                         current == AetherTubePrefs.EFFECTS_ALWAYS));
         options.add(
                 UiOptionItem.from(
                         "Always off",
-                        option -> mPrefs.setVisualEffectsMode(AetherTubePrefs.EFFECTS_NEVER),
+                        option -> {
+                            mPrefs.setVisualEffectsMode(AetherTubePrefs.EFFECTS_NEVER);
+                            mRestartApp = true;
+                        },
                         current == AetherTubePrefs.EFFECTS_NEVER));
 
         settingsPresenter.appendRadioCategory("Visual effects (blur, glow)", options);
