@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -125,26 +126,19 @@ fun ShortsScreen(
     var incoming by remember { mutableStateOf<Video?>(null) }
     var direction by remember { mutableFloatStateOf(0f) }
 
-    var positionMs by remember { mutableLongStateOf(0L) }
-    var durationMs by remember { mutableLongStateOf(0L) }
-    var playing by remember { mutableStateOf(true) }
-
     val stageAspect = if (aspectRatio > 0f) aspectRatio else DEFAULT_ASPECT
-    val showPoster = readyVideoId == null || readyVideoId != current?.videoId || slide.value != 0f
+
+    // derivedStateOf, not a plain val: slide.value changes every animation frame during a page
+    // transition (up to 60-120Hz), but the boolean it feeds into only actually flips at the very start
+    // and end of that ~260ms motion. A plain val reading slide.value directly would recompose this
+    // whole composable every one of those frames just to keep producing the same answer; derivedStateOf
+    // still re-evaluates that often but only invalidates readers when the result actually changes.
+    val showPoster by remember(readyVideoId, current?.videoId) {
+        derivedStateOf { readyVideoId == null || readyVideoId != current?.videoId || slide.value != 0f }
+    }
 
     LaunchedEffect(current?.videoId) {
         current?.let(onPlayVideo)
-    }
-
-    // Cheap poll for the scrubber. Nothing else here needs the player's live state, and an observer on
-    // ExoPlayer would have to be torn down and rebuilt around every engine restart.
-    LaunchedEffect(current?.videoId) {
-        while (true) {
-            positionMs = playerView.positionMs
-            durationMs = playerView.durationMs
-            playing = playerView.playWhenReady
-            delay(PROGRESS_POLL_MS)
-        }
     }
 
     LaunchedEffect(Unit) {
@@ -271,8 +265,8 @@ fun ShortsScreen(
             ShortsScrim()
 
             ShortsProgress(
-                positionMs = positionMs,
-                durationMs = durationMs,
+                playerView = playerView,
+                videoId = current?.videoId,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
@@ -327,25 +321,12 @@ fun ShortsScreen(
                 .padding(end = 40.dp),
         )
 
-        if (!playing && !showPoster) {
-            // Paused. Worth marking explicitly: a still frame on a TV is otherwise indistinguishable
-            // from a stalled stream.
-            Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(84.dp)
-                    .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.55f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = "Paused",
-                    tint = Color.White,
-                    modifier = Modifier.size(44.dp),
-                )
-            }
-        }
+        ShortsPauseIndicator(
+            playerView = playerView,
+            videoId = current?.videoId,
+            showPoster = showPoster,
+            modifier = Modifier.align(Alignment.Center),
+        )
     }
 }
 
@@ -373,12 +354,28 @@ private fun ShortsScrim() {
     )
 }
 
+/**
+ * Owns its own position/duration poll so the 300ms tick only invalidates this bar, not the whole
+ * [ShortsScreen] tree it lives in - the poll used to live at the top of [ShortsScreen] itself, which
+ * meant every tick recomposed the stage, the ambient backdrop and the metadata along with it.
+ */
 @Composable
 private fun ShortsProgress(
-    positionMs: Long,
-    durationMs: Long,
+    playerView: ShortsPlayerView,
+    videoId: String?,
     modifier: Modifier = Modifier,
 ) {
+    var positionMs by remember { mutableLongStateOf(0L) }
+    var durationMs by remember { mutableLongStateOf(0L) }
+
+    LaunchedEffect(videoId) {
+        while (true) {
+            positionMs = playerView.positionMs
+            durationMs = playerView.durationMs
+            delay(PROGRESS_POLL_MS)
+        }
+    }
+
     val fraction = if (durationMs > 0) (positionMs.toFloat() / durationMs).coerceIn(0f, 1f) else 0f
 
     Box(
@@ -393,6 +390,47 @@ private fun ShortsProgress(
                 .fillMaxWidth(fraction)
                 .background(MaterialTheme.colorScheme.primary),
         )
+    }
+}
+
+/**
+ * Same isolation as [ShortsProgress], for the same reason: `playWhenReady` used to be polled
+ * alongside position/duration at the top of [ShortsScreen], invalidating the whole tree every 300ms
+ * just to know whether to show a pause glyph.
+ */
+@Composable
+private fun ShortsPauseIndicator(
+    playerView: ShortsPlayerView,
+    videoId: String?,
+    showPoster: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    var playing by remember { mutableStateOf(true) }
+
+    LaunchedEffect(videoId) {
+        while (true) {
+            playing = playerView.playWhenReady
+            delay(PROGRESS_POLL_MS)
+        }
+    }
+
+    if (!playing && !showPoster) {
+        // Paused. Worth marking explicitly: a still frame on a TV is otherwise indistinguishable
+        // from a stalled stream.
+        Box(
+            modifier = modifier
+                .size(84.dp)
+                .clip(CircleShape)
+                .background(Color.Black.copy(alpha = 0.55f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = "Paused",
+                tint = Color.White,
+                modifier = Modifier.size(44.dp),
+            )
+        }
     }
 }
 

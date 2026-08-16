@@ -1,6 +1,7 @@
 @file:OptIn(
     androidx.tv.material3.ExperimentalTvMaterial3Api::class,
     androidx.compose.ui.ExperimentalComposeUiApi::class,
+    com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi::class,
 )
 
 package com.abhimankolte.aethertube.tv.ui.home.compose
@@ -72,13 +73,13 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.tv.material3.Carousel
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
@@ -86,11 +87,15 @@ import androidx.tv.material3.Text
 import com.abhimankolte.aethertube.tv.ui.common.compose.CardTitle
 import com.abhimankolte.aethertube.tv.ui.common.compose.VideoCard
 import com.abhimankolte.aethertube.tv.ui.search.compose.HeroBackdrop
-import com.abhimankolte.aethertube.tv.ui.search.compose.SearchVideoCardView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video
 import com.liskovsoft.smartyoutubetv2.common.app.models.errors.ErrorFragmentData
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData
+import com.liskovsoft.smartyoutubetv2.common.utils.ClickbaitRemover
+import com.liskovsoft.smartyoutubetv2.tv.R
 import kotlinx.coroutines.delay
 import androidx.compose.foundation.lazy.grid.itemsIndexed as gridItemsIndexed
 
@@ -478,12 +483,10 @@ private fun FeaturedCarousel(
     }
 }
 
-@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
 @Composable
 private fun CarouselBackdrop(video: Video) {
     val context = LocalContext.current
     val mainUIData = remember(context) { MainUIData.instance(context) }
-    var cardView by remember { mutableStateOf<SearchVideoCardView?>(null) }
     var sizePx by remember { mutableStateOf(IntSize.Zero) }
 
     Box(
@@ -491,16 +494,27 @@ private fun CarouselBackdrop(video: Video) {
             .fillMaxSize()
             .onSizeChanged { sizePx = it },
     ) {
+        // Was an AndroidView(SearchVideoCardView) - a FrameLayout + ImageView + Glide target - despite
+        // never calling its startPreview(), so the preview/EmbedPlayerView machinery that class exists
+        // for was dead weight here: this slot only ever showed the static thumbnail. Same
+        // model/override/error shape as VideoCard's own static thumbnail, just without the interactive
+        // preview escalation that doesn't fit a timer-driven rotating banner anyway.
         if (sizePx.width > 0 && sizePx.height > 0) {
-            AndroidView(
-                factory = { ctx -> SearchVideoCardView(ctx).also { cardView = it } },
+            GlideImage(
+                model = ClickbaitRemover.updateThumbnail(video, mainUIData.thumbQuality),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
-                update = { view -> view.bind(video, mainUIData.thumbQuality, mainUIData.cardPreviewType, sizePx.width, sizePx.height) },
-                onReset = { view ->
-                    view.stopPreview()
-                    view.unbind()
-                },
-            )
+            ) { request ->
+                request
+                    .override(sizePx.width, sizePx.height)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(
+                        Glide.with(context)
+                            .load(video.cardImageUrl)
+                            .error(R.drawable.card_placeholder),
+                    )
+            }
         }
 
         Box(
@@ -545,10 +559,21 @@ private fun GridContent(
     // every paginated append and permanently breaking infinite scroll past the first load. Reading
     // rows/row.videos directly here (not inside remember) is what makes GridContent's recomposition
     // scope actually depend on their snapshot state.
-    val entries = if (showRowHeaders) {
-        rows.flatMap { row -> listOf(GridEntry.Header(row.id, row.title)) + row.videos.map { GridEntry.VideoEntry(it) } }
-    } else {
-        rows.flatMap { it.videos }.map { GridEntry.VideoEntry(it) }
+    // derivedStateOf, not a plain val: this used to recompute (and reallocate a full GridEntry list)
+    // on every recomposition of GridContent regardless of cause, including ones that have nothing to
+    // do with rows/videos (e.g. scroll-driven topRowIndices below). derivedStateOf only re-runs the
+    // flatMap when a read it actually depends on (row identities, row.videos content) has changed, and
+    // - same as the guard on `rows` above - correctly sees an ACTION_SYNC in-place `row.videos[i] = x`
+    // replacement as a change even when the item count doesn't move, unlike a count-based remember key
+    // would have.
+    val entries by remember(showRowHeaders) {
+        derivedStateOf {
+            if (showRowHeaders) {
+                rows.flatMap { row -> listOf(GridEntry.Header(row.id, row.title)) + row.videos.map { GridEntry.VideoEntry(it) } }
+            } else {
+                rows.flatMap { it.videos }.map { GridEntry.VideoEntry(it) }
+            }
+        }
     }
     val lastVideo = rows.lastOrNull()?.videos?.lastOrNull()
 
