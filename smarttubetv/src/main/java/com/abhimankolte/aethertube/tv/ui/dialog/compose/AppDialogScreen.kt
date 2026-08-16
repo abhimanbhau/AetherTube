@@ -408,7 +408,11 @@ private fun OptionList(category: OptionCategory, modifier: Modifier = Modifier) 
                     .focusGroup(),
                 contentPadding = PaddingValues(horizontal = 32.dp, vertical = 20.dp),
             ) {
-                itemsIndexed(options, key = { index, _ -> index }) { index, item ->
+                // Content-based, not a bare index: dynamic option lists (track/audio format pickers)
+                // get filtered or reordered, and a pure positional key defeats Compose's diffing -
+                // every remaining item "changes identity" and the whole list recomposes instead of
+                // just the entries that actually moved.
+                itemsIndexed(options, key = { index, item -> item.title?.toString() ?: "option_${item.id}_$index" }) { index, item ->
                     val isChecked = when {
                         isButton -> false
                         isSingleSelect -> index == selectedIndex

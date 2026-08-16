@@ -740,7 +740,7 @@ private fun TopNav(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(32.dp),
     ) {
-        NavIconButton(Icons.Filled.Settings, "Settings", onSettingsClick)
+        NavIconButton(Icons.Filled.Settings, "Settings", onSettingsClick, isFirstIcon = true)
         NavIconButton(Icons.Filled.Search, "Search", onSearchClick)
 
         // Settings is its own dedicated screen (see ComposeSettingsActivity), reached via the gear
@@ -782,7 +782,12 @@ private fun TopNav(
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun NavIconButton(icon: ImageVector, contentDescription: String, onClick: () -> Unit) {
+private fun NavIconButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    isFirstIcon: Boolean = false,
+) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     val scale by animateFloatAsState(if (isFocused) 1.12f else 1f, FocusScaleSpring, label = "navIconScale")
@@ -802,6 +807,11 @@ private fun NavIconButton(icon: ImageVector, contentDescription: String, onClick
             .scale(scale)
             .clip(CircleShape)
             .background(background)
+            // Mirrors SectionTab's isLastTab handling on the opposite edge: nothing to the left of
+            // Settings (the leftmost item in this strip) has a natural focus target either, so
+            // without this, default spatial search can wrap or jump unpredictably on Left instead
+            // of just doing nothing.
+            .then(if (isFirstIcon) Modifier.focusProperties { left = FocusRequester.Cancel } else Modifier)
             .combinedClickable(
                 interactionSource = interactionSource,
                 indication = null,

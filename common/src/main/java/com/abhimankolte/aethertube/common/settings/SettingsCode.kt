@@ -187,6 +187,11 @@ class BitReader(payload: Long, private val availableBits: Int = SettingsCode.PAY
     private var consumed = 0
 
     fun read(bits: Int): Int? {
+        // Every real call site in SettingsRegistry passes a small hardcoded constant (1-4 bits), so
+        // this can't actually be hit today - but it's not a private class, and the (1L shl bits) - 1
+        // mask below silently does the wrong thing for bits outside 1..32 rather than failing loudly.
+        require(bits in 1..32) { "bits must be 1..32, got $bits" }
+
         if (consumed + bits > availableBits) {
             return null
         }

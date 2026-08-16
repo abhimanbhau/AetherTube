@@ -90,9 +90,13 @@ jobs:
             sed -i "/$MARKER/,\$d" current_notes.txt
           fi
           
+          # vt_report.txt only exists if the scan step above actually ran (VIRUS_TOTAL_API_KEY set
+          # and the scan succeeded) - without this guard, a skipped/missing-key run left this step
+          # failing on "No such file or directory" and release notes never got updated at all, not
+          # even to just carry the existing notes through unchanged.
           {
             cat current_notes.txt
-            cat vt_report.txt
+            if [ -f vt_report.txt ]; then cat vt_report.txt; fi
           } > final_notes.txt
           
           gh release edit "$TAG_NAME" --notes-file final_notes.txt
