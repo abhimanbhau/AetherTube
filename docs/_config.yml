@@ -1,8 +1,9 @@
 title: AetherTube
 description: >-
   Documentation, FAQ, and guides for AetherTube — SmartTube rebuilt with Jetpack Compose for TV.
-baseurl: ""
-url: "https://abhimanbhau.github.io"
+baseurl: "/AetherTube"
+url: "https://abhimankolte.com"
+permalink: pretty
 
 remote_theme: just-the-docs/just-the-docs
 
