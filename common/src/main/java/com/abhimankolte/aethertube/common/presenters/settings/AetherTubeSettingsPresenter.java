@@ -46,6 +46,7 @@ public class AetherTubeSettingsPresenter extends BasePresenter<Void> {
         appendNewUi(settingsPresenter);
         appendVisualEffects(settingsPresenter);
         appendSettingsCode(settingsPresenter);
+        AetherTubeBackupImportPresenter.instance(getContext()).appendOptions(settingsPresenter);
 
         // Matches how upstream handles restart-requiring settings: prompt rather than
         // force-restart.

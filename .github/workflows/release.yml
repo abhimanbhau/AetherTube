@@ -130,9 +130,21 @@ jobs:
             RANGE="HEAD~20..HEAD"
           fi
 
+          # %B (full message), not %s (subject only): sync-and-publish.yml squashes every dev-repo
+          # commit into one "Sync: ..." commit per run, and its subject alone would show as a single
+          # generic line here for an entire batch of real work. Its body carries the real per-commit
+          # subjects instead (see that workflow's Synced-From trailer) - strip the now-redundant
+          # "Sync: ..." header line and the trailer itself, and drop the blank lines their paragraph
+          # breaks leave behind. Commits with no body (a plain feat:/fix:) are untouched by this -
+          # %B for those is just the subject line already.
+          #
           # -c (compact) keeps this a single line: it travels through GITHUB_OUTPUT and back into jq
           # below, and a one-liner avoids needing multi-line output plumbing for no benefit.
-          CHANGELOG=$(git log --no-merges --pretty=format:'%s' "$RANGE" 2>/dev/null | head -30 \
+          CHANGELOG=$(git log --no-merges --pretty=format:'%B' "$RANGE" 2>/dev/null \
+            | grep -v '^Sync: merge upstream SmartTube changes' \
+            | grep -v '^Synced-From:' \
+            | sed '/^$/d' \
+            | head -30 \
             | jq -R -s -c 'split("\n") | map(select(length > 0))')
 
           # An empty array would render as a blank dialog body; fall back to something truthful.
