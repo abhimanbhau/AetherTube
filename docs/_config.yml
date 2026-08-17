@@ -1,0 +1,51 @@
+title: AetherTube
+description: >-
+  Documentation, FAQ, and guides for AetherTube — SmartTube rebuilt with Jetpack Compose for TV.
+baseurl: ""
+url: "https://abhimanbhau.github.io"
+
+remote_theme: just-the-docs/just-the-docs
+
+plugins:
+  - jekyll-remote-theme
+
+color_scheme: dark
+
+search_enabled: true
+search:
+  heading_level: 2
+  previews: 2
+  preview_words_before: 5
+  preview_words_after: 10
+  tokenizer_separator: /[\s/]+/
+  rel_url: true
+  button: false
+
+heading_anchors: true
+nav_sort: case_insensitive
+back_to_top: true
+back_to_top_text: "Back to top"
+
+aux_links:
+  "AetherTube on GitHub":
+    - "https://github.com/abhimanbhau/AetherTube"
+  "Latest release":
+    - "https://github.com/abhimanbhau/AetherTube/releases/latest"
+aux_links_new_tab: true
+
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub"
+gh_edit_repository: "https://github.com/abhimanbhau/AetherTube"
+gh_edit_branch: "master"
+gh_edit_source: docs
+gh_edit_view_mode: "tree"
+
+footer_content: >-
+  AetherTube is an unaffiliated personal fork of <a href="https://github.com/yuliskov/SmartTube">SmartTube</a>.
+  Not affiliated with YouTube, Google, or SmartTube's maintainer.
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules
