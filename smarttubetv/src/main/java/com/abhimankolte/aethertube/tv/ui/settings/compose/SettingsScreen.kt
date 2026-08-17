@@ -4,9 +4,8 @@ package com.abhimankolte.aethertube.tv.ui.settings.compose
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -44,19 +43,14 @@ import androidx.compose.ui.unit.sp
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.abhimankolte.aethertube.tv.ui.common.compose.MotionTokens
 import com.abhimankolte.aethertube.tv.ui.dialog.compose.AppDialogPanelContent
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsItem
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionCategory
 
 private val LEFT_PANEL_WIDTH = 380.dp
-private const val FOCUS_ANIM_MS = 180
 
-/**
- * A permanent, always-visible two-pane settings screen - left = every top-level settings category,
- * right = whichever one is selected - matching the classic Android/Android TV Settings app layout
- * (see the reference screenshots this was built from) instead of a flyout/overlay over other content.
- * Both panes are opaque and full-height; nothing here animates in over anything else.
- */
+/** Two-pane settings screen displaying top-level categories on the left and options on the right. */
 @Composable
 fun SettingsScreen(
     items: List<SettingsItem>,
@@ -69,21 +63,15 @@ fun SettingsScreen(
     detailCategoryIndex: Int = 0,
     onDetailCategoryIndexChange: (Int) -> Unit = {},
 ) {
-    // Nothing here requested initial system focus, so on cold entry the screen showed a category
-    // visually "selected" but nothing was actually D-pad-focused - the first press did nothing until
-    // the user clicked it manually. Grab focus onto the selected row explicitly once it's known
-    // (selectedIndex starts at -1 until the fragment's onResume picks a default category).
+    // Focus requesters for category rail navigation.
     val focusRequesters = remember(items) { items.indices.map { FocusRequester() } }
-    // One-shot. This used to re-run on every selectedIndex change, and because each row selects
-    // itself on focus, arrowing down the rail fired a programmatic focus request that raced the
-    // D-pad movement already in flight - focus would land on whichever won, which is what made
-    // Settings jump to an unrelated row.
+    // Must stay one-shot: re-running on every selectedIndex change (each row selects itself on
+    // focus) raced a programmatic focus request against D-pad movement already in flight, landing
+    // focus on whichever won - an arbitrary row.
     var didInitialFocus by rememberSaveable { mutableStateOf(false) }
-    // The row focus should return to when focus re-enters this rail. Tracked explicitly rather than
-    // left to focusRestorer, which restores by matching an attached child node and gives up silently
-    // when it cannot - falling back to spatial search, i.e. an arbitrary row. Landing on a different
-    // row than you left is not just cosmetic here: rows select on focus, so it switched the whole
-    // settings category out from under you.
+    // Tracked explicitly rather than left to focusRestorer, which restores by matching an attached
+    // child and silently falls back to spatial search when it can't - landing on a different row
+    // than you left, which switches the whole settings category out from under you.
     var lastFocusedRow by rememberSaveable { mutableStateOf(0) }
     LaunchedEffect(selectedIndex, didInitialFocus) {
         if (!didInitialFocus && selectedIndex >= 0) {
@@ -97,12 +85,7 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
     ) {
-        // A plain Column, not a LazyColumn. focusRestorer restores by matching an *attached* child
-        // node (see FocusRestorer.restoreFocusedChild), and a lazy layout does not keep off-screen
-        // children attached - so restoration silently failed and fell back to spatial search, which
-        // is what made returning to this rail land on an arbitrary row. There are only ever a dozen
-        // or so settings categories, far too few to need virtualisation, and keeping them all
-        // composed makes restoration deterministic. Same reasoning as the Home tab strip.
+        // Non-lazy scrollable column keeps all categories composed for deterministic focus restoration.
         Column(
             modifier = Modifier
                 .width(LEFT_PANEL_WIDTH)
@@ -151,16 +134,15 @@ fun SettingsScreen(
     }
 }
 
-/** [FocusRequester.requestFocus] throws if the target isn't composed yet (e.g. scroll hasn't settled). */
+/** Focus requester with non-crashing guard for uncomposed layout targets. */
 private fun requestFocusSafely(focusRequester: FocusRequester) {
     try {
         focusRequester.requestFocus()
     } catch (e: IllegalStateException) {
-        // no-op: not composed yet, D-pad navigation just keeps whatever focus it already had
+        // Target not attached to composition hierarchy yet.
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SettingsCategoryRow(
     item: SettingsItem,
@@ -178,12 +160,12 @@ private fun SettingsCategoryRow(
             isSelected -> MaterialTheme.colorScheme.surfaceVariant
             else -> androidx.compose.ui.graphics.Color.Transparent
         },
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "settingsCategoryBackground",
     )
     val contentColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "settingsCategoryContent",
     )
 
@@ -194,20 +176,17 @@ private fun SettingsCategoryRow(
             .clip(RoundedCornerShape(12.dp))
             .background(backgroundColor)
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
-            // Matches every other list in the app (TopNav tabs, the dialog category rail): moving
-            // focus onto a category previews it immediately, click is just a redundant secondary
-            // trigger for touch/pointer input - not the only way in, like it was before.
+            // Focus previews category immediately; click provides deliberate touch/pointer selection.
             .onFocusChanged { state ->
                 if (state.isFocused) {
                     onFocused()
                     onSelected()
                 }
             }
-            .combinedClickable(
+            .clickable(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onSelected,
-                onLongClick = {},
             )
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,

@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import com.abhimankolte.aethertube.tv.ui.common.compose.AetherTubeTheme
+import com.abhimankolte.aethertube.tv.ui.common.compose.AnimatedSplashScreen
 import com.abhimankolte.aethertube.tv.ui.settings.compose.ComposeSettingsActivity
 import com.abhimankolte.aethertube.tv.ui.shorts.ShortsPlayerActivity
 import com.liskovsoft.mediaserviceinterfaces.oauth.Account
@@ -52,6 +56,10 @@ class ComposeHomeFragment :
     private var currentSectionType by mutableStateOf(BrowseSection.TYPE_ROW)
     private var showProgress by mutableStateOf(false)
     private var focusedBackdropUrl by mutableStateOf<String?>(null)
+
+    // One-way: never resets back to true. Cold-start only - see AnimatedSplashScreen's own doc comment
+    // for why a video/voice deep link never reaches this at all.
+    private var showSplash by mutableStateOf(true)
 
     // Backs the TopNav avatar button (see onAccountClick below). SignInService.addOnAccountChange
     // has no matching remove method, so this listener - and the closure capturing this fragment -
@@ -106,7 +114,10 @@ class ComposeHomeFragment :
     // (see the onSectionFocused dedup note above - same underlying disposeActions() mechanism). Only
     // cache a section once its load has actually settled (showProgressBar(false) fired for it); otherwise
     // leaving mid-load would cache a spuriously-empty snapshot and that tab would appear dead forever.
-    private var isCurrentSectionSettled = false
+    //
+    // Compose state (not a plain var): also doubles as AnimatedSplashScreen's contentReady signal, so
+    // the splash's hold phase can observe the boot section's very first settle.
+    private var isCurrentSectionSettled by mutableStateOf(false)
 
     private class SectionSnapshot(
         val rows: List<HomeRow>,
@@ -131,36 +142,45 @@ class ComposeHomeFragment :
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = ComposeView(requireContext()).apply {
         setContent {
             AetherTubeTheme {
-                HomeScreen(
-                    sections = sections,
-                    selectedSectionId = lastFocusedSectionId,
-                    sectionType = currentSectionType,
-                    onSectionSelected = ::onSectionSelected,
-                    onSearchClick = { SearchPresenter.instance(requireContext()).startSearch(null) },
-                    onSettingsClick = { startActivity(Intent(requireContext(), ComposeSettingsActivity::class.java)) },
-                    accountAvatarUrl = currentAccount?.avatarImageUrl,
-                    onAccountClick = { AccountSelectionPresenter.instance(requireContext()).show(true) },
-                    showProgress = showProgress,
-                    backdropUrl = focusedBackdropUrl,
-                    rows = homeRows,
-                    errorData = errorData,
-                    onVideoClick = ::onVideoClicked,
-                    onVideoFocus = { video ->
-                        browsePresenter.onVideoItemSelected(video)
-                        // Only the spacious shelf view gets the ambient backdrop-follows-focus
-                        // treatment. A dense grid (My Videos, Subscriptions, History, etc.) has
-                        // cards close enough together that even a debounced crossfade still fires
-                        // constantly during normal browsing, reading as "the page refreshing".
-                        if (currentSectionType == BrowseSection.TYPE_ROW) {
-                            focusedBackdropUrl = video.cardImageUrl
-                        }
-                        video.videoId?.let { sectionFocusMemory[lastFocusedSectionId] = it }
-                    },
-                    onVideoLongClick = { video -> browsePresenter.onVideoItemLongClicked(video) },
-                    onScrollEnd = { video -> browsePresenter.onScrollEnd(video) },
-                    restoreFocusVideoId = pendingFocusVideoId,
-                    onFocusRestored = { pendingFocusVideoId = null },
-                )
+                Box(modifier = Modifier.fillMaxSize()) {
+                    HomeScreen(
+                        sections = sections,
+                        selectedSectionId = lastFocusedSectionId,
+                        sectionType = currentSectionType,
+                        onSectionSelected = ::onSectionSelected,
+                        onSearchClick = { SearchPresenter.instance(requireContext()).startSearch(null) },
+                        onSettingsClick = { startActivity(Intent(requireContext(), ComposeSettingsActivity::class.java)) },
+                        accountAvatarUrl = currentAccount?.avatarImageUrl,
+                        onAccountClick = { AccountSelectionPresenter.instance(requireContext()).show(true) },
+                        showProgress = showProgress,
+                        backdropUrl = focusedBackdropUrl,
+                        rows = homeRows,
+                        errorData = errorData,
+                        onVideoClick = ::onVideoClicked,
+                        onVideoFocus = { video ->
+                            browsePresenter.onVideoItemSelected(video)
+                            // Only the spacious shelf view gets the ambient backdrop-follows-focus
+                            // treatment. A dense grid (My Videos, Subscriptions, History, etc.) has
+                            // cards close enough together that even a debounced crossfade still fires
+                            // constantly during normal browsing, reading as "the page refreshing".
+                            if (currentSectionType == BrowseSection.TYPE_ROW) {
+                                focusedBackdropUrl = video.cardImageUrl
+                            }
+                            video.videoId?.let { sectionFocusMemory[lastFocusedSectionId] = it }
+                        },
+                        onVideoLongClick = { video -> browsePresenter.onVideoItemLongClicked(video) },
+                        onScrollEnd = { video -> browsePresenter.onScrollEnd(video) },
+                        restoreFocusVideoId = pendingFocusVideoId,
+                        onFocusRestored = { pendingFocusVideoId = null },
+                    )
+
+                    if (showSplash) {
+                        AnimatedSplashScreen(
+                            contentReady = isCurrentSectionSettled,
+                            onFinished = { showSplash = false },
+                        )
+                    }
+                }
             }
         }
     }
@@ -198,8 +218,8 @@ class ComposeHomeFragment :
             (currentSectionType == BrowseSection.TYPE_SHORTS_GRID && video.isShorts)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         browsePresenter.onViewInitialized()
     }
 

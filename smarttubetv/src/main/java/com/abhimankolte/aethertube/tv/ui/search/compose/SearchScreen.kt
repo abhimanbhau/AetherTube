@@ -1,19 +1,18 @@
 @file:OptIn(
     androidx.tv.material3.ExperimentalTvMaterial3Api::class,
     androidx.compose.ui.ExperimentalComposeUiApi::class,
+    androidx.compose.foundation.ExperimentalFoundationApi::class,
 )
 
 package com.abhimankolte.aethertube.tv.ui.search.compose
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -74,6 +73,7 @@ import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.abhimankolte.aethertube.tv.ui.common.compose.CardTitle
+import com.abhimankolte.aethertube.tv.ui.common.compose.MotionTokens
 import com.abhimankolte.aethertube.tv.ui.common.compose.VideoCard
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video
 import com.liskovsoft.smartyoutubetv2.common.app.models.search.vineyard.Tag
@@ -84,15 +84,9 @@ private val CARD_HEIGHT = 124.dp
 private val CARD_SHAPE = RoundedCornerShape(14.dp)
 private val CARD_TITLE_SIZE = 14.sp
 private val CARD_TITLE_LINE_HEIGHT = 18.sp
-private const val FOCUS_ANIM_MS = 180
 
-// Apple TV-style focus scale: a light spring with a touch of overshoot instead of a rigid linear/cubic
-// tween - snappy enough not to lag behind fast D-pad navigation, but feels alive rather than mechanical.
-private val FocusScaleSpring = spring<Float>(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMediumLow)
-private const val BACKDROP_DEBOUNCE_MS = 220L
-
-// Mirrors leanback's ViewUtil.ROW_SCROLL_CONTINUE_NUM - start fetching the next page once the viewport
-// is within this many items of the end, rather than waiting for the last item to actually be reached.
+// Mirrors leanback's ViewUtil.ROW_SCROLL_CONTINUE_NUM - start fetching the next page once the
+// viewport is within this many items of the end, rather than waiting for the last item to load.
 private const val ROW_SCROLL_CONTINUE_NUM = 4
 
 /**
@@ -118,11 +112,9 @@ fun SearchScreen(
     searchFieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
-    // See HomeScreen's identical debounce - flicking focus across the result grid fired a full-screen
-    // Glide crossfade per card without this, reading as "the page refreshing".
     var debouncedBackdropUrl by remember { mutableStateOf(backdropUrl) }
     LaunchedEffect(backdropUrl) {
-        delay(BACKDROP_DEBOUNCE_MS)
+        delay(MotionTokens.BACKDROP_DEBOUNCE_MS)
         debouncedBackdropUrl = backdropUrl
     }
 
@@ -198,12 +190,12 @@ private fun SearchBar(
 
     val borderColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.border,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "searchBarBorder",
     )
     val iconColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "searchIconColor",
     )
 
@@ -242,16 +234,7 @@ private fun SearchBar(
                         if (event.type != KeyEventType.KeyDown) {
                             false
                         } else if (event.key == Key.DirectionDown) {
-                            // BasicTextField can swallow DPAD Down as a cursor-navigation key on some TV
-                            // devices/keyboards instead of letting it fall through to TV focus navigation -
-                            // force it down to whatever's below (tags row or results) explicitly.
-                            //
-                            // moveFocus(Down) alone used Compose's default spatial search: it picks
-                            // whichever focusable is geometrically closest to this field's center, and this
-                            // field spans nearly the full row width while the tag row starts at the left
-                            // edge - past two or three tags, that's rarely tag #0. Go straight to the first
-                            // tag when there are any; runCatching covers the one frame where it's requested
-                            // before TagsRow has composed it (tags flips true and the LazyRow needs a beat).
+                            // DPAD Down explicitly targets the first tag to bypass textfield cursor navigation and geometric ambiguity.
                             if (hasTags) {
                                 runCatching { firstTagFocusRequester.requestFocus() }
                                     .onFailure { focusManager.moveFocus(FocusDirection.Down) }
@@ -260,9 +243,7 @@ private fun SearchBar(
                             }
                             true
                         } else if (event.key == Key.Enter || event.key == Key.NumPadEnter || event.key == Key.DirectionCenter) {
-                            // KeyboardActions.onSearch only fires through an actual bound software IME's
-                            // action button - on a remote-only TV session with no soft keyboard shown,
-                            // the OK/center key never reaches it. Submit directly from the raw key event too.
+                            // Submits search on Enter/Center key directly for physical TV remotes without soft IME.
                             keyboardController?.hide()
                             onSearchSubmit()
                             true
@@ -278,14 +259,10 @@ private fun SearchBar(
             )
 
             if (showProgress) {
-                // NOTE: androidx.tv.material3 has no CircularProgressIndicator (that's a
-                // compose-material/material3 component); a plain label avoids pulling in that dependency.
+                // Lightweight text progress indicator without full material3 library overhead.
                 Text(text = "...", color = iconColor)
             }
 
-            // ComposeSearchFragment.startVoiceRecognition() is fully implemented (backs onto
-            // SpeechRecognizer via the presenter) but was never reachable from this icon - it sat here
-            // as a plain, non-interactive Icon.
             SearchVoiceIcon(onClick = onVoiceSearchClick)
         }
 
@@ -293,14 +270,13 @@ private fun SearchBar(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SearchVoiceIcon(onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     val tint by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "searchVoiceTint",
     )
 
@@ -310,23 +286,21 @@ private fun SearchVoiceIcon(onClick: () -> Unit) {
         tint = tint,
         modifier = Modifier
             .clip(CircleShape)
-            .combinedClickable(
+            .clickable(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {},
             ),
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SearchSettingsIcon(onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     val tint by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "searchSettingsTint",
     )
 
@@ -336,11 +310,10 @@ private fun SearchSettingsIcon(onClick: () -> Unit) {
         tint = tint,
         modifier = Modifier
             .clip(CircleShape)
-            .combinedClickable(
+            .clickable(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {},
             ),
     )
 }
@@ -371,7 +344,6 @@ private fun TagsRow(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TagChip(
     tag: Tag,
@@ -382,15 +354,15 @@ private fun TagChip(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val scale by animateFloatAsState(if (isFocused) 1.06f else 1f, FocusScaleSpring, label = "tagScale")
+    val scale by animateFloatAsState(if (isFocused) 1.06f else 1f, MotionTokens.FocusScaleSpring, label = "tagScale")
     val backgroundColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "tagBackground",
     )
     val textColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "tagText",
     )
 
@@ -398,10 +370,7 @@ private fun TagChip(
         modifier = Modifier
             .padding(vertical = 4.dp)
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
-            // Up is otherwise unspecified spatial search again - same failure mode as the search
-            // field's Down key, just in reverse. Every chip (not only the first) gets this, since
-            // the row scrolls and whichever chip is focused when Up is pressed should return to
-            // the field it came from, not wherever geometry happens to land.
+            // Directs D-pad Up explicitly back to the search field regardless of horizontal scroll offset.
             .focusProperties { up = upFocusRequester }
             .scale(scale)
             .clip(CircleShape)
@@ -433,8 +402,7 @@ private fun VideoResultRow(
     val listState = rememberLazyListState()
     val lastVideo = row.videos.lastOrNull()
 
-    // Pagination driven by viewport proximity to the end rather than the last item's composition -
-    // see HomeScreen's GridContent for why the composition-keyed approach can't page past screen one.
+    // Viewport-proximity pagination prefetching results before reaching scroll boundary.
     val shouldLoadMore by remember {
         derivedStateOf {
             val info = listState.layoutInfo

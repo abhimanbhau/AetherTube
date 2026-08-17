@@ -1,17 +1,17 @@
-@file:OptIn(androidx.tv.material3.ExperimentalTvMaterial3Api::class)
+@file:OptIn(
+    androidx.tv.material3.ExperimentalTvMaterial3Api::class,
+    androidx.compose.foundation.ExperimentalFoundationApi::class,
+)
 
 package com.abhimankolte.aethertube.tv.ui.dialog.compose
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -34,7 +34,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,31 +60,18 @@ import androidx.compose.ui.unit.sp
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.abhimankolte.aethertube.tv.ui.common.compose.MotionTokens
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionCategory
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionItem
 
 private val LEFT_PANEL_WIDTH = 240.dp
-private const val FOCUS_ANIM_MS = 180
-
-// Apple TV-style focus scale: a light spring with a touch of overshoot instead of a rigid linear/cubic
-// tween - snappy enough not to lag behind fast D-pad navigation, but feels alive rather than mechanical.
-private val FocusScaleSpring = spring<Float>(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMediumLow)
 private val PANEL_WIDTH = 480.dp
 
-/** Matches the 220ms the old window transition used, but animated inside Compose - see AppDialogScreen. */
+/** Enter transition duration for the side panel. */
 private const val PANEL_ENTER_MS = 220
 private val PANEL_SHAPE = RoundedCornerShape(topStart = 24.dp, bottomStart = 24.dp)
 
-/**
- * A right-anchored panel over a dimmed scrim, not a full-screen takeover - the hosting Activity
- * window is translucent (see ComposeAppDialogActivity's theme) so whatever's underneath stays
- * visible. Used for dialogs reached from outside the Settings screen (context menus, confirmations,
- * SponsorBlock, etc.) that don't have an already-visible Compose screen to render inline into.
- *
- * The dedicated Settings screen (see [com.abhimankolte.aethertube.tv.ui.settings.compose.ComposeSettingsFragment])
- * doesn't use this either - it renders [AppDialogPanelContent] directly as a permanent, opaque
- * two-pane layout instead of an overlay/flyout.
- */
+/** Right-anchored side panel dialog for playback options, context menus, and player settings. */
 @Composable
 fun AppDialogScreen(
     title: String?,
@@ -95,17 +82,10 @@ fun AppDialogScreen(
     initialCategoryIndex: Int = 0,
     onCategoryIndexChange: (Int) -> Unit = {},
 ) {
-    // AppDialogPresenter#enableOverlay(true) (chapter notifications, SponsorBlock's in-player prompt)
-    // means "float this over whatever's playing, don't block it" - those callers get a much lighter
-    // scrim. Everything else (subtitles/speed/quality pickers, context menus) keeps the heavier one,
-    // same as opening the dedicated Settings screen.
+    // Lighter scrim for active playback overlay prompts to maintain video visibility.
     val scrimAlpha = if (isOverlay) 0.15f else 0.5f
 
-    // Entrance animation lives here, in Compose, rather than as a window transition on the Activity -
-    // see the comment on App.Theme.Compose.Dialog in styles.xml. A window animation blacks out the
-    // video playing underneath (SurfaceView can't composite into an activity animation layer); this
-    // animates only our own content inside an already-composited translucent window, so playback below
-    // is untouched and the dialog opens immediately.
+    // In-compose slide animation ensures smooth rendering over translucent playback windows.
     var isPanelVisible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { isPanelVisible = true }
 
@@ -118,11 +98,7 @@ fun AppDialogScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            // A flat scrim across the whole screen hid the video everywhere, not just behind the
-            // panel - this is reached constantly *during active playback* (quality/subtitles/speed),
-            // and the whole point of a right-anchored panel over a translucent window is to keep
-            // watching while you adjust something. Fade it in from fully transparent on the left
-            // (where the video is) to the target alpha only right at the panel's own edge.
+            // Gradient scrim darkens the area behind the panel while leaving the video un-obscured on the left.
             .background(
                 Brush.horizontalGradient(
                     0f to Color.Transparent,
@@ -149,13 +125,7 @@ fun AppDialogScreen(
     }
 }
 
-/**
- * The actual dialog content (header + category list + options) with no positioning/background/scrim
- * of its own - callers decide how to place and frame it. Left = category list, right = the selected
- * category's options - like the real Android/Android TV Settings app, instead of leanback's
- * single-pane push/pop preference screens. When there's only one category (leanback's "expandable"
- * single-dialog case, e.g. a plain "pick one" prompt) the category list is skipped entirely.
- */
+/** Two-pane dialog panel layout displaying categories on the left and options on the right. */
 @Composable
 fun AppDialogPanelContent(
     title: String?,
@@ -163,26 +133,15 @@ fun AppDialogPanelContent(
     showBackButton: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    // Which category was open last time this frame was on screen, and a way to report changes back.
-    // Hoisted out of the composable on purpose: opening a nested dialog pushes a new frame, and only
-    // the topmost frame stays composed - so this frame leaves composition entirely and any remember()
-    // state inside it is destroyed. Popping back then rebuilt it with the first category selected,
-    // losing the user's place. That reads as "Back jumped me to the top of Settings" even though the
-    // frame stack itself popped correctly by exactly one level.
+    // Hoisted category index to preserve scroll position when popping back from nested dialog frames.
     initialCategoryIndex: Int = 0,
     onCategoryIndexChange: (Int) -> Unit = {},
 ) {
-    // weight(1f), not just fillMaxSize(): a Column doesn't shrink a later, unweighted child's max-height
-    // constraint by whatever DialogHeader (fixed height) already used - without weight, the option list
-    // (or the whole categories Row) was measured against the full panel height, overflowing past the
-    // header by the header's own height and clipping the bottom of the list.
+    // Uses weight(1f) to prevent list content from overflowing past the fixed-height header.
     Column(modifier = modifier) {
         if (categories.size <= 1) {
             val category = categories.firstOrNull()
-            // category?.title alone renders blank for OptionCategory.singleSwitch()/singleButton() -
-            // neither factory sets it, only their one OptionItem's own title. categoryDisplayTitle()
-            // already falls back to that (used a few lines down for the multi-category list); the
-            // single-category header just wasn't using it.
+            // Falls back to option title if the single-option category lacks its own header title.
             DialogHeader(
                 title = title ?: category?.let { categoryDisplayTitle(it) },
                 showBackButton = showBackButton,
@@ -199,13 +158,11 @@ fun AppDialogPanelContent(
             DialogHeader(title = title, showBackButton = showBackButton, onBack = onBack)
 
             Row(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                // Plain Column for the same reason as the settings rail: focusRestorer can only
-                // restore a child that is still attached, which a lazy layout does not guarantee.
+                // Non-lazy column ensures category items remain attached for deterministic focus restoration.
                 Column(
                     modifier = Modifier
                         .width(LEFT_PANEL_WIDTH)
                         .fillMaxHeight()
-                        // Deterministic re-entry, same reasoning as the settings rail.
                         .focusProperties {
                             onEnter = {
                                 categoryRequesters.getOrNull(lastFocusedCategory)?.let {
@@ -226,8 +183,7 @@ fun AppDialogPanelContent(
                             onSelected = {
                                 lastFocusedCategory = index
                                 selectedIndex = index
-                                // Report upward so the frame remembers this position for when a
-                                // nested dialog is opened from here and later popped back to.
+                                // Reports category selection to preserve navigation state on dialog frame transitions.
                                 onCategoryIndexChange(index)
                             },
                             focusRequester = categoryRequesters.getOrNull(index),
@@ -253,12 +209,7 @@ fun AppDialogPanelContent(
     }
 }
 
-/**
- * OptionCategory.singleSwitch()/singleButton() (used constantly throughout the settings presenters
- * for a single toggle or action mixed in among bigger categories) never set a category-level title -
- * only their one contained OptionItem has one. Without this fallback, every such category renders as
- * a blank, unlabeled row in the left rail - navigable and functional, but unreadable.
- */
+/** Extracts display title from category or falls back to its first contained option title. */
 private fun categoryDisplayTitle(category: OptionCategory): String {
     val ownTitle = category.title?.toString()
     if (!ownTitle.isNullOrBlank()) {
@@ -292,35 +243,32 @@ private fun DialogHeader(title: String?, showBackButton: Boolean, onBack: () -> 
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun BackButton(onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val scale by animateFloatAsState(if (isFocused) 1.15f else 1f, FocusScaleSpring, label = "backScale")
+    val scale by animateFloatAsState(if (isFocused) 1.15f else 1f, MotionTokens.FocusScaleSpring, label = "backScale")
     val tint by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "backTint",
     )
 
     Icon(
-        imageVector = Icons.Filled.ArrowBack,
+        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = "Back",
         tint = tint,
         modifier = Modifier
             .scale(scale)
-            .combinedClickable(
+            .clickable(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {},
             ),
     )
 }
 
-/** Plain text row, matching HomeScreen's SectionTab: weight/color shift + a thin accent underline - no fill. */
-@OptIn(ExperimentalFoundationApi::class)
+/** Category row displaying title with accent bar indicator on focus/selection. */
 @Composable
 private fun CategoryRow(
     title: String,
@@ -333,7 +281,7 @@ private fun CategoryRow(
 
     val textColor by animateColorAsState(
         if (isFocused || isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurfaceVariant,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "categoryText",
     )
     val barColor by animateColorAsState(
@@ -342,7 +290,7 @@ private fun CategoryRow(
             isSelected -> MaterialTheme.colorScheme.onSurfaceVariant
             else -> Color.Transparent
         },
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "categoryBar",
     )
 
@@ -351,11 +299,10 @@ private fun CategoryRow(
             .fillMaxWidth()
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .onFocusChanged { state -> if (state.isFocused) onSelected() }
-            .combinedClickable(
+            .clickable(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onSelected,
-                onLongClick = {},
             )
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -381,15 +328,12 @@ private fun OptionList(category: OptionCategory, modifier: Modifier = Modifier) 
     when (category.type) {
         OptionCategory.TYPE_LONG_TEXT -> LongTextContent(category)
         else -> {
-            // TYPE_RADIO_LIST / TYPE_STRING_LIST: single-select; TYPE_CHECKBOX_LIST / TYPE_SINGLE_SWITCH:
-            // independent toggles; TYPE_SINGLE_BUTTON: one plain action row, not checkable.
             val isSingleSelect = category.type == OptionCategory.TYPE_RADIO_LIST || category.type == OptionCategory.TYPE_STRING_LIST
             val isButton = category.type == OptionCategory.TYPE_SINGLE_BUTTON
             val options = category.options.orEmpty()
 
-            // OptionItem#getId() defaults to 0 for almost every real item (most UiOptionItem factories
-            // never set it) - never use it as a list/state key, it collides constantly. Index is safe:
-            // each category's option list is rebuilt fresh per show() call and stable for its lifetime.
+            // Index, not OptionItem#getId() - that defaults to 0 for almost every real item, so
+            // using it as a key/selection index collides constantly.
             var selectedIndex by remember(category) {
                 mutableStateOf(options.indexOfFirst { it.isSelected }.let { if (it == -1) null else it })
             }
@@ -397,13 +341,7 @@ private fun OptionList(category: OptionCategory, modifier: Modifier = Modifier) 
                 mutableStateListOf<Boolean>().apply { options.forEach { add(it.isSelected) } }
             }
 
-            // Deterministic entry, matching both rails. This list is the third focus level, and it
-            // was the one still drifting: nested dialogs show a BackButton in the header (see
-            // DialogHeader - it only appears once detailFrames.size > 1), so the panel gains an extra
-            // focusable at nested levels and default focus ordering shifts by exactly one. Redirecting
-            // entry at an explicit row makes the header's contents irrelevant to where focus lands.
-            // Start on the currently-selected option rather than the top - for a radio list that is
-            // the row the user most likely wants.
+            // Focus requester targeting the active option upon entering the right options panel.
             var lastFocusedOption by remember(category) {
                 mutableStateOf(options.indexOfFirst { it.isSelected }.coerceAtLeast(0))
             }
@@ -414,7 +352,7 @@ private fun OptionList(category: OptionCategory, modifier: Modifier = Modifier) 
                     .focusProperties {
                         onEnter = {
                             // Only attached while that row is composed; falling through to default
-                            // entry is fine and is why this is not allowed to throw.
+                            // entry on failure is fine, which is why this must not throw.
                             try {
                                 entryRequester.requestFocus()
                             } catch (e: IllegalStateException) { }
@@ -423,10 +361,7 @@ private fun OptionList(category: OptionCategory, modifier: Modifier = Modifier) 
                     .focusGroup(),
                 contentPadding = PaddingValues(horizontal = 32.dp, vertical = 20.dp),
             ) {
-                // Content-based, not a bare index: dynamic option lists (track/audio format pickers)
-                // get filtered or reordered, and a pure positional key defeats Compose's diffing -
-                // every remaining item "changes identity" and the whole list recomposes instead of
-                // just the entries that actually moved.
+                // Title-based key allows Compose to maintain item identities when options reorder.
                 itemsIndexed(options, key = { index, item -> item.title?.toString() ?: "option_${item.id}_$index" }) { index, item ->
                     val isChecked = when {
                         isButton -> false
@@ -479,8 +414,7 @@ private fun LongTextContent(category: OptionCategory) {
     }
 }
 
-/** Plain text row with a small check/radio glyph - no card fill, matching the rest of the app's minimal chrome. */
-@OptIn(ExperimentalFoundationApi::class)
+/** Option row supporting checkable radio/checkbox indicators and action clicks. */
 @Composable
 private fun OptionRow(
     item: OptionItem,
@@ -495,10 +429,10 @@ private fun OptionRow(
 
     val contentColor by animateColorAsState(
         if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "optionContent",
     )
-    val scale by animateFloatAsState(if (isFocused) 1.02f else 1f, FocusScaleSpring, label = "optionScale")
+    val scale by animateFloatAsState(if (isFocused) 1.02f else 1f, MotionTokens.FocusScaleSpring, label = "optionScale")
 
     Row(
         modifier = Modifier
@@ -506,11 +440,10 @@ private fun OptionRow(
             .scale(scale)
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .onFocusChanged { if (it.isFocused) onFocused() }
-            .combinedClickable(
+            .clickable(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-                onLongClick = {},
             )
             .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,

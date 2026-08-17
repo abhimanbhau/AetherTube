@@ -1,0 +1,12 @@
+# Normalize line endings to LF for anything git detects as text, regardless of which OS or tool
+# commits it - without this, files land with whatever line ending the committing client happened
+# to write, and every downstream sync (see .github/workflows/sync-and-publish.yml) that compares
+# this repo's blobs against another copy sees a full-file rewrite for pure whitespace noise.
+* text=auto eol=lf
+
+# Explicit safety net on top of git's content-sniffing heuristic for this repo's actual binary
+# assets (branding art, jarred dependencies) - never want these run through a text filter.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.jar binary

@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -72,30 +71,11 @@ enum class CardTitle {
     Overlay,
 }
 
-private const val FOCUS_ANIM_MS = 180
 private const val PLAYER_START_DELAY_MS = 2_000L
 
-/** Focus ring: chunky bright outer + thin dark inner, so it reads over any thumbnail. */
-private val RING_WIDTH = 4.dp
-private val RING_INNER_WIDTH = 1.5.dp
-
-/** Unfocused cards are dimmed - the one cue a bright thumbnail can't camouflage. */
-private const val UNFOCUSED_DIM = 0.35f
-
 /**
- * The single video card used by every Compose screen.
- *
- * Previously Home and Search each carried their own near-identical copy, and each one hosted a
- * [com.abhimankolte.aethertube.tv.ui.search.compose.SearchVideoCardView] through [AndroidView] - a
- * FrameLayout, an ImageView and a Glide target inflated for *every* card in a lazy layout, which is
- * the most expensive thing on a grid frame. Here the thumbnail and the animated preview are pure
- * Compose; only the video preview still needs a real View, and only while it is actually playing.
- *
- * Card preview parity with the leanback card is preserved - see [MainUIData.getCardPreviewType]:
- *  - CARD_PREVIEW_DISABLED: thumbnail only.
- *  - CARD_PREVIEW_MUTED / CARD_PREVIEW_FULL: on focus, either the animated preview image
- *    ([Video.previewUrl]) immediately, or a muted/unmuted [EmbedPlayerView] after a short delay -
- *    matching what the leanback card did.
+ * Universal video card composable supporting configurable title placement, dynamic glow highlights,
+ * and animated video preview escalation.
  */
 @Composable
 fun VideoCard(
@@ -122,35 +102,23 @@ fun VideoCard(
 
     val lowEnd = LocalLowEndDevice.current
     var isFocused by remember { mutableStateOf(false) }
-    // Held as State and read inside the draw lambdas below rather than unwrapped with `by`. Reading
-    // an animated value during composition recomposes the card on every animation frame; reading it
-    // in the draw phase only redraws. Focus animation therefore costs no recomposition at all.
-    val glowAlpha = animateFloatAsState(if (isFocused) 1f else 0f, tween(FOCUS_ANIM_MS), label = "cardGlow")
-    val dimAlpha = animateFloatAsState(if (isFocused) 0f else UNFOCUSED_DIM, tween(FOCUS_ANIM_MS), label = "cardDim")
-    val scrimAlpha = animateFloatAsState(if (isFocused) 0.9f else 0.7f, tween(FOCUS_ANIM_MS), label = "cardScrim")
+
+    // Read in draw phase to avoid full card recomposition during focus animations.
+    val glowAlpha = animateFloatAsState(if (isFocused) 1f else 0f, tween(MotionTokens.FOCUS_ANIM_MS), label = "cardGlow")
+    val dimAlpha = animateFloatAsState(if (isFocused) 0f else FocusTokens.UnfocusedDim, tween(MotionTokens.FOCUS_ANIM_MS), label = "cardDim")
+    val scrimAlpha = animateFloatAsState(if (isFocused) 0.9f else 0.7f, tween(MotionTokens.FOCUS_ANIM_MS), label = "cardScrim")
     val ringColor = Color.White
     val ringInnerColor = Color.Black.copy(alpha = 0.55f)
 
-    // Dynamic palette color-sync: the focus glow tints itself from the focused card's own thumbnail
-    // instead of always being the same static accent, closer to the ambient-lighting feel of a
-    // modern TV OS. Extraction only ever runs for the card that's actually focused right now - a
-    // grid can hold dozens of cards, and Palette scanning pixel data on all of them at once would be
-    // a real, measurable cost, unlike the flat accent this replaces. Skipped on low-end devices
-    // alongside the blur glow itself, and falls back to the flat accent while nothing's extracted
-    // yet (or extraction fails) so there's never a missing/blank glow.
-    // Not unwrapped with `by`, same reasoning as glowAlpha/dimAlpha/scrimAlpha below: this is read
-    // inside the drawBehind draw phase, not during composition, so an in-flight color transition
-    // (e.g. focus landing on a card with a very different thumbnail) redraws without recomposing.
+    // Focus glow tints dynamically from the thumbnail palette; skipped on low-end hardware for performance.
     val paletteColor = if (!lowEnd) rememberFocusPaletteColor(video.cardImageUrl, isFocused) else null
     val glowColor = animateColorAsState(
         (paletteColor ?: MaterialTheme.colorScheme.primary).copy(alpha = 0.55f),
-        tween(FOCUS_ANIM_MS),
+        tween(MotionTokens.FOCUS_ANIM_MS),
         label = "cardGlowColor",
     )
 
-    // Preview only ever runs for the focused card. The leanback card showed an animated preview image
-    // straight away when the video has one, and otherwise waited a couple of seconds before spinning
-    // up a player - so passing through cards never starts playback.
+    // Preview playback only activates after dwelling on the focused card to prevent thrashing during fast navigation.
     val previewType = mainUIData.cardPreviewType
     var previewMode by remember(video.videoId) { mutableStateOf(PreviewMode.None) }
     LaunchedEffect(isFocused, previewType, video.videoId) {
@@ -160,10 +128,7 @@ fun VideoCard(
         }
         when {
             video.previewUrl != null -> previewMode = PreviewMode.AnimatedImage
-            // Deliberately NOT gated on device class. Card preview is an explicit user setting with
-            // three states (off / muted / with sound); a device heuristic quietly overriding what
-            // the user asked for is the wrong trade, and it silently broke previews on perfectly
-            // capable TVs. Only the decorative blurs below adapt automatically.
+            // Respects user preview preference directly without heuristic overrides.
             video.videoId != null -> {
                 delay(PLAYER_START_DELAY_MS)
                 previewMode = PreviewMode.Player
@@ -198,31 +163,23 @@ fun VideoCard(
                 .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
                 .onFocusChanged {
                     isFocused = it.isFocused
-                    // Forward focus gain to the caller, not just to this card's own visual state.
-                    // This was silently dropped when Home's and Search's separate card
-                    // implementations were merged into this one: every call site still passed
-                    // onFocus (it drives the ambient backdrop and the presenter's selected-item
-                    // tracking), but nothing here ever called it - so the backdrop stopped following
-                    // focus across shelves and grids and appeared frozen on whatever loaded first.
-                    // FeaturedCarousel kept working only because it wires onVideoFocus itself
-                    // instead of going through VideoCard.
+                    // Callers depend on this for the ambient backdrop and presenter selected-item
+                    // tracking, even though nothing inside VideoCard itself uses it - don't drop it
+                    // just because it looks unused here.
                     if (it.isFocused) {
                         onFocus()
                     }
                 }
                 .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-                // Dim veil and both focus rings used to be three more full-card child Boxes stacked
-                // on top of the artwork. Drawn here instead: three fewer layout nodes per card (27 on
-                // a 9-card grid), and because the alphas are read in the draw phase the whole focus
-                // transition is redraw-only.
+                // Drawn directly in draw phase to reduce layout node allocations.
                 .drawWithContent {
                     drawContent()
                     val d = dimAlpha.value
                     if (d > 0f) drawRect(Color.Black, alpha = d)
                     if (isFocused) {
                         val r = shape.topStart.toPx(size, this)
-                        val outer = RING_WIDTH.toPx()
-                        val inner = RING_INNER_WIDTH.toPx()
+                        val outer = FocusTokens.RingWidth.toPx()
+                        val inner = FocusTokens.RingInnerWidth.toPx()
                         drawRoundRect(
                             color = ringColor,
                             topLeft = Offset(outer / 2f, outer / 2f),
@@ -241,10 +198,10 @@ fun VideoCard(
                     }
                 },
         ) {
-            // Static thumbnail. Deliberately NOT ViewUtil.glideOptions(): that sets
-            // skipMemoryCache(true) so animated previews restart from frame one, and the leanback card
-            // applied it to the still thumbnail too - meaning every thumbnail was re-decoded from disk
-            // on every bind, which is exactly the wrong trade for a grid you scroll through.
+            // DiskCacheStrategy.ALL, deliberately not ViewUtil.glideOptions() (which sets
+            // skipMemoryCache(true)): that's for the animated preview below, where a restart-from-
+            // frame-one is the point. Applied to this static thumbnail it would just re-decode from
+            // disk on every bind.
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -282,8 +239,7 @@ fun VideoCard(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize(),
                     ) { request ->
-                        // No caching here, unlike the thumbnail: it's what makes the animation start from
-                        // its first frame each time rather than resuming mid-loop.
+                        // Skips cache to ensure animated previews restart from frame one.
                         request.diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
                     }
                     PreviewMode.Player -> VideoPreviewPlayer(
@@ -323,15 +279,7 @@ fun VideoCard(
 
 private enum class PreviewMode { None, AnimatedImage, Player }
 
-/**
- * The focused card's dominant/vibrant color, or null while nothing's been extracted yet.
- *
- * A separate, small Glide bitmap fetch rather than hooking into the display [GlideImage] above -
- * `glide-compose` doesn't expose the decoded bitmap directly, and the thumbnail is already on
- * [DiskCacheStrategy.ALL], so this second request decodes from the cached bytes instead of hitting
- * the network again. Downscaled to 96x96 before Palette even sees it: full-resolution extraction
- * would cost far more than the visual result needs.
- */
+/** Extracts dominant/vibrant color asynchronously from a low-res thumbnail sample for focus glow. */
 @Composable
 private fun rememberFocusPaletteColor(imageUrl: String?, active: Boolean): Color? {
     var color by remember { mutableStateOf<Color?>(null) }
@@ -369,19 +317,14 @@ private fun CardTitleText(
         color = if (isFocused) Color.White else Color.White.copy(alpha = 0.85f),
         fontWeight = if (isFocused) FontWeight.SemiBold else FontWeight.Medium,
         fontSize = fontSize,
-        // Pinned: Compose 1.10 changed default text metrics, and a title box sized without an explicit
-        // line height silently clips the second line.
+        // Pinned line height prevents vertical clipping on multi-line titles.
         lineHeight = lineHeight,
         maxLines = 2,
         modifier = modifier,
     )
 }
 
-/**
- * The one part that still has to be a real View: [EmbedPlayerView] extends ExoPlayer's PlayerView and
- * needs a Surface, which no Compose image can provide. Composed only while this card is focused and
- * actually previewing, so unfocused cards cost nothing.
- */
+/** Embedded ExoPlayer view for active in-card video previews. */
 @Composable
 private fun VideoPreviewPlayer(video: Video, muted: Boolean, lowQuality: Boolean) {
     var player by remember { mutableStateOf<EmbedPlayerView?>(null) }
@@ -399,8 +342,7 @@ private fun VideoPreviewPlayer(video: Video, muted: Boolean, lowQuality: Boolean
         onRelease = { it.finish() },
     )
 
-    // Opening from an effect rather than AndroidView's update lambda: update re-runs on every
-    // recomposition of this card, which would restart playback repeatedly.
+    // Starts video playback in an effect to prevent repeated restarts across recompositions.
     LaunchedEffect(player, video.videoId) {
         player?.openVideo(video)
     }
