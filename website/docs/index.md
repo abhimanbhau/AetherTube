@@ -19,12 +19,35 @@ hide:
   <div class="ah-hero__scrollcue">Scroll</div>
 </section>
 
-<section class="ah-panel" id="panel-settings">
+<section class="ah-panel" id="panel-ambient">
   <div class="ah-panel__inner">
     <div class="ah-panel__text">
       <div class="ah-stages">
         <div class="ah-stage ah-stage--a">
           <p class="ah-eyebrow">The flagship feature</p>
+          <h2>Built for now, not stretched onto a TV from a decade-old toolkit.</h2>
+          <p>The whole browsing and playback experience, rebuilt from scratch in Jetpack Compose for TV.</p>
+        </div>
+        <div class="ah-stage ah-stage--b">
+          <p class="ah-eyebrow">Blur, glow, motion</p>
+          <h2>A screen that reacts<br>to what you're looking at.</h2>
+          <p>The background carries a softly blurred wash of the focused video's own artwork, and the focus glow picks up its dominant colour — closer to ambient lighting than a grid of boxes.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ah-panel__media">
+      <div class="ah-glow"></div>
+      <img src="assets/screenshots/home.jpg" alt="AetherTube Compose home screen" class="ah-shot">
+    </div>
+  </div>
+</section>
+
+<section class="ah-panel" id="panel-settings">
+  <div class="ah-panel__inner ah-panel__inner--reverse">
+    <div class="ah-panel__text">
+      <div class="ah-stages">
+        <div class="ah-stage ah-stage--a">
+          <p class="ah-eyebrow">Also worth knowing about</p>
           <h2>Forty settings.<br>One code.</h2>
           <p>Video quality, playback behavior, SponsorBlock, interface tweaks — all of it, collapsed into something you can type with a remote.</p>
         </div>
@@ -51,7 +74,7 @@ hide:
 </section>
 
 <section class="ah-panel" id="panel-shorts">
-  <div class="ah-panel__inner ah-panel__inner--reverse">
+  <div class="ah-panel__inner">
     <div class="ah-panel__text">
       <p class="ah-eyebrow">Shorts that feel like Shorts</p>
       <h2>Flick up.<br>Next video.</h2>
@@ -60,20 +83,6 @@ hide:
     <div class="ah-panel__media ah-panel__media--shorts">
       <img src="assets/screenshots/shorts-grid.jpg" alt="Shorts grid entry point" class="ah-shot ah-shot--grid">
       <img src="assets/screenshots/shorts-player-1.jpg" alt="Vertical Shorts player" class="ah-shot ah-shot--player">
-    </div>
-  </div>
-</section>
-
-<section class="ah-panel" id="panel-ambient">
-  <div class="ah-panel__inner">
-    <div class="ah-panel__text">
-      <p class="ah-eyebrow">Built for now</p>
-      <h2>A screen that reacts<br>to what you're looking at.</h2>
-      <p>The background carries a softly blurred wash of the focused video's own artwork, and the focus glow picks up its dominant colour — closer to ambient lighting than a grid of boxes.</p>
-    </div>
-    <div class="ah-panel__media">
-      <div class="ah-glow"></div>
-      <img src="assets/screenshots/home.jpg" alt="AetherTube Compose home screen" class="ah-shot">
     </div>
   </div>
 </section>

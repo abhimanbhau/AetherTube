@@ -102,7 +102,11 @@ html:has(.aether-home) {
 
 .ah-panel__inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, 1fr), not plain 1fr: a bare 1fr track's minimum is auto (min-content), and
+     .ah-panel__media--shorts' children are all position: absolute in JS-enhanced mode - with no
+     in-flow content, min-content is 0, so the whole column (and both images inside it) collapsed
+     to zero width. minmax(0, 1fr) overrides that implicit minimum. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 3.5rem;
   align-items: center;
   max-width: 72rem;
@@ -199,6 +203,13 @@ html:has(.aether-home) {
 }
 
 .ah-panel__media--shorts {
+  /* width: 100% (not auto) matters here: this element's own children are all position: absolute
+     in JS-enhanced mode, so it has no in-flow content. A grid item with width: auto and auto
+     inline-axis margins sizes to its content instead of stretching (the same rule that centers a
+     fixed-width box) - with zero-width content, that collapsed this whole element, and both
+     images inside it, to 0 width. An explicit width sidesteps that; max-width still caps it and
+     the auto margins still center it once width itself isn't auto. */
+  width: 100%;
   max-width: 22rem;
   margin: 0 auto;
 }

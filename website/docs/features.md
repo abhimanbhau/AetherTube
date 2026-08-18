@@ -3,6 +3,18 @@
 AetherTube keeps everything SmartTube does — SponsorBlock, adjustable playback speed, HDR/8K/60fps,
 live chat, no Google account requirement — and changes what's below.
 
+## A Compose UI built for now
+
+The whole browsing and playback experience, rebuilt from scratch in Jetpack Compose for TV, rather
+than stretched onto a TV from a decade-old View-based toolkit. This is AetherTube's flagship
+feature — everything else on this page is built on top of it.
+
+## An ambient, reactive background
+
+The background carries a softly blurred wash of the focused video's own artwork, and the focus
+glow picks up that thumbnail's dominant colour — so the whole screen shifts as you move across a
+shelf. Closer to an ambient-lighting effect than a static grid of boxes.
+
 ## Portable settings codes
 
 Every setting you've tuned — video quality, playback behavior, SponsorBlock, interface tweaks —
@@ -13,25 +25,13 @@ breach — the code *is* the backup, and it works with no internet connection on
 Found at **Settings → AetherTube → Transfer settings**.
 
 !!! tip
-    This is AetherTube's flagship feature. The [full write-up](guides/transfer-settings.md) covers
-    exactly which 33 settings travel, how a 60-bit code stays typo-tolerant, and why it's
-    deliberately *not* a full account backup.
+    The [full write-up](guides/transfer-settings.md) covers exactly which 33 settings travel, how
+    a 60-bit code stays typo-tolerant, and why it's deliberately *not* a full account backup.
 
 ## A dedicated Shorts feed
 
 A full-bleed vertical feed — flick up, next video, exactly like the Shorts feed on your phone.
 SmartTube opens each Short like a regular video; AetherTube scrolls.
-
-## A Compose UI built for now
-
-The whole browsing and playback experience, rebuilt from scratch in Jetpack Compose for TV, rather
-than stretched onto a TV from a decade-old View-based toolkit.
-
-## An ambient, reactive background
-
-The background carries a softly blurred wash of the focused video's own artwork, and the focus
-glow picks up that thumbnail's dominant colour — so the whole screen shifts as you move across a
-shelf. Closer to an ambient-lighting effect than a static grid of boxes.
 
 ## Updates that find you
 

@@ -26,6 +26,38 @@
     root.classList.add("js-enhanced");
     gsap.registerPlugin(ScrollTrigger);
 
+    // --- Compose UI / ambient background: the flagship feature - pinned, two stages crossfade
+    //     while the glow behind the screenshot builds through the same timeline ---
+    var ambientPanel = root.querySelector("#panel-ambient");
+    if (ambientPanel) {
+      var ambientStages = ambientPanel.querySelectorAll(".ah-stage");
+      var glow = ambientPanel.querySelector(".ah-glow");
+      var ambientShot = ambientPanel.querySelector(".ah-shot");
+
+      if (ambientStages.length === 2) {
+        var ambientTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ambientPanel,
+            start: "top top",
+            end: "+=180%",
+            pin: true,
+            scrub: 0.5,
+          },
+        });
+
+        ambientTl
+          .to(ambientStages[0], { autoAlpha: 0, y: -30, duration: 1 })
+          .fromTo(ambientStages[1], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 1 }, "<");
+
+        if (glow) {
+          ambientTl.fromTo(glow, { opacity: 0.15, scale: 0.85 }, { opacity: 0.55, scale: 1.15, duration: 2 }, 0);
+        }
+        if (ambientShot) {
+          ambientTl.fromTo(ambientShot, { scale: 0.96 }, { scale: 1.04, duration: 2 }, 0);
+        }
+      }
+    }
+
     // --- Transfer settings: headline -> the code typing itself -> what it means, in place ---
     var settingsPanel = root.querySelector("#panel-settings");
     if (settingsPanel) {
@@ -51,7 +83,7 @@
             start: "top top",
             end: "+=250%",
             pin: true,
-            scrub: 1,
+            scrub: 0.5,
           },
         });
 
@@ -96,33 +128,11 @@
               start: "top top",
               end: "+=150%",
               pin: true,
-              scrub: 1,
+              scrub: 0.5,
             },
           })
           .to(grid, { autoAlpha: 0, scale: 0.94, duration: 1 })
           .fromTo(player, { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 1 }, "<");
-      }
-    }
-
-    // --- Ambient: the glow behind the screenshot intensifies as it scrolls through ---
-    var ambientPanel = root.querySelector("#panel-ambient");
-    if (ambientPanel) {
-      var glow = ambientPanel.querySelector(".ah-glow");
-      if (glow) {
-        gsap.fromTo(
-          glow,
-          { opacity: 0.15, scale: 0.85 },
-          {
-            opacity: 0.55,
-            scale: 1.15,
-            scrollTrigger: {
-              trigger: ambientPanel,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
       }
     }
 
