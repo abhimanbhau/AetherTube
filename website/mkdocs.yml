@@ -81,6 +81,7 @@ nav:
       - Installation: guides/installation.md
       - Stable or beta?: guides/stable-vs-beta.md
       - Transfer settings: guides/transfer-settings.md
+      - Video & playback: guides/video-playback.md
 
 extra:
   social:

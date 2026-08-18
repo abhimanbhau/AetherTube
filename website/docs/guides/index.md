@@ -1,7 +1,7 @@
 # Guides
 
-Step-by-step walkthroughs for installing AetherTube, choosing a channel, and moving your settings
-between devices.
+Step-by-step walkthroughs for installing AetherTube, choosing a channel, moving your settings
+between devices, and getting the most out of playback.
 
 <div class="grid cards" markdown>
 
@@ -22,5 +22,11 @@ between devices.
     ---
 
     Move your whole setup to a new device with a twelve-character code.
+
+-   :material-play-circle:{ .lg .middle } **[Video & playback](video-playback.md)**
+
+    ---
+
+    Codecs, HDR, SponsorBlock, casting, and Picture-in-Picture.
 
 </div>

@@ -1,7 +1,9 @@
 # What's different from SmartTube
 
 AetherTube keeps everything SmartTube does — SponsorBlock, adjustable playback speed, HDR/8K/60fps,
-live chat, no Google account requirement — and changes what's below.
+live chat, no Google account requirement — and changes what's below. For details on the inherited
+playback side (codecs, HDR, SponsorBlock, casting, Picture-in-Picture), see
+[Video & playback](guides/video-playback.md).
 
 ## A Compose UI built for now
 

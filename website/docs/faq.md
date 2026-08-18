@@ -45,6 +45,80 @@ nothing stored anywhere except wherever you wrote the code down yourself. See
 [Transfer settings](guides/transfer-settings.md#why-offline-no-account-matters) for why that
 design was deliberate.
 
+## Videos are buffering a lot
+
+This isn't usually the app — it's more often DNS or network-level interference with YouTube
+traffic. Switching to an encrypted DNS provider (e.g. NextDNS) on the device or router fixes it
+for a lot of people. If that doesn't help, try the usual playback fixes below.
+
+## I get "the video profile is not supported"
+
+Open the format picker (the **HQ** button in the player) and pick a codec other than AV1 — most
+devices don't have AV1 hardware decoding. See [Video & playback](guides/video-playback.md#choosing-a-codec)
+for which codec to pick instead.
+
+## Why doesn't it auto-select the highest quality?
+
+It does, by default — but if you've set a video preset under **Settings → Player → Video
+presets**, that preset acts as a ceiling, not a suggestion. Set it back to "Without preset" if you
+want the highest available quality every time. This is also not the same thing as bitrate — a
+lower-bitrate codec at the same resolution isn't lower quality, see
+[Video & playback](guides/video-playback.md#choosing-a-codec).
+
+## Can it pick resolution automatically based on my bandwidth?
+
+Not yet — there's no adaptive bandwidth-based mode. Set a fixed ceiling under **Settings → Player
+→ Video presets** instead; see [Choosing a resolution](guides/video-playback.md#choosing-a-resolution).
+
+## The debug overlay says 1080p but I have a 4K display (or vice versa)
+
+The debug overlay's resolution readout is unreliable — ignore it. Play a 4K video and judge by
+what's actually on screen, not that number.
+
+## Does HDR actually work?
+
+If your device, TV, and (if applicable) TV box and HDMI cable all support it — yes. If HDR looks
+dim or washed out despite all of that, it's very likely a device-side limitation rather than an
+app bug. See [HDR](guides/video-playback.md#hdr) for the full explanation.
+
+## What does Auto Frame Rate (AFR) do, and should I turn it on?
+
+It matches your TV's refresh rate to the content playing, which can smooth out panning shots
+slightly. Most people don't notice a difference either way, and it doesn't behave well on every
+device. Try it; if it causes glitches when switching, turn it off. See
+[Auto Frame Rate](guides/video-playback.md#auto-frame-rate-afr).
+
+## Should I set a high or low player buffer?
+
+High, generally. A bigger buffer preloads more of the video ahead of your playback position,
+which smooths over network hiccups — the RAM cost isn't significant. A small buffer only helps if
+you frequently close videos early and want to save a little bandwidth. Note that seeking backward
+always has to rebuffer regardless of buffer size — that's not something a bigger buffer avoids.
+
+## My device freezes while watching videos
+
+This is almost always a firmware or Android-level issue outside the app's control, especially on
+custom ROMs. The usual workarounds apply: reboot, clear the app's cache, reinstall, or — as a
+last resort — factory-reset the device.
+
+## Can I download videos for offline viewing?
+
+No, AetherTube doesn't have a download feature.
+
+## Can updates install themselves automatically?
+
+No — that's an Android platform limitation, not a choice. Only the app that originally installed
+a package (normally an app store) can silently update it; every other installer, AetherTube
+included, can only show an install prompt for you to confirm. AetherTube does check for and
+notify you about updates automatically, though — see [Installation](guides/installation.md).
+
+## Why does a recommended video have nothing to do with what I watch?
+
+Recommendations come from YouTube's own algorithm, not from AetherTube — the app has no influence
+over what gets suggested. If you're not signed in, recommendations are essentially anonymous
+(based on region and general trends, not your history); if you are, they follow your account's
+normal YouTube history and preferences, same as anywhere else.
+
 ## Why does the app look unchanged after installing?
 
 The Compose UI is on by default, but if you're seeing the old leanback interface, check
