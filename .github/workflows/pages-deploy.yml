@@ -1,0 +1,58 @@
+name: Deploy docs site
+
+# Builds website/ (Material for MkDocs) and deploys it to GitHub Pages whenever it changes on
+# master. Deploys via the Pages deployment API (actions/deploy-pages), not a branch push, so this
+# only ever needs the default GITHUB_TOKEN - no PUBLISH_TOKEN, no workflow-scope requirement.
+#
+# This file's own presence in the public repo depends on sync-and-publish.yml successfully
+# carrying it over from the dev repo first - see that workflow's docs for the PUBLISH_TOKEN
+# workflow-scope caveat on *creating or changing* a workflow file.
+
+on:
+  push:
+    branches: [ master ]
+    paths: [ "website/**", ".github/workflows/pages-deploy.yml" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r website/requirements.txt
+
+      - name: Build site
+        run: mkdocs build --strict
+        working-directory: website
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: website/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
