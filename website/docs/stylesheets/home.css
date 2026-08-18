@@ -1,0 +1,277 @@
+/* Homepage scroll story. Default state below (no .js-enhanced class) is the real fallback: every
+   stage/panel sits in normal document flow at full opacity, so a user with JS disabled, GSAP
+   blocked, or prefers-reduced-motion set gets the same content as a plain scrolling page - nothing
+   is ever hidden behind JavaScript that doesn't run. home.js is what adds .js-enhanced and switches
+   these into the pinned/crossfading layout. See home.js for the corresponding guard. */
+
+html:has(.aether-home) {
+  overflow-x: hidden;
+}
+
+.aether-home .ah-hero,
+.aether-home .ah-panel,
+.aether-home .ah-closer {
+  /* Breaks out of Material's centered max-width content column to go full viewport width,
+     regardless of what that max-width happens to be - no dependency on the theme's internals. */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  box-sizing: border-box;
+}
+
+/* ---------- Hero ---------- */
+
+.ah-hero {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 1.5rem 4rem;
+  overflow: hidden;
+}
+
+.ah-hero__glow {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse at 50% 40%, var(--md-primary-fg-color) 0%, transparent 60%);
+  opacity: 0.18;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.ah-hero__logo {
+  width: 88px;
+  height: 88px;
+  border-radius: 22%;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 20px 50px -15px var(--md-primary-fg-color);
+}
+
+.ah-hero__title {
+  font-family: "Space Grotesk", var(--md-text-font-family), sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.25rem;
+  color: var(--md-default-fg-color);
+}
+
+.ah-hero__subtitle {
+  max-width: 36rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  opacity: 0.75;
+  margin: 0 0 2.25rem;
+}
+
+.ah-hero__cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.ah-hero__scrollcue {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  animation: ah-bob 2s ease-in-out infinite;
+}
+
+@keyframes ah-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ---------- Panels ---------- */
+
+.ah-panel {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 5rem 1.5rem;
+}
+
+.ah-panel__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  align-items: center;
+  max-width: 72rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.ah-panel__inner--reverse {
+  direction: rtl;
+}
+
+.ah-panel__inner--reverse > * {
+  direction: ltr;
+}
+
+.ah-eyebrow {
+  font-family: "Space Grotesk", var(--md-text-font-family), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--md-primary-fg-color);
+  margin: 0 0 0.75rem;
+}
+
+.ah-panel__text h2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  margin: 0 0 1rem;
+}
+
+.ah-panel__text p {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  opacity: 0.8;
+  max-width: 32rem;
+}
+
+.ah-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ah-list li {
+  font-size: 1rem;
+  opacity: 0.85;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.ah-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--md-primary-fg-color);
+}
+
+.ah-code {
+  font-family: var(--md-code-font-family, monospace);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--md-primary-fg-color);
+  margin: 0.5rem 0 1.25rem;
+}
+
+.ah-link {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--md-primary-fg-color);
+  text-decoration: none;
+  margin-top: 0.5rem;
+}
+
+.ah-link:hover {
+  text-decoration: underline;
+}
+
+.ah-panel__media {
+  position: relative;
+}
+
+.ah-shot {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  box-shadow: 0 30px 70px -25px rgba(0, 0, 0, 0.55);
+}
+
+.ah-panel__media--shorts {
+  max-width: 22rem;
+  margin: 0 auto;
+}
+
+.ah-glow {
+  position: absolute;
+  inset: -15%;
+  background: radial-gradient(circle at 50% 45%, var(--md-primary-fg-color) 0%, transparent 65%);
+  opacity: 0.3;
+  filter: blur(60px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ah-panel__media .ah-shot {
+  position: relative;
+  z-index: 1;
+}
+
+/* Stage stack - transfer-settings panel's three text moments. In the default (non-enhanced)
+   state they're just three stacked blocks in normal flow, all fully visible. */
+.ah-stages {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .ah-panel__inner,
+  .ah-panel__inner--reverse {
+    grid-template-columns: 1fr;
+    direction: ltr;
+  }
+
+  .ah-panel {
+    min-height: auto;
+    padding: 4rem 1.5rem;
+  }
+}
+
+/* ---------- Closer + final CTA ---------- */
+
+.ah-closer {
+  text-align: center;
+  padding: 5rem 1.5rem;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.ah-closer h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+/* ---------- JS-enhanced mode: pinned, crossfading stages ---------- */
+
+.js-enhanced .ah-stages {
+  position: relative;
+  min-height: 16rem;
+}
+
+.js-enhanced .ah-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.js-enhanced .ah-panel__media--shorts {
+  position: relative;
+  min-height: 26rem;
+}
+
+.js-enhanced .ah-panel__media--shorts .ah-shot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

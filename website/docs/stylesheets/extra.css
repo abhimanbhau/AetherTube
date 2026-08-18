@@ -1,3 +1,8 @@
+/* theme.font.text (Inter) covers body copy via Material's own Google Fonts loader; Space Grotesk
+   is only for headings and isn't one of Material's two configurable font slots, so it's loaded
+   here instead. */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap");
+
 /* Light mode uses a darker violet than the brand's #8b5cf6 - the brand hex fails WCAG AA
    contrast against a white background (~3:1); #6d28d9 clears 4.5:1 for body text and links. */
 [data-md-color-scheme="default"] {
@@ -29,8 +34,13 @@
 }
 
 /* Both schemes: headings pick up the accent violet instead of the default near-black/white,
-   so the brand colour shows up in body copy, not just chrome. */
+   so the brand colour shows up in body copy, not just chrome - and a distinct display face
+   instead of falling back to the body font, so headings don't read as "generic docs theme." */
 .md-typeset h1,
-.md-typeset h2 {
+.md-typeset h2,
+.md-typeset h3 {
   color: var(--md-primary-fg-color);
+  font-family: "Space Grotesk", var(--md-text-font-family), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }

@@ -1,36 +1,90 @@
-# AetherTube
-
-**SmartTube, rebuilt with Jetpack Compose for TV.**
-
-AetherTube is a personal fork of [SmartTube](https://github.com/yuliskov/SmartTube) — an
-unofficial, ad-free YouTube client for Android TV. This fork replaces SmartTube's leanback
-(View-based) interface with a new UI built in Jetpack Compose for TV. It's a hobby project, not an
-attempt to compete with or replace SmartTube: everything that isn't the UI layer — YouTube API
-access, playback, the settings model, device compatibility — is SmartTube's work, tracked from
-upstream and left alone wherever possible.
-
-!!! warning "Status: personal / experimental"
-    Built for one setup (an Android TV box, `armeabi-v7a`), not tested broadly, no promises about
-    other devices. The Compose UI is on by default — it's the whole point of this fork — but it's
-    one toggle away from SmartTube's original leanback interface (**Settings → AetherTube → New UI
-    (beta)**) if you'd rather fall back.
-
-[Get started :material-arrow-right:](guides/installation.md){ .md-button .md-button--primary }
-[View on GitHub :fontawesome-brands-github:](https://github.com/abhimanbhau/AetherTube){ .md-button }
-
+---
+title: AetherTube — SmartTube rebuilt with Jetpack Compose for TV
+hide:
+  - navigation
+  - toc
 ---
 
-## The headline feature: settings that travel in a 12-character code
+<div class="aether-home">
 
-Every setting you've tuned — video quality, playback behavior, SponsorBlock, interface tweaks —
-collapses into a code like `3G41-96RJ-ARGN`. Type it into another device and you're back exactly
-where you left off: no account, no cloud, no internet connection needed on either end. The code
-*is* the backup.
+<section class="ah-hero">
+  <div class="ah-hero__glow"></div>
+  <img src="assets/logo.png" alt="" class="ah-hero__logo">
+  <h1 class="ah-hero__title">SmartTube, rebuilt<br>for TV.</h1>
+  <p class="ah-hero__subtitle">AetherTube reimagines Android TV YouTube browsing in Jetpack Compose — with a few tricks SmartTube doesn't have.</p>
+  <div class="ah-hero__cta">
+    <a href="guides/installation/" class="md-button md-button--primary">Get started</a>
+    <a href="https://github.com/abhimanbhau/AetherTube" class="md-button">View on GitHub</a>
+  </div>
+  <div class="ah-hero__scrollcue">Scroll</div>
+</section>
 
-**[Read the full write-up →](guides/transfer-settings.md)** — how the 60-bit format works, exactly
-which 33 settings travel, and why it's deliberately not a full account backup.
+<section class="ah-panel" id="panel-settings">
+  <div class="ah-panel__inner">
+    <div class="ah-panel__text">
+      <div class="ah-stages">
+        <div class="ah-stage ah-stage--a">
+          <p class="ah-eyebrow">The flagship feature</p>
+          <h2>Forty settings.<br>One code.</h2>
+          <p>Video quality, playback behavior, SponsorBlock, interface tweaks — all of it, collapsed into something you can type with a remote.</p>
+        </div>
+        <div class="ah-stage ah-stage--b">
+          <p class="ah-eyebrow">Type it on the new device</p>
+          <p class="ah-code">3G41-96RJ-ARGN</p>
+        </div>
+        <div class="ah-stage ah-stage--c">
+          <p class="ah-eyebrow">No account. No cloud. No internet needed.</p>
+          <ul class="ah-list">
+            <li>Video quality &amp; playback</li>
+            <li>SponsorBlock</li>
+            <li>Frame-rate matching</li>
+            <li>Interface &amp; overlay</li>
+          </ul>
+          <a href="guides/transfer-settings/" class="ah-link">See exactly how it works →</a>
+        </div>
+      </div>
+    </div>
+    <div class="ah-panel__media">
+      <img src="assets/screenshots/settings-new-ui.jpg" alt="AetherTube settings screen showing the Transfer settings option" class="ah-shot">
+    </div>
+  </div>
+</section>
 
----
+<section class="ah-panel" id="panel-shorts">
+  <div class="ah-panel__inner ah-panel__inner--reverse">
+    <div class="ah-panel__text">
+      <p class="ah-eyebrow">Shorts that feel like Shorts</p>
+      <h2>Flick up.<br>Next video.</h2>
+      <p>A dedicated, full-bleed vertical feed — exactly like the app on your phone. SmartTube opens each Short like a regular video; AetherTube scrolls.</p>
+    </div>
+    <div class="ah-panel__media ah-panel__media--shorts">
+      <img src="assets/screenshots/shorts-grid.jpg" alt="Shorts grid entry point" class="ah-shot ah-shot--grid">
+      <img src="assets/screenshots/shorts-player-1.jpg" alt="Vertical Shorts player" class="ah-shot ah-shot--player">
+    </div>
+  </div>
+</section>
+
+<section class="ah-panel" id="panel-ambient">
+  <div class="ah-panel__inner">
+    <div class="ah-panel__text">
+      <p class="ah-eyebrow">Built for now</p>
+      <h2>A screen that reacts<br>to what you're looking at.</h2>
+      <p>The background carries a softly blurred wash of the focused video's own artwork, and the focus glow picks up its dominant colour — closer to ambient lighting than a grid of boxes.</p>
+    </div>
+    <div class="ah-panel__media">
+      <div class="ah-glow"></div>
+      <img src="assets/screenshots/home.jpg" alt="AetherTube Compose home screen" class="ah-shot">
+    </div>
+  </div>
+</section>
+
+<section class="ah-closer">
+  <p class="ah-eyebrow">Small things too</p>
+  <h2>Updates that find you.</h2>
+  <p>AetherTube checks for its own new releases and tells you right in the app, with the actual list of what changed — no remembering to come back and check GitHub for an APK.</p>
+</section>
+
+</div>
 
 ## Where to go next
 
@@ -70,10 +124,7 @@ which 33 settings travel, and why it's deliberately not a full account backup.
 
 </div>
 
----
-
-## Not affiliated
-
-AetherTube is not affiliated with YouTube, Google, or SmartTube's maintainer. It is not on the
-Play Store, F-Droid, or any app store — get builds only from the
-[Releases page](https://github.com/abhimanbhau/AetherTube/releases).
+!!! info "Not affiliated"
+    AetherTube is not affiliated with YouTube, Google, or SmartTube's maintainer. It is not on the
+    Play Store, F-Droid, or any app store — get builds only from the
+    [Releases page](https://github.com/abhimanbhau/AetherTube/releases).

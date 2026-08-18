@@ -11,6 +11,9 @@ theme:
   name: material
   logo: assets/logo.png
   favicon: assets/logo.png
+  font:
+    text: Inter
+    code: JetBrains Mono
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -43,6 +46,12 @@ theme:
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/home.css
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js
+  - https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js
+  - javascripts/home.js
 
 markdown_extensions:
   - admonition
