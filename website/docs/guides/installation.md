@@ -1,21 +1,14 @@
----
-layout: default
-title: Installation
-parent: Guides
-nav_order: 1
----
-
 # Installation
 
-{: .warning }
-AetherTube is not on the Play Store, F-Droid, or any app store. Get builds from this
-repository's [Releases page](https://github.com/abhimanbhau/AetherTube/releases) only. Do not
-trust an AetherTube APK from anywhere else.
+!!! warning
+    AetherTube is not on the Play Store, F-Droid, or any app store. Get builds from this
+    repository's [Releases page](https://github.com/abhimanbhau/AetherTube/releases) only. Do not
+    trust an AetherTube APK from anywhere else.
 
 ## 1. Pick a channel
 
-Decide between **stable** and **beta** first — see [Stable or beta?](stable-vs-beta). Most people
-want stable.
+Decide between **stable** and **beta** first — see [Stable or beta?](stable-vs-beta.md). Most
+people want stable.
 
 ## 2. Download the right APK
 
@@ -35,13 +28,21 @@ If you're not sure which architecture your device uses, grab the universal APK.
 
 Android TV has no built-in path to install an APK you downloaded yourself. Use one of:
 
-- **A file manager app** — download the APK on-device (or copy it over) and open it.
-- **A USB stick** — copy the APK to a USB drive, plug it into the TV box, and open it with a file
-  manager.
-- **ADB** — from a computer on the same network or over USB:
-  ```bash
-  adb install AetherTube_stable_<version>_universal.apk
-  ```
+=== "File manager app"
+
+    Download the APK on-device (or copy it over) and open it.
+
+=== "USB stick"
+
+    Copy the APK to a USB drive, plug it into the TV box, and open it with a file manager.
+
+=== "ADB"
+
+    From a computer on the same network or over USB:
+
+    ```bash
+    adb install AetherTube_stable_<version>_universal.apk
+    ```
 
 SmartTube's own README has a more detailed sideloading walkthrough if you need device-specific
 steps.
@@ -52,4 +53,4 @@ AetherTube checks for new releases on its own and tells you in-app when one's av
 actual changelog — you don't need to come back to this page to check for updates.
 
 If you're moving from an existing install (or setting up a second device), see
-[Transfer settings](transfer-settings) instead of reconfiguring everything by hand.
+[Transfer settings](transfer-settings.md) instead of reconfiguring everything by hand.

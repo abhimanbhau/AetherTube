@@ -1,19 +1,4 @@
----
-layout: default
-title: FAQ
-nav_order: 2
----
-
 # Frequently asked questions
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
-
----
 
 ## Is AetherTube on the Play Store?
 
@@ -24,15 +9,24 @@ Don't trust an AetherTube APK from anywhere else.
 ## What's the difference between AetherTube and SmartTube?
 
 AetherTube replaces SmartTube's leanback (View-based) interface with a new UI built in Jetpack
-Compose for TV, and adds a handful of its own features on top (portable settings codes, a
-dedicated Shorts feed, an ambient reactive background, in-app update checks). Everything else —
-YouTube API access, playback engine, the settings model, device compatibility — is SmartTube's
-work, tracked from upstream. See [Features](features) for the full list.
+Compose for TV, and adds its own features on top — most notably
+[portable settings codes](guides/transfer-settings.md), a dedicated Shorts feed, and an ambient
+reactive background. Everything else — YouTube API access, playback engine, the settings model,
+device compatibility — is SmartTube's work, tracked from upstream. See
+[Features](features.md) for the full list.
+
+## How do I move my settings to a new TV without redoing everything by hand?
+
+**Settings → AetherTube → Transfer settings.** Generate a twelve-character code on your current
+device, type it into the new one, and every tuned setting — video quality, SponsorBlock,
+playback behavior, interface tweaks — is back exactly as it was. No account, no cloud, and it
+works with no internet connection on either end. See the
+[full guide](guides/transfer-settings.md) for exactly what travels and how the code works.
 
 ## Should I install stable or beta?
 
 Take **stable** unless you specifically want to help test upcoming changes. See
-[Stable or beta?](guides/stable-vs-beta) for the details — they're separate apps that install
+[Stable or beta?](guides/stable-vs-beta.md) for the details — they're separate apps that install
 side by side, so you can run both if you want.
 
 ## Does AetherTube require a Google account?
@@ -44,15 +38,12 @@ No — same as SmartTube, a Google account is not required.
 No. AetherTube is a personal, experimental fork built for one setup (an Android TV box,
 `armeabi-v7a`) and hasn't been tested broadly across devices.
 
-## Can I move my settings to a new TV or a fresh install?
+## Is my settings-transfer code sent anywhere?
 
-Yes — see [Transfer settings](guides/transfer-settings). Your whole configuration collapses into
-a short code you type back in on the new install.
-
-## Is my data sent anywhere?
-
-The settings transfer code has no account and no cloud step — it's a local code you carry
-yourself. See [Transfer settings](guides/transfer-settings) for how it works.
+No. It's generated and applied entirely on-device — there's no server round trip, no account, and
+nothing stored anywhere except wherever you wrote the code down yourself. See
+[Transfer settings](guides/transfer-settings.md#why-offline-no-account-matters) for why that
+design was deliberate.
 
 ## Why does the app look unchanged after installing?
 

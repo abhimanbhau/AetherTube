@@ -1,0 +1,84 @@
+site_name: AetherTube
+site_description: Documentation, FAQ, and guides for AetherTube — SmartTube rebuilt with Jetpack Compose for TV.
+site_url: https://abhimankolte.com/AetherTube/
+repo_url: https://github.com/abhimanbhau/AetherTube
+repo_name: abhimanbhau/AetherTube
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - toc.follow
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - FAQ: faq.md
+  - Features: features.md
+  - Guides:
+      - guides/index.md
+      - Installation: guides/installation.md
+      - Stable or beta?: guides/stable-vs-beta.md
+      - Transfer settings: guides/transfer-settings.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/abhimanbhau/AetherTube
+
+copyright: >
+  AetherTube is an unaffiliated personal fork of
+  <a href="https://github.com/yuliskov/SmartTube">SmartTube</a>. Not affiliated with
+  YouTube, Google, or SmartTube's maintainer.

@@ -1,0 +1,36 @@
+/* Light mode uses a darker violet than the brand's #8b5cf6 - the brand hex fails WCAG AA
+   contrast against a white background (~3:1); #6d28d9 clears 4.5:1 for body text and links. */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #6d28d9;
+  --md-primary-fg-color--light: #8b5cf6;
+  --md-primary-fg-color--dark: #4c1d95;
+  --md-accent-fg-color: #6d28d9;
+  --md-accent-fg-color--transparent: #6d28d91a;
+}
+
+/* Dark mode gets the real brand violet at full saturation against a true near-black - the
+   contrast headroom on a dark background is what the brand hex was designed for. */
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #0a0a0f;
+  --md-default-fg-color: #e7e5ec;
+  --md-default-fg-color--light: #c9c6d6;
+  --md-default-fg-color--lighter: #8f8ba3;
+  --md-default-fg-color--lightest: #37354a;
+  --md-code-bg-color: #14141d;
+  --md-code-fg-color: #d8d6e3;
+  --md-footer-bg-color: #060609;
+  --md-footer-bg-color--dark: #050508;
+
+  --md-primary-fg-color: #8b5cf6;
+  --md-primary-fg-color--light: #a78bfa;
+  --md-primary-fg-color--dark: #6d28d9;
+  --md-accent-fg-color: #a78bfa;
+  --md-accent-fg-color--transparent: #a78bfa1a;
+}
+
+/* Both schemes: headings pick up the accent violet instead of the default near-black/white,
+   so the brand colour shows up in body copy, not just chrome. */
+.md-typeset h1,
+.md-typeset h2 {
+  color: var(--md-primary-fg-color);
+}

@@ -1,33 +1,21 @@
----
-layout: default
-title: Features
-nav_order: 4
----
-
 # What's different from SmartTube
-{: .no_toc }
 
 AetherTube keeps everything SmartTube does — SponsorBlock, adjustable playback speed, HDR/8K/60fps,
-live chat, no Google account requirement — and changes the parts listed here.
-{: .fs-6 .fw-300 }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
-
----
+live chat, no Google account requirement — and changes what's below.
 
 ## Portable settings codes
 
 Every setting you've tuned — video quality, playback behavior, SponsorBlock, interface tweaks —
 collapses into a short code like `3G41-96RJ-ARGN`. Setting up a new TV, or wiped and reinstalled?
 Type the code in and you're back exactly where you left off. No account, no cloud, nothing to
-breach — the code *is* the backup.
+breach — the code *is* the backup, and it works with no internet connection on either device.
 
-Found at **Settings → AetherTube → Transfer settings**. See the
-[Transfer settings guide](guides/transfer-settings) for the walkthrough.
+Found at **Settings → AetherTube → Transfer settings**.
+
+!!! tip
+    This is AetherTube's flagship feature. The [full write-up](guides/transfer-settings.md) covers
+    exactly which 33 settings travel, how a 60-bit code stays typo-tolerant, and why it's
+    deliberately *not* a full account backup.
 
 ## A dedicated Shorts feed
 
@@ -36,8 +24,8 @@ SmartTube opens each Short like a regular video; AetherTube scrolls.
 
 ## A Compose UI built for now
 
-The whole browsing and playback experience, rebuilt from scratch in Jetpack Compose for TV,
-rather than stretched onto a TV from a decade-old View-based toolkit.
+The whole browsing and playback experience, rebuilt from scratch in Jetpack Compose for TV, rather
+than stretched onto a TV from a decade-old View-based toolkit.
 
 ## An ambient, reactive background
 
@@ -47,8 +35,8 @@ shelf. Closer to an ambient-lighting effect than a static grid of boxes.
 
 ## Updates that find you
 
-AetherTube checks for its own new releases and tells you right in the app, with the actual list
-of what changed — no remembering to come back and check GitHub for an APK.
+AetherTube checks for its own new releases and tells you right in the app, with the actual list of
+what changed — no remembering to come back and check GitHub for an APK.
 
 ## Small quality-of-life changes
 
