@@ -156,6 +156,15 @@ jobs:
           echo "json=$CHANGELOG" >> "$GITHUB_OUTPUT"
 
       - name: Generate update manifest
+        env:
+          # Passed through the environment, not interpolated directly into the script below: this
+          # JSON is built from commit messages, which routinely contain an apostrophe ("don't",
+          # "it's", ...). ${{ }} is plain textual substitution done before bash ever sees the
+          # script - a raw apostrophe landing inside a single-quoted '${{ }}' terminates that
+          # quoting early and the rest of the line gets parsed as loose shell syntax. A double-
+          # quoted "$CHANGELOG_JSON" expansion doesn't re-parse the value for shell metacharacters
+          # at all, so nothing in a commit message - quotes, parens, `$`, backticks - can break it.
+          CHANGELOG_JSON: ${{ steps.changelog.outputs.json }}
         run: |
           cd smarttubetv/build/outputs/apk/ststable/release
 
@@ -197,7 +206,7 @@ jobs:
             --arg x86 "$BASE/$X86" \
             --arg versionName "${{ steps.version.outputs.VERSION_NAME }}" \
             --argjson versionCode "${{ steps.version.outputs.VERSION_CODE }}" \
-            --argjson changelog '${{ steps.changelog.outputs.json }}' \
+            --argjson changelog "$CHANGELOG_JSON" \
             '{
               package: {
                 downloadUrl: $universal,
