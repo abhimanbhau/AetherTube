@@ -207,6 +207,13 @@ replaces.
 MIT — see [LICENSE](LICENSE). Vendored and forked third-party modules keep their own licenses;
 full attribution in [NOTICE.md](NOTICE.md).
 
-<div align="center">
-<sub>Not affiliated with YouTube, Google, or SmartTube's maintainer.</sub>
-</div>
+<br>
+
+## Legal
+
+AetherTube is an independent, unofficial project, **not affiliated with, endorsed by, or
+sponsored by Google LLC, YouTube LLC, or SmartTube's maintainer**. "YouTube" is a trademark of
+Google LLC, referenced here only to describe what this software does. AetherTube hosts no
+content of its own — everything is streamed directly from YouTube's own servers — and is
+provided "AS IS," with no warranty and no liability accepted for its use, to the maximum extent
+the law allows. Full disclaimer: [LEGAL.md](LEGAL.md).

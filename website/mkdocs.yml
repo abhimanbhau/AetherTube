@@ -82,6 +82,7 @@ nav:
       - Stable or beta?: guides/stable-vs-beta.md
       - Transfer settings: guides/transfer-settings.md
       - Video & playback: guides/video-playback.md
+  - Legal: legal.md
 
 extra:
   social:
@@ -89,6 +90,8 @@ extra:
       link: https://github.com/abhimanbhau/AetherTube
 
 copyright: >
-  AetherTube is an unaffiliated personal fork of
-  <a href="https://github.com/yuliskov/SmartTube">SmartTube</a>. Not affiliated with
-  YouTube, Google, or SmartTube's maintainer.
+  AetherTube is an independent, unofficial personal fork of
+  <a href="https://github.com/yuliskov/SmartTube">SmartTube</a>, provided "AS IS" with no
+  warranty. Not affiliated with, endorsed by, or sponsored by YouTube, Google, or SmartTube's
+  maintainer. "YouTube" is a trademark of Google LLC. Full disclaimer:
+  <a href="https://abhimankolte.com/AetherTube/legal/">Legal</a>.

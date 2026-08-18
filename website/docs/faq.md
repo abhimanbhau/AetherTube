@@ -139,4 +139,5 @@ is a personal project maintained by one person, so responses aren't guaranteed t
 
 ## Is AetherTube affiliated with YouTube, Google, or SmartTube's maintainer?
 
-No, none of the above.
+No, none of the above. See [Legal](legal.md) for the full disclaimer, including the liability and
+no-warranty terms this software is provided under.

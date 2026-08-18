@@ -134,6 +134,7 @@ hide:
 </div>
 
 !!! info "Not affiliated"
-    AetherTube is not affiliated with YouTube, Google, or SmartTube's maintainer. It is not on the
+    AetherTube is not affiliated with, endorsed by, or sponsored by YouTube, Google, or
+    SmartTube's maintainer — see [Legal](legal.md) for the full disclaimer. It is not on the
     Play Store, F-Droid, or any app store — get builds only from the
     [Releases page](https://github.com/abhimanbhau/AetherTube/releases).
