@@ -1,3 +1,7 @@
+# Fetched and patched at build time by scripts/fetch-deps.sh - see patches/README.md
+/SharedModules/
+/MediaServiceCore/
+
 # built application files
 *.apk
 *.ap_

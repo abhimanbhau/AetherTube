@@ -151,15 +151,15 @@ check this page manually.
 
 ## Build
 
-This project depends on two git submodules from upstream SmartTube (`MediaServiceCore`,
-`SharedModules`) that are forked into this account so a plain clone works:
+This project depends on two upstream SmartTube modules (`MediaServiceCore`, `SharedModules`).
+They're not submodules — a small script fetches each fresh from upstream at a pinned commit and
+applies this repo's own patches on top (see [`patches/README.md`](patches/README.md) for why):
 
 ```bash
-git clone --recursive https://github.com/abhimanbhau/AetherTube.git
+git clone https://github.com/abhimanbhau/AetherTube.git
 cd AetherTube
+./scripts/fetch-deps.sh
 ```
-
-(If you already cloned without `--recursive`: `git submodule update --init --recursive`.)
 
 Build with JDK 17+ set as `JAVA_HOME` (Android Studio's bundled JBR works):
 

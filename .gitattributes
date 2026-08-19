@@ -10,3 +10,8 @@
 *.jpg binary
 *.jpeg binary
 *.jar binary
+
+# Patch files must stay byte-exact - some of their content lines reproduce upstream's own CRLF
+# file content verbatim (upstream has no .gitattributes normalizing this), so LF-normalizing the
+# patch itself would silently corrupt those lines and break `git apply` against the real files.
+patches/**/*.patch -text

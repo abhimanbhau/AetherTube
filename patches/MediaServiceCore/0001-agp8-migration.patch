@@ -1,0 +1,362 @@
+diff --git a/build.gradle b/build.gradle
+index ebe4b71c..9cf0377b 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -3,7 +3,6 @@
+ buildscript {
+     repositories {
+         google()
+-        jcenter()
+     }
+ 
+     dependencies {
+@@ -18,7 +17,6 @@ buildscript {
+ allprojects {
+     repositories {
+         google()
+-        jcenter()
+     }
+ }
+ 
+diff --git a/mediaserviceinterfaces/build.gradle b/mediaserviceinterfaces/build.gradle
+index bd62fc21..10e825a8 100644
+--- a/mediaserviceinterfaces/build.gradle
++++ b/mediaserviceinterfaces/build.gradle
+@@ -1,40 +1,41 @@
+-apply from: '../../SharedModules/constants.gradle'
+-apply plugin: 'com.android.library'
+-
+-android {
+-    compileSdkVersion project.ext.compileSdkVersion
+-    buildToolsVersion project.ext.buildToolsVersion
+-    testOptions.unitTests.includeAndroidResources = true
+-
+-    compileOptions {
+-        sourceCompatibility JavaVersion.VERSION_1_8
+-        targetCompatibility JavaVersion.VERSION_1_8
+-    }
+-
+-    defaultConfig {
+-        minSdkVersion project.ext.minSdkVersion
+-        targetSdkVersion project.ext.targetSdkVersion
+-        versionCode 11
+-        versionName "0.3.1"
+-    }
+-
+-    buildTypes {
+-        release {
+-            minifyEnabled false
+-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+-        }
+-    }
+-}
+-
+-dependencies {
+-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+-
+-    testImplementation 'junit:junit:' + junitVersion
+-    testImplementation 'org.robolectric:robolectric:' + robolectricVersion
+-
+-    implementation project(':sharedutils')
+-
+-    implementation 'io.reactivex.rxjava2:rxandroid:' + rxAndroidVersion
+-    implementation 'io.reactivex.rxjava2:rxjava:' + rxJavaVersion
+-    implementation 'androidx.annotation:annotation:' + annotationXVersion
+-}
++apply from: '../../SharedModules/constants.gradle'
++apply plugin: 'com.android.library'
++
++android {
++
++    namespace 'com.liskovsoft.mediaserviceinterfaces'
++    compileSdkVersion project.ext.compileSdkVersion
++    testOptions.unitTests.includeAndroidResources = true
++
++    compileOptions {
++        sourceCompatibility JavaVersion.VERSION_1_8
++        targetCompatibility JavaVersion.VERSION_1_8
++    }
++
++    defaultConfig {
++        minSdkVersion project.ext.minSdkVersion
++        targetSdkVersion project.ext.targetSdkVersion
++        versionCode 11
++        versionName "0.3.1"
++    }
++
++    buildTypes {
++        release {
++            minifyEnabled false
++            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
++        }
++    }
++}
++
++dependencies {
++    implementation fileTree(dir: 'libs', include: ['*.jar'])
++
++    testImplementation 'junit:junit:' + junitVersion
++    testImplementation 'org.robolectric:robolectric:' + robolectricVersion
++
++    implementation project(':sharedutils')
++
++    implementation 'io.reactivex.rxjava2:rxandroid:' + rxAndroidVersion
++    implementation 'io.reactivex.rxjava2:rxjava:' + rxJavaVersion
++    implementation 'androidx.annotation:annotation:' + annotationXVersion
++}
+diff --git a/mediaserviceinterfaces/src/main/AndroidManifest.xml b/mediaserviceinterfaces/src/main/AndroidManifest.xml
+index a9272d73..876eded1 100644
+--- a/mediaserviceinterfaces/src/main/AndroidManifest.xml
++++ b/mediaserviceinterfaces/src/main/AndroidManifest.xml
+@@ -1,2 +1 @@
+-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+-          package="com.liskovsoft.mediaserviceinterfaces"/>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"/>
+diff --git a/youtubeapi/build.gradle b/youtubeapi/build.gradle
+index 1afa3faf..9a346eb9 100644
+--- a/youtubeapi/build.gradle
++++ b/youtubeapi/build.gradle
+@@ -1,108 +1,109 @@
+-apply from: '../../SharedModules/constants.gradle'
+-apply plugin: 'kotlin-android'
+-apply plugin: 'com.android.library'
+-
+-android {
+-    compileSdkVersion project.ext.compileSdkVersion
+-    buildToolsVersion project.ext.buildToolsVersion
+-    testOptions.unitTests.includeAndroidResources = true
+-
+-    compileOptions {
+-        sourceCompatibility JavaVersion.VERSION_1_8
+-        targetCompatibility JavaVersion.VERSION_1_8
+-    }
+-
+-    defaultConfig {
+-        minSdkVersion project.ext.minSdkVersion
+-        targetSdkVersion project.ext.targetSdkVersion
+-        versionCode 15
+-        versionName "0.1.5"
+-
+-        // required for androidTest support
+-        // more info: https://developer.android.com/training/testing/unit-testing/instrumented-unit-tests
+-        // small tests: https://stackoverflow.com/questions/4671923/what-is-the-purpose-of-smalltest-mediumtest-and-largetest-annotations-in-an
+-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+-
+-        // More info: http://myhexaville.com/2017/03/10/android-multidex/
+-        // Additionally, you should extend your application from MultiDexApplication
+-        multiDexEnabled = true
+-
+-        // consumerProguardFiles 'proguard-rules.txt' // embed this file to aar
+-    }
+-
+-    buildTypes {
+-        release {
+-            minifyEnabled false
+-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+-        }
+-    }
+-
+-    // gradle 4.6 migration: disable dimensions mechanism
+-    // more: https://proandroiddev.com/advanced-android-flavors-part-4-a-new-version-fc2ad80c01bb
+-    flavorDimensions "default"
+-
+-    productFlavors {
+-        stbeta {}
+-        ststable {}
+-        stfdroid {}
+-    }
+-}
+-
+-dependencies {
+-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+-
+-    testImplementation project(':youtubeapi')
+-    testImplementation project(':sharedtests')
+-    testImplementation 'co.infinum:retromock:' + retromockVersion
+-    testImplementation 'junit:junit:' + junitVersion
+-    testImplementation 'org.robolectric:robolectric:' + robolectricVersion
+-
+-    androidTestImplementation project(':youtubeapi')
+-    androidTestImplementation project(':sharedtests')
+-    androidTestImplementation 'junit:junit:' + junitVersion
+-    androidTestImplementation 'androidx.test:runner:' + testXSupportVersion
+-    androidTestImplementation 'androidx.test:rules:' + testXSupportVersion
+-
+-    implementation project(':commons-io-2.8.0') // My Android 4.3 fix
+-    implementation project(':sharedutils')
+-    implementation project(':mediaserviceinterfaces')
+-
+-    implementation 'com.squareup.retrofit2:retrofit:' + retrofitVersion
+-    implementation 'com.squareup.retrofit2:converter-gson:' + retrofitVersion
+-    implementation 'com.google.code.gson:gson:' + gsonVersion
+-    implementation 'com.jayway.jsonpath:json-path:' + jsonPathVersion
+-
+-    implementation 'com.google.net.cronet:cronet-okhttp:' + cronetOkHttpVersion
+-    implementation 'org.chromium.net:cronet-api:' + cronetApiVersion
+-
+-    implementation 'io.reactivex.rxjava2:rxandroid:' + rxAndroidVersion
+-    implementation 'io.reactivex.rxjava2:rxjava:' + rxJavaVersion
+-
+-    implementation 'androidx.annotation:annotation:' + annotationXVersion
+-
+-    // js interpreter
+-    // duktape fork
+-    // implementation 'app.cash.quickjs:quickjs-android:' + quickjsVersion
+-    //implementation 'com.squareup.duktape:duktape-android:' + duktapeVersion
+-    //implementation 'org.mozilla:rhino:' + rhinoVersion
+-    //implementation 'com.eclipsesource.j2v8:j2v8:' + j2v8Version + '@aar'
+-    // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8/6.2.1
+-    //implementation(name: 'j2v8-6.2.1', ext: 'aar')
+-    //implementation files('libs/j2v8-6.2.1-fixed.aar')
+-    // https://stackoverflow.com/questions/60878599/error-building-android-library-direct-local-aar-file-dependencies-are-not-supp
+-    stbetaImplementation project(':j2v8')
+-    ststableImplementation project(':j2v8')
+-    stfdroidImplementation 'com.eclipsesource.j2v8:j2v8:' + j2v8Version + '@aar'
+-
+-    // Add kotlin support libs
+-    implementation 'androidx.core:core-ktx:' + kotlinCoreXVersion
+-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:' + kotlinVersion
+-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:' + kotlinVersion
+-
+-    // https://github.com/florianingerl/com.florianingerl.util.regex
+-    implementation 'com.github.florianingerl.util:regex:' + florianingerlRegexVersion
+-
+-    // NewPipe pot
+-    implementation 'androidx.webkit:webkit:' + webkitVersion
+-    implementation 'com.grack:nanojson:' + nanojsonVersion
+-}
++apply from: '../../SharedModules/constants.gradle'
++apply plugin: 'kotlin-android'
++apply plugin: 'com.android.library'
++
++android {
++
++    namespace 'com.liskovsoft.youtubeapi'
++    compileSdkVersion project.ext.compileSdkVersion
++    testOptions.unitTests.includeAndroidResources = true
++
++    compileOptions {
++        sourceCompatibility JavaVersion.VERSION_1_8
++        targetCompatibility JavaVersion.VERSION_1_8
++    }
++
++    defaultConfig {
++        minSdkVersion project.ext.minSdkVersion
++        targetSdkVersion project.ext.targetSdkVersion
++        versionCode 15
++        versionName "0.1.5"
++
++        // required for androidTest support
++        // more info: https://developer.android.com/training/testing/unit-testing/instrumented-unit-tests
++        // small tests: https://stackoverflow.com/questions/4671923/what-is-the-purpose-of-smalltest-mediumtest-and-largetest-annotations-in-an
++        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
++
++        // More info: http://myhexaville.com/2017/03/10/android-multidex/
++        // Additionally, you should extend your application from MultiDexApplication
++        multiDexEnabled = true
++
++        // consumerProguardFiles 'proguard-rules.txt' // embed this file to aar
++    }
++
++    buildTypes {
++        release {
++            minifyEnabled false
++            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
++        }
++    }
++
++    // gradle 4.6 migration: disable dimensions mechanism
++    // more: https://proandroiddev.com/advanced-android-flavors-part-4-a-new-version-fc2ad80c01bb
++    flavorDimensions "default"
++
++    productFlavors {
++        stbeta {}
++        ststable {}
++        stfdroid {}
++    }
++}
++
++dependencies {
++    implementation fileTree(dir: 'libs', include: ['*.jar'])
++
++    testImplementation project(':youtubeapi')
++    testImplementation project(':sharedtests')
++    testImplementation 'co.infinum:retromock:' + retromockVersion
++    testImplementation 'junit:junit:' + junitVersion
++    testImplementation 'org.robolectric:robolectric:' + robolectricVersion
++
++    androidTestImplementation project(':youtubeapi')
++    androidTestImplementation project(':sharedtests')
++    androidTestImplementation 'junit:junit:' + junitVersion
++    androidTestImplementation 'androidx.test:runner:' + testXSupportVersion
++    androidTestImplementation 'androidx.test:rules:' + testXSupportVersion
++
++    implementation project(':commons-io-2.8.0') // My Android 4.3 fix
++    implementation project(':sharedutils')
++    implementation project(':mediaserviceinterfaces')
++
++    implementation 'com.squareup.retrofit2:retrofit:' + retrofitVersion
++    implementation 'com.squareup.retrofit2:converter-gson:' + retrofitVersion
++    implementation 'com.google.code.gson:gson:' + gsonVersion
++    implementation 'com.jayway.jsonpath:json-path:' + jsonPathVersion
++
++    implementation 'com.google.net.cronet:cronet-okhttp:' + cronetOkHttpVersion
++    implementation 'org.chromium.net:cronet-api:' + cronetApiVersion
++
++    implementation 'io.reactivex.rxjava2:rxandroid:' + rxAndroidVersion
++    implementation 'io.reactivex.rxjava2:rxjava:' + rxJavaVersion
++
++    implementation 'androidx.annotation:annotation:' + annotationXVersion
++
++    // js interpreter
++    // duktape fork
++    // implementation 'app.cash.quickjs:quickjs-android:' + quickjsVersion
++    //implementation 'com.squareup.duktape:duktape-android:' + duktapeVersion
++    //implementation 'org.mozilla:rhino:' + rhinoVersion
++    //implementation 'com.eclipsesource.j2v8:j2v8:' + j2v8Version + '@aar'
++    // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8/6.2.1
++    //implementation(name: 'j2v8-6.2.1', ext: 'aar')
++    //implementation files('libs/j2v8-6.2.1-fixed.aar')
++    // https://stackoverflow.com/questions/60878599/error-building-android-library-direct-local-aar-file-dependencies-are-not-supp
++    stbetaImplementation project(':j2v8')
++    ststableImplementation project(':j2v8')
++    stfdroidImplementation 'com.eclipsesource.j2v8:j2v8:' + j2v8Version + '@aar'
++
++    // Add kotlin support libs
++    implementation 'androidx.core:core-ktx:' + kotlinCoreXVersion
++    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:' + kotlinVersion
++    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:' + kotlinVersion
++
++    // https://github.com/florianingerl/com.florianingerl.util.regex
++    implementation 'com.github.florianingerl.util:regex:' + florianingerlRegexVersion
++
++    // NewPipe pot
++    implementation 'androidx.webkit:webkit:' + webkitVersion
++    implementation 'com.grack:nanojson:' + nanojsonVersion
++}
+diff --git a/youtubeapi/src/main/AndroidManifest.xml b/youtubeapi/src/main/AndroidManifest.xml
+index 70f49c6c..69b96c0c 100644
+--- a/youtubeapi/src/main/AndroidManifest.xml
++++ b/youtubeapi/src/main/AndroidManifest.xml
+@@ -1,6 +1,5 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+-          xmlns:tools="http://schemas.android.com/tools"
+-          package="com.liskovsoft.youtubeapi">
++          xmlns:tools="http://schemas.android.com/tools">
+     <uses-permission android:name="android.permission.INTERNET"/>
+     <!-- WebViewUtils -->
+     <uses-feature android:name="android.hardware.usb.host" />
+diff --git a/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/videoinfo/models/formats/VideoFormat.java b/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/videoinfo/models/formats/VideoFormat.java
+index 9f866cb3..62756e59 100644
+--- a/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/videoinfo/models/formats/VideoFormat.java
++++ b/youtubeapi/src/main/java/com/liskovsoft/youtubeapi/videoinfo/models/formats/VideoFormat.java
+@@ -319,6 +319,9 @@ public class VideoFormat {
+                 getITag());
+     }
+ 
++    /**
++     * TODO: to be removed. Temp SABR fix
++     */
+     public boolean isBroken() {
+         return Helpers.allNulls(mUrl, mCipher, mSignatureCipher);
+     }
