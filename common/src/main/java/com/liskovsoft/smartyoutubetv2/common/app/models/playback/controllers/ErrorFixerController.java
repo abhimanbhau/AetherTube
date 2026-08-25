@@ -182,11 +182,13 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
                 disableSubtitles(); // Response code: 429
             } else if (isGeneralError && getPlayerTweaksData().isHighBitrateFormatsEnabled()) {
                 getPlayerTweaksData().setHighBitrateFormatsEnabled(false); // Response code: 429
+            } else if (!mBufferingDetector.isPlayable()) { // Response code: 403
+                switchNextEngine();
             } else {
                 YouTubeServiceManager.instance().applyNoPlaybackFix(); // Response code: 403
             }
 
-            restartEngine = false;
+            //restartEngine = false;
             //showMessage = false;
         } else if (type == PlayerEventListener.ERROR_TYPE_RENDERER && rendererIndex == PlayerEventListener.RENDERER_INDEX_SUBTITLE) {
             // "Response code: 429" (subtitle error)
@@ -322,18 +324,14 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
             return;
         }
 
-        getPlayerTweaksData().setPlayerDataSource(getFasterDataSource());
-    }
-
-    private static int getFasterDataSource() {
-        return Utils.skipCronet() ? PlayerTweaksData.PLAYER_DATA_SOURCE_DEFAULT : PlayerTweaksData.PLAYER_DATA_SOURCE_CRONET;
+        getPlayerTweaksData().setPlayerDataSource(Utils.getFasterDataSource());
     }
 
     /**
      * Bad idea. Faster source is different among devices
      */
     private boolean isFasterDataSourceEnabled() {
-        int fasterDataSource = getFasterDataSource();
+        int fasterDataSource = Utils.getFasterDataSource();
         return getPlayerTweaksData().getPlayerDataSource() == fasterDataSource;
     }
 
