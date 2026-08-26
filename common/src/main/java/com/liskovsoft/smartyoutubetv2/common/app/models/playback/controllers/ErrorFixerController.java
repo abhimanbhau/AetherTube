@@ -177,6 +177,9 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
             //    YouTubeServiceManager.instance().applyNoPlaybackFix(); // Response code: 403
             //}
 
+            restartEngine = false;
+            showMessage = false;
+
             boolean isGeneralError = Helpers.startsWithAny(errorContent, "Response code: 429", "Response code: 500");
             if (isGeneralError && isSubtitlesEnabled()) {
                 disableSubtitles(); // Response code: 429
@@ -184,12 +187,11 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
                 getPlayerTweaksData().setHighBitrateFormatsEnabled(false); // Response code: 429
             } else if (!mBufferingDetector.isPlayable()) { // Response code: 403
                 switchNextEngine();
+                restartEngine = true;
+                showMessage = true;
             } else {
                 YouTubeServiceManager.instance().applyNoPlaybackFix(); // Response code: 403
             }
-
-            //restartEngine = false;
-            //showMessage = false;
         } else if (type == PlayerEventListener.ERROR_TYPE_RENDERER && rendererIndex == PlayerEventListener.RENDERER_INDEX_SUBTITLE) {
             // "Response code: 429" (subtitle error)
             // "Response code: 500" (subtitle error)
