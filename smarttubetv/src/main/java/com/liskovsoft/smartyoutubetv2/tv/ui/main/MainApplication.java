@@ -50,7 +50,7 @@ import java.security.Security;
 
 public class MainApplication extends MultiDexApplication { // fix: Didn't find class "com.google.firebase.provider.FirebaseInitProvider"
     static {
-        // fix youtube bandwidth throttling (best - false)???
+        // fix YouTube bandwidth throttling (best - false)???
         // false is better for streams (less buffering)
         System.setProperty("http.keepAlive", "false");
         // fix ipv6 infinite video buffering???
@@ -111,12 +111,8 @@ public class MainApplication extends MultiDexApplication { // fix: Didn't find c
             // goes through AppDialogPresenter), not just the Settings screen. See ComposeAppDialogFragment
             // for the two-pane master-detail redesign and its (rare) chat/comments fallback.
             dialogClazz = ComposeAppDialogActivity.class;
-        } else if (VERSION.SDK_INT == 26
-                && Helpers.equalsAny(Helpers.getCrashlyticsDeviceName(), "4S806_Z51S1 (Panasonic)")) {
-            // The fix: Only fullscreen opaque activities can request orientation
-            dialogClazz = AppDialogActivityOpaque.class;
         } else {
-            dialogClazz = AppDialogActivity.class;
+            dialogClazz = getDialogClass();
         }
 
         viewManager.setRoot(homeActivityClass);
@@ -148,6 +144,28 @@ public class MainApplication extends MultiDexApplication { // fix: Didn't find c
             // player - so it's launched directly and registered here purely to give it a parent.
             viewManager.register(ShortsPlayerActivity.class, ShortsPlayerActivity.class, homeActivityClass);
         }
+    }
+
+    /**
+     * Fix for the 'IllegalStateException: Only fullscreen opaque activities can request orientation'
+     */
+    private static Class<? extends AppDialogActivity> getDialogClass() {
+        Class<? extends AppDialogActivity> dialogClass;
+
+        if (VERSION.SDK_INT == 26
+                && Helpers.equalsAny(Helpers.getCrashlyticsDeviceName(),
+                "4S806_Z51S1 (Panasonic)",
+                "5S72Z_G20S (Panasonic)",
+                "9S60Z_ZQ21S (Panasonic)",
+                "Android Smart TV (MStar)",
+                "Xgimi TV (Xgimi Technology Co.,Ltd)"
+        )) {
+            // The fix: Only fullscreen opaque activities can request orientation
+            dialogClass = AppDialogActivityOpaque.class;
+        } else {
+            dialogClass = AppDialogActivity.class;
+        }
+        return dialogClass;
     }
 
     private void setupGlobalExceptionHandler() {
