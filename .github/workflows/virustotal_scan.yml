@@ -1,6 +1,20 @@
 name: VirusTotal Scan
 
+# Submits every released APK to VirusTotal and appends a results table to the GitHub Release
+# notes (the in-app updater shows the release notes, so this is what people see before installing).
+#
+# Trigger history / why `workflow_run`: this used to be `on: release: published` only. That never
+# actually fired for real releases - release.yml creates the GitHub Release with the automatic
+# GITHUB_TOKEN, and GitHub deliberately does NOT deliver `release`/`push`/etc. events for actions
+# taken with GITHUB_TOKEN (anti-recursion). So `workflow_run` on the Release workflow is what
+# makes this run automatically: it fires when Release *finishes*, regardless of which token drove
+# it. `release: published` is kept only as a harmless fallback for a release cut by a human or a
+# PAT; `workflow_dispatch` stays for re-scanning an arbitrary past tag by hand.
+
 on:
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
   release:
     types: [published]
   workflow_dispatch:
@@ -11,6 +25,9 @@ on:
 
 jobs:
   virustotal_scan:
+    # On a workflow_run trigger, only scan if the Release run actually succeeded - a failed
+    # release build has nothing worth scanning (and may have published no assets).
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -19,12 +36,30 @@ jobs:
 
     steps:
       - name: Set tag variable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "TAG_NAME=${{ github.event.inputs.release_tag }}" >> $GITHUB_ENV
-          else
-            echo "TAG_NAME=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          case "${{ github.event_name }}" in
+            workflow_dispatch)
+              TAG_NAME="${{ github.event.inputs.release_tag }}"
+              ;;
+            release)
+              TAG_NAME="${{ github.event.release.tag_name }}"
+              ;;
+            workflow_run)
+              # Release's final step creates the GitHub Release, so by the time this fires the
+              # newest published stable release is the one Release just cut. /releases/latest is
+              # exactly "most recent non-prerelease, non-draft" - which also skips the constantly
+              # -updated `beta-latest` prerelease that CI.yml maintains.
+              TAG_NAME="$(gh api "repos/${{ github.repository }}/releases/latest" -q '.tag_name')"
+              ;;
+          esac
+          if [ -z "$TAG_NAME" ]; then
+            echo "::error::could not determine a release tag to scan"
+            exit 1
           fi
+          echo "Scanning release: $TAG_NAME"
+          echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
 
       - name: Set report marker variable
         run: |
@@ -61,7 +96,7 @@ jobs:
 
           echo "| Build Variant | VirusTotal Status | Detailed Report |" >> vt_report.txt
           echo "| :--- | :--- | :--- |" >> vt_report.txt
-          
+
           for file in release_assets/*.apk; do
             [ -e "$file" ] || continue
             filename=$(basename "$file")
@@ -72,9 +107,9 @@ jobs:
 
             echo "Purging badge cache for $filename..."
             curl -s -X POST $badge_url
-            
+
             asset_link="https://github.com/${{ github.repository }}/releases/download/${{ env.TAG_NAME }}/$filename"
-            
+
             echo "| [$filename]($asset_link) | [![]($badge_url&v=$(date +%s))]($vt_link) | [View Report]($vt_link) |" >> vt_report.txt
           done
 
@@ -89,7 +124,7 @@ jobs:
             echo "Previous report found. Cleaning up..."
             sed -i "/$MARKER/,\$d" current_notes.txt
           fi
-          
+
           # vt_report.txt only exists if the scan step above actually ran (VIRUS_TOTAL_API_KEY set
           # and the scan succeeded) - without this guard, a skipped/missing-key run left this step
           # failing on "No such file or directory" and release notes never got updated at all, not
@@ -98,5 +133,5 @@ jobs:
             cat current_notes.txt
             if [ -f vt_report.txt ]; then cat vt_report.txt; fi
           } > final_notes.txt
-          
+
           gh release edit "$TAG_NAME" --notes-file final_notes.txt

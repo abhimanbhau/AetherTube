@@ -1,8 +1,10 @@
 name: Release
 
-# Builds signed release APKs and publishes them as a GitHub Release. Publishing the release
-# also triggers virustotal_scan.yml (it listens for release: published), so scan results land
-# on the release notes automatically - no need to duplicate that here.
+# Builds signed release APKs and publishes them as a GitHub Release. When this workflow finishes,
+# virustotal_scan.yml runs off its completion (`workflow_run`) and appends a scan-results table to
+# the release notes automatically - no need to duplicate that here. (It can't key off
+# `release: published`: this job creates the release with GITHUB_TOKEN, and GitHub suppresses the
+# event for anything GITHUB_TOKEN does.)
 #
 # Requires four repo secrets: SIGNING_KEY (base64 keystore), KEY_STORE_PASSWORD, ALIAS,
 # KEY_PASSWORD. Unlike the beta CI build, this workflow refuses to produce an unsigned
