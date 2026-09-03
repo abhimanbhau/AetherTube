@@ -89,8 +89,8 @@ android {
         applicationId "com.abhimankolte.aethertube"
         minSdkVersion project.properties.minSdkVersion
         targetSdkVersion project.properties.targetSdkVersion
-        versionCode 2428
-        versionName "32.38"
+        versionCode 2429
+        versionName "32.39"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
 
