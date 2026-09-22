@@ -441,6 +441,14 @@ public class MotherActivity extends FragmentActivity {
         return MediaServiceData.instance();
     }
 
+    protected final boolean isBackPressed() {
+        return mIsBackPressed;
+    }
+
+    protected final void resetBackState() {
+        mIsBackPressed = false;
+    }
+
     private void initEdgeSlide() {
         if (VERSION.SDK_INT < 21 || !Helpers.isTouchSupported(this) || Utils.isSystemGestureArrowEnabled(this)) {
             return;
